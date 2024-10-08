@@ -9,6 +9,7 @@ import { Route, Routes } from "react-router-dom";
 import LibrarianListOfBooks from "./pages/Librarian/ListOfBooks.jsx";
 import SnackBar from "./components/SnackBar.jsx";
 import { set } from "mongoose";
+import AccountSettings from "./pages/AccountSettings.jsx";
 
 function App() {
   const [open, setOpen] = useState(false);
@@ -21,6 +22,7 @@ function App() {
   }
   return (
     <Routes>
+      <Route path="/account-settings" element = {<AccountSettings/>}/>
       <Route path="/reader-dashboard" element={<Reader_Dashboard open = {open} updateOpen = {updateOpen} successfulLogin = {successfulLogin}/>} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route
