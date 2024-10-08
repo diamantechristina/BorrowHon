@@ -5,6 +5,7 @@ import { TextField, Button } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 import "@fontsource/arsenal";
 import "@fontsource/inria-serif";
+import "@fontsource/montserrat";
 import { EyeCrossed, Eye } from "react-flaticons";
 import { InputAdornment } from "@mui/material";
 import { useAccount } from "../library/account.js";
