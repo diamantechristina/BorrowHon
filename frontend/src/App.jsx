@@ -22,7 +22,7 @@ function App() {
   }
   return (
     <Routes>
-      <Route path="/account-settings" element = {<AccountSettings/>}/>
+      <Route path="/settings" element = {<AccountSettings/>}/>
       <Route path="/reader-dashboard" element={<Reader_Dashboard open = {open} updateOpen = {updateOpen} successfulLogin = {successfulLogin}/>} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route
