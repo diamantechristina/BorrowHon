@@ -57,7 +57,7 @@ const Navbar = () => {
         justifyContent: "space-between",
         alignItems: "center",
         marginTop: "10px",
-        // gap: "20px",
+        zIndex: "100",
       }}
     >
       <Box
@@ -193,9 +193,6 @@ const Navbar = () => {
                         marginTop: "3px",
                       }}
                     >
-                      {/* {selectedFilter === 'Filter' ? 'Filter' : selectedFilter} */}
-                      {/* {selectedFilter === 'Title' ? 'Title' :} */}
-                      {/* {getFilterText()} */}
                       Filter
                     </Typography>
                   </Button>
