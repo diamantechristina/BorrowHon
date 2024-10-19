@@ -2,6 +2,8 @@ import React from "react";
 import { Box, Typography, Button, TextField } from "@mui/material";
 import { ArrowSmallLeft, User, Lock, Marker, Envelope, PhonePause } from "react-flaticons";
 
+// phone number icon not correct, use image instead
+
 const AccountSettings = () => {
   return (
     <Box
