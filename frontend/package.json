@@ -25,10 +25,7 @@
     "react-flaticons": "^1.1.5",
     "react-router-dom": "^6.26.2",
     "react-spring-3d-carousel": "^1.3.4",
-<<<<<<< HEAD
-=======
     "uuid": "^10.0.0",
->>>>>>> 4b8916e3a492fe7f5dd96e669de75f0c8d544127
     "zustand": "^5.0.0-rc.2"
   },
   "devDependencies": {
