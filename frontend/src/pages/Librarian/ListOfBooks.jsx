@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
+import Resizer from "react-image-file-resizer";
 import {
   Button,
   Box,
@@ -12,19 +13,12 @@ import {
 import { Modal, styled } from "@mui/material";
 import { ArrowSmallLeft } from "react-flaticons";
 import { useBook } from "../../library/book.js";
+import { set } from "mongoose";
 
 const ListOfBooks = () => {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [confirmOpen, setConfirmOpen] = useState(false);
-
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
-
-  const handleConfirmOpen = () => {
-    // setOpen(false);
-    setConfirmOpen(true);
-  };
 
   const handleConfirmClose = () => setConfirmOpen(false);
 
@@ -36,9 +30,19 @@ const ListOfBooks = () => {
     genre: "",
     isbn: "",
     description: "",
+    coverImage: "",
   });
 
   const { createBook } = useBook();
+
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
+  const handleConfirmOpen = () => {
+    // setOpen(false);
+    console.log(newBook.coverImage);
+    setConfirmOpen(true);
+  };
 
   const handleAddBook = async () => {
     const { success, message } = await createBook(newBook);
@@ -50,6 +54,7 @@ const ListOfBooks = () => {
     event.preventDefault();
     const files = event.dataTransfer.files;
     setSelectedFiles(files);
+    console.log(files);
   };
 
   const handleDragOver = (event) => {
@@ -70,11 +75,10 @@ const ListOfBooks = () => {
 
   const backgroundImageUrl = useMemo(() => {
     if (selectedFiles && selectedFiles[0]) {
-        return URL.createObjectURL(selectedFiles[0]);
+      return URL.createObjectURL(selectedFiles[0]);
     }
-    return ''
+    return "";
   }, [selectedFiles]);
-
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -84,6 +88,30 @@ const ListOfBooks = () => {
     }));
   };
 
+  const resizeFile = (file) =>
+    new Promise((resolve) => {
+      Resizer.imageFileResizer(
+        file,
+        500,
+        500,
+        "JPEG",
+        100,
+        0,
+        (uri) => {
+          resolve(uri);
+        },
+        "base64"
+      );
+    });
+  const onChange = async (event) => {
+    const file = event.target.files[0];
+    const image = await resizeFile(file);
+    setNewBook((prevBook) => ({
+      ...prevBook,
+      coverImage: image,
+    }));
+    console.log(image);
+  };
   return (
     <Box
       sx={{
@@ -208,7 +236,9 @@ const ListOfBooks = () => {
                       height: "50vh",
                       width: "270px",
                       borderRadius: "20px",
-                      border: selectedFiles ? "3px solid transparent" : "3px dashed #F4F4F4",
+                      border: selectedFiles
+                        ? "3px solid transparent"
+                        : "3px dashed #F4F4F4",
                       marginRight: "50px",
                       marginBottom: "20px",
                     }}
@@ -216,10 +246,12 @@ const ListOfBooks = () => {
                     <Button
                       component="label"
                       role={undefined}
+                      name="coverImage"
                       variant="contained"
                       tabIndex={-1}
                       onDragOver={handleDragOver}
                       onDrop={handleDrop}
+                      onChange={onChange}
                       sx={{
                         height: "inherit",
                         width: "inherit",
@@ -231,7 +263,7 @@ const ListOfBooks = () => {
                         backgroundColor: "transparent",
                         textTransform: "none",
                         fontSize: "18px",
-                        backgroundImage:`url(${backgroundImageUrl})`,
+                        backgroundImage: `url(${backgroundImageUrl})`,
                         backgroundSize: "cover",
                         backgroundPosition: "center",
                         backgroundRepeat: "no-repeat",
@@ -619,22 +651,21 @@ const ListOfBooks = () => {
                       fontSize: "4vw",
                       fontWeight: "bold",
                       fontFamily: "montserrat",
-                    //   marginTop: "-5vh",
+                      //   marginTop: "-5vh",
                     }}
                   >
                     CONFIRM ADD BOOK
                   </Typography>
                   <Box
                     sx={{
-                        width: "60vw",
-                        height: "55vh",
-                        // backgroundColor: "yellow",
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        flexDirection: "row",
-                        // overflow: "auto",
-                      
+                      width: "60vw",
+                      height: "55vh",
+                      // backgroundColor: "yellow",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      flexDirection: "row",
+                      // overflow: "auto",
                     }}
                   >
                     <Box
@@ -646,7 +677,7 @@ const ListOfBooks = () => {
                     >
                       <Box
                         sx={{
-                        //   width: "25vw",
+                          //   width: "25vw",
                           height: "55vh",
 
                           backgroundImage: `url(${backgroundImageUrl})`,
@@ -665,77 +696,85 @@ const ListOfBooks = () => {
                         marginRight: "2vw",
                       }}
                     >
-                        <Typography
-                            sx={{
-                                fontSize: "2.5vw",
-                                fontWeight: "bold",
-                                fontFamily: "montserrat",
-                                textTransform: "uppercase",
-                            }}
-                        >
-                            {newBook.title}
-                        </Typography>
-                        <Typography
-                            sx={{
-                                fontSize: "20px",
-                                // fontWeight: "bold",
-                                fontFamily: "montserrat",
-                            }}
-                        >{newBook.genre}</Typography>
-                        <Typography
-                            sx={{
-                                fontSize: "1.5vw",
-                                fontWeight: "bold",
-                                fontFamily: "montserrat",
-                            }}
-                        >{newBook.author}</Typography>
-                        <Typography
-                            sx={{
-                                fontSize: "20px",
-                                fontFamily: "montserrat",
-                                my: "2vh",
-                            }}
-                        >ISBN: {newBook.isbn}</Typography>
-                        <Box
-                            sx={{
-                                width: "100%",
-                                height: "1px",
-                                backgroundColor: "#F4F4F4",
-                                my: "2vh",
-                            }}
-                        ></Box>
-                        <Typography
-                            sx={{
-                                fontSize: "20px",
-                                fontFamily: "montserrat",
-                            }}
-                        >{newBook.description}</Typography>
+                      <Typography
+                        sx={{
+                          fontSize: "2.5vw",
+                          fontWeight: "bold",
+                          fontFamily: "montserrat",
+                          textTransform: "uppercase",
+                        }}
+                      >
+                        {newBook.title}
+                      </Typography>
+                      <Typography
+                        sx={{
+                          fontSize: "20px",
+                          // fontWeight: "bold",
+                          fontFamily: "montserrat",
+                        }}
+                      >
+                        {newBook.genre}
+                      </Typography>
+                      <Typography
+                        sx={{
+                          fontSize: "1.5vw",
+                          fontWeight: "bold",
+                          fontFamily: "montserrat",
+                        }}
+                      >
+                        {newBook.author}
+                      </Typography>
+                      <Typography
+                        sx={{
+                          fontSize: "20px",
+                          fontFamily: "montserrat",
+                          my: "2vh",
+                        }}
+                      >
+                        ISBN: {newBook.isbn}
+                      </Typography>
+                      <Box
+                        sx={{
+                          width: "100%",
+                          height: "1px",
+                          backgroundColor: "#F4F4F4",
+                          my: "2vh",
+                        }}
+                      ></Box>
+                      <Typography
+                        sx={{
+                          fontSize: "20px",
+                          fontFamily: "montserrat",
+                        }}
+                      >
+                        {newBook.description}
+                      </Typography>
                     </Box>
                   </Box>
                   <Button
-                variant="contained"
-                sx={{
-                  width: "clamp(10rem, 12vw, 40rem)",
-                  height: "70px",
-                  borderRadius: "20px", // border radius
-                  bgcolor: "#1FAA70",
-                  color: "#F4F4F4",
-                  "&:hover": {
-                    bgcolor: "#4dc995",
-                    color: "#F4F4F4",
-                    boxShadow: "none",
-                  },
-                  fontFamily: "Montserrat",
-                  fontWeight: "bold",
-                  boxShadow: "none",
-                  textTransform: "none",
-                  fontSize: "18px",
-                }}
-                tabIndex={-1}
-                onClick={handleAddBook}
-              >
-                Confirm
-              </Button>
+                    variant="contained"
+                    sx={{
+                      width: "clamp(10rem, 12vw, 40rem)",
+                      height: "70px",
+                      borderRadius: "20px", // border radius
+                      bgcolor: "#1FAA70",
+                      color: "#F4F4F4",
+                      "&:hover": {
+                        bgcolor: "#4dc995",
+                        color: "#F4F4F4",
+                        boxShadow: "none",
+                      },
+                      fontFamily: "Montserrat",
+                      fontWeight: "bold",
+                      boxShadow: "none",
+                      textTransform: "none",
+                      fontSize: "18px",
+                    }}
+                    tabIndex={-1}
+                    onClick={handleAddBook}
+                  >
+                    Confirm
+                  </Button>
                 </Box>
               </Modal>
             </Box>
