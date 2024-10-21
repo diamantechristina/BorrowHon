@@ -11,6 +11,16 @@ export const getBooks = async (req, res) => {
     }
 }
 
+export const filterBooks = async (req, res) => {
+    try{
+        const books = await Book.find().sort({createdAt: -1});
+        res.status(200).json({success: true, data: books})
+    } catch (error){
+        console.log("Error in getting books: ",error.message)
+        res.status(500).json({success: false, message: 'Server error'})
+    }
+}
+
 export const createBook = async (req, res) => {
     const book = req.body // getting the data from frontend
     
