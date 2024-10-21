@@ -53,7 +53,7 @@ const Dashboard = ({ open, updateOpen, successfulLogin }) => {
   const [hoveredCard, setHoveredCard] = useState(false);
 
   const getImageUrl = (title) => {
-    return `../../src/resources/${title.toLowerCase().split(" ").join("")}.jpg`;
+    return `../../src/resources/${title?.toLowerCase().split(" ").join("")}.jpg`;
   };
 
   const slides = [
