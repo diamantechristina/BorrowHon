@@ -50,7 +50,9 @@ const Dashboard = ({ open, updateOpen, successfulLogin }) => {
 
   const [goToSlide, setGoToSlide] = useState(null);
 
-  const [hoveredCard, setHoveredCard] = useState(false);
+  const [hoverPopularBook, setHoverPopularBook] = useState(false);
+
+  const [hoverRecentBook, setHoverRecentBook] = useState(false);
 
   const getImageUrl = (title) => {
     return `../../src/resources/${title?.toLowerCase().split(" ").join("")}.jpg`;
@@ -219,7 +221,8 @@ const Dashboard = ({ open, updateOpen, successfulLogin }) => {
           >
             <Box
               sx={{
-                width: "35vw",
+                // width: "35vw",
+                width: "clamp(35vw, 35vw, 35vw)",
                 display: "flex",
                 flexDirection: "column",
                 gap: 1,
@@ -314,7 +317,7 @@ const Dashboard = ({ open, updateOpen, successfulLogin }) => {
         <Box
           sx={{
             width: "inherit",
-            height: "100vh",
+            height: "110vh",
             backgroundColor: "#191919",
             display: "flex",
             flexDirection: "column",
@@ -324,9 +327,9 @@ const Dashboard = ({ open, updateOpen, successfulLogin }) => {
           <Typography
             sx={{
               color: "#F4F4F4",
-              fontSize: "25px",
+              fontSize: "30px",
               fontWeight: "bold",
-              marginLeft: "2.5vw",
+              marginLeft: "8vw",
             }}
           >
             Most Popular Books
@@ -357,11 +360,12 @@ const Dashboard = ({ open, updateOpen, successfulLogin }) => {
             >
               {bookTitles.slice(0, 5).map((title, index) => (
                 <Card
-                  onMouseOver={() => setHoveredCard(title)}
-                  onMouseOut={() => setHoveredCard(null)}
+                  onMouseOver={() => setHoverPopularBook(title)}
+                  onMouseOut={() => setHoverPopularBook(null)}
                   key={index}
                   sx={{
-                    width: "15vw",
+                    width: "12.6vw",
+                    height: "40vh",
                     borderRadius: 4,
                     position: "relative",
                     "&:hover": {
@@ -376,7 +380,7 @@ const Dashboard = ({ open, updateOpen, successfulLogin }) => {
                     component="img"
                     image={getImageUrl(title)}
                   ></CardMedia>
-                  {hoveredCard == title && (
+                  {hoverPopularBook == title && (
                     <CardContent
                       sx={{
                         position: "absolute",
@@ -396,7 +400,114 @@ const Dashboard = ({ open, updateOpen, successfulLogin }) => {
                         sx={{
                           display: "flex",
                           flexDirection: "column",
-                          marginTop: "45vh",
+                          marginTop: "33vh",
+                        }}
+                      >
+                        <Typography
+                          sx={{
+                            fontSize: "16px",
+                            fontWeight: "bold",
+                            color: "#F4F4F4",
+                          }}
+                        >
+                          {bookTitles[index]}
+                        </Typography>
+                        <Typography
+                          sx={{
+                            color: "#F4F4F4",
+                            fontSize: "14px",
+                          }}
+                        >
+                          By {bookAuthors[index]}
+                        </Typography>
+                      </Box>
+                    </CardContent>
+                  )}
+                </Card>
+              ))}
+            </Box>
+          </Box>
+          <Typography
+            sx={{
+              color: "#F4F4F4",
+              fontSize: "30px",
+              fontWeight: "bold",
+              marginLeft: "8vw",
+              marginBottom: "-2vh",
+            }}
+          >
+            Newly Added Books
+          </Typography>
+          <Box
+            sx={{
+              overflowX: "scroll",
+              "&::-webkit-scrollbar": {
+                display: "none",
+              },
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Box
+              sx={{
+                width: "100vw",
+                height: "58vh",
+                // backgroundColor:"yellow",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                flexDirection: "row",
+                gap: "5vw",
+              }}
+            >
+              {bookTitles.slice(0, 5).map((title, index) => (
+                <Card
+                  onMouseOver={() => setHoverRecentBook(title)}
+                  onMouseOut={() => setHoverRecentBook(null)}
+                  key={index}
+                  sx={{
+                    width: "12.6vw",
+                    height: "40vh",
+                    borderRadius: 4,
+                    position: "relative",
+                    "&:hover": {
+                      transform: "scale(1.05)",
+                    },
+                  }}
+                  style={{
+                    filter: "drop-shadow(0px 0px 15px rgba(34, 85, 96, 1))",
+                  }}
+                >
+                  <CardMedia
+                    component="img"
+                    image={getImageUrl(title)}
+                    sx={{
+                      height: "100%",
+                    }}
+                  ></CardMedia>
+                  {hoverRecentBook == title && (
+                    <CardContent
+                      sx={{
+                        position: "absolute",
+                        // backgroundColor:"pink",
+                        bottom: 0,
+                        width: "100%",
+                        height: "100%",
+                        display: "flex",
+                        justifyContent: "center",
+                        flexDirection: "column",
+                        color: "white",
+                        backgroundImage:
+                          "linear-gradient(to bottom, rgba(0, 20, 20, 0.3), rgba(20, 20, 20, 1))",
+                      }}
+                    >
+                      <Box
+                        sx={{
+                          display: "flex",
+                          flexDirection: "column",
+                          marginTop: "33vh",
                         }}
                       >
                         <Typography
