@@ -12,6 +12,7 @@ import { useBook } from "../../library/book.js";
 import SnackBar from "../../components/SnackBar";
 import Carousel from "react-spring-3d-carousel";
 import { v4 as uuidv4 } from "uuid";
+import { set } from "mongoose";
 
 const Dashboard = ({ open, updateOpen, successfulLogin }) => {
   const { fetchBook, books } = useBook();
@@ -26,6 +27,8 @@ const Dashboard = ({ open, updateOpen, successfulLogin }) => {
   const [bookAuthors, setBookAuthors] = useState([]);
 
   const [bookDescriptions, setBookDescriptions] = useState([]);
+
+  const [bookCreation, setBookCreation] = useState([]);
 
   useEffect(() => {
     if (books.length > 0) {
@@ -47,6 +50,21 @@ const Dashboard = ({ open, updateOpen, successfulLogin }) => {
       setBookDescriptions(descriptions);
     }
   }, [books]);
+
+  useEffect(()=>{
+    if(books.length > 0){
+      const bookCreatedAt = books.map((book) => ({
+        title: book.title,
+        author: book.author,
+        createdAt: book.createdAt
+      }))
+      const sortedBooks = bookCreatedAt.sort((a, b) => {
+        return new Date(b.createdAt) - new Date(a.createdAt);
+      });
+      setBookCreation(sortedBooks);
+      console.log(bookCreation);
+    }
+  }, [books])
 
   const [goToSlide, setGoToSlide] = useState(null);
 
@@ -391,13 +409,14 @@ const Dashboard = ({ open, updateOpen, successfulLogin }) => {
                         display: "flex",
                         justifyContent: "center",
                         flexDirection: "column",
-                        color: "white",
+                        color: "#F4F4F4",
                         backgroundImage:
                           "linear-gradient(to bottom, rgba(0, 20, 20, 0.3), rgba(20, 20, 20, 1))",
                       }}
                     >
                       <Box
                         sx={{
+                          width: "90%", 
                           display: "flex",
                           flexDirection: "column",
                           marginTop: "33vh",
@@ -462,9 +481,9 @@ const Dashboard = ({ open, updateOpen, successfulLogin }) => {
                 gap: "5vw",
               }}
             >
-              {bookTitles.slice(0, 5).map((title, index) => (
+              {bookCreation.slice(0, 5).map((book, index) => (
                 <Card
-                  onMouseOver={() => setHoverRecentBook(title)}
+                  onMouseOver={() => setHoverRecentBook(book.title)}
                   onMouseOut={() => setHoverRecentBook(null)}
                   key={index}
                   sx={{
@@ -482,12 +501,12 @@ const Dashboard = ({ open, updateOpen, successfulLogin }) => {
                 >
                   <CardMedia
                     component="img"
-                    image={getImageUrl(title)}
+                    image={getImageUrl(book.title)}
                     sx={{
                       height: "100%",
                     }}
                   ></CardMedia>
-                  {hoverRecentBook == title && (
+                  {hoverRecentBook == book.title && (
                     <CardContent
                       sx={{
                         position: "absolute",
@@ -498,13 +517,14 @@ const Dashboard = ({ open, updateOpen, successfulLogin }) => {
                         display: "flex",
                         justifyContent: "center",
                         flexDirection: "column",
-                        color: "white",
+                        color: "#F4F4F4",
                         backgroundImage:
                           "linear-gradient(to bottom, rgba(0, 20, 20, 0.3), rgba(20, 20, 20, 1))",
                       }}
                     >
                       <Box
                         sx={{
+                          width: "90%", 
                           display: "flex",
                           flexDirection: "column",
                           marginTop: "33vh",
@@ -512,19 +532,20 @@ const Dashboard = ({ open, updateOpen, successfulLogin }) => {
                       >
                         <Typography
                           sx={{
-                            fontSize: "20px",
+                            fontSize: "16px",
                             fontWeight: "bold",
                             color: "#F4F4F4",
                           }}
                         >
-                          {bookTitles[index]}
+                          {book.title}
                         </Typography>
                         <Typography
                           sx={{
                             color: "#F4F4F4",
+                            fontSize: "14px",
                           }}
                         >
-                          By {bookAuthors[index]}
+                          By {book.author}
                         </Typography>
                       </Box>
                     </CardContent>
