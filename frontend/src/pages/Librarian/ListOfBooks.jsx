@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Resizer from "react-image-file-resizer";
 import {
@@ -35,11 +35,17 @@ const ListOfBooks = () => {
 
   const { createBook } = useBook();
 
+  const { fetchBook, books } = useBook();
+  useEffect(() => {
+    fetchBook();
+  }, [fetchBook]);
+
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
   const handleConfirmOpen = () => {
     // setOpen(false);
+    console.log(books);
     console.log(newBook.coverImage);
     setConfirmOpen(true);
   };
@@ -138,11 +144,12 @@ const ListOfBooks = () => {
           },
           position: "absolute",
           left: 10,
-          top: 10,
+          top: 15,
         }}
       >
+        
         <ArrowSmallLeft
-          size={"75px"}
+          size={"3rem"}
           style={{
             marginTop: "-10px",
             marginLeft: "-15px",
@@ -151,7 +158,33 @@ const ListOfBooks = () => {
           }}
         />
       </Button>
-      <Card>
+      <Typography
+          sx={{
+            margin: 0,
+            position: "absolute",
+          left: 75,
+          top: 10,
+          color: "#E8E8E8",
+          fontFamily: "Montserrat",
+          fontWeight: "bold",
+          fontSize: "clamp(1.25rem, 3vw, 2rem)",
+          }}
+        >
+          List of Books
+        </Typography>
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "space - evenly",
+          backgroundColor: "red",
+          width: "100vw",
+          height: "90vh",
+          marginTop: "10vh", 
+        }}
+      >
+        <Card>
         <CardActions>
           <Button onClick={handleOpen}>Add Book</Button>
           <Modal
@@ -781,6 +814,8 @@ const ListOfBooks = () => {
           </Modal>
         </CardActions>
       </Card>
+
+      </Box>
     </Box>
   );
 };
