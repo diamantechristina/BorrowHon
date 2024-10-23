@@ -376,6 +376,7 @@ const Dashboard = ({ open, updateOpen, successfulLogin }) => {
                     height: "40vh",
                     borderRadius: 4,
                     position: "relative",
+                    transition: "300ms",
                     "&:hover": {
                       transform: "scale(1.05)",
                     },
@@ -484,6 +485,7 @@ const Dashboard = ({ open, updateOpen, successfulLogin }) => {
                     height: "40vh",
                     borderRadius: 4,
                     position: "relative",
+                    transition: "300ms",
                     "&:hover": {
                       transform: "scale(1.05)",
                     },
