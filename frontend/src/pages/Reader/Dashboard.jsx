@@ -14,6 +14,8 @@ import SnackBar from "../../components/SnackBar";
 import Carousel from "react-spring-3d-carousel";
 import { Modal } from "@mui/material";
 import { v4 as uuidv4 } from "uuid";
+import { useNavigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 
 const Dashboard = ({ open, updateOpen, successfulLogin }) => {
   const { fetchBook, books } = useBook();
@@ -21,13 +23,22 @@ const Dashboard = ({ open, updateOpen, successfulLogin }) => {
     fetchBook();
   }, [fetchBook]);
 
+  const navigate = useNavigate();
+
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const [bookData, setBookData] = useState([]);
 
   const [bookCreation, setBookCreation] = useState([]);
 
-  
+  const [openModal, setOpenModal] = useState(false);
+
+  const handleOpenModal = () => {
+    setOpenModal(true);
+  };
+  const handleCloseModal = () => {
+    setOpenModal(false);
+  };
 
   useEffect(() => {
     if (books.length > 0) {
@@ -52,6 +63,9 @@ const Dashboard = ({ open, updateOpen, successfulLogin }) => {
   const [hoverPopularBook, setHoverPopularBook] = useState(false);
 
   const [hoverRecentBook, setHoverRecentBook] = useState(false);
+
+
+
 
   const getImageUrl = (title) => {
     return `../../src/resources/${title
@@ -180,7 +194,14 @@ const Dashboard = ({ open, updateOpen, successfulLogin }) => {
                 {bookData[currentIndex]?.description}
               </Typography>
               <Button
-                varianted="contained"
+                onClick={()=>{
+                  navigate("/view-book", {
+                    state: {
+                      bookData: bookData[currentIndex],
+                    }
+                  })
+                }}
+                variant="contained"
                 sx={{
                   width: "clamp(5vw, 12vw, 12vw)",
                   height: "52px",
@@ -200,7 +221,70 @@ const Dashboard = ({ open, updateOpen, successfulLogin }) => {
               >
                 See Book
               </Button>
-              
+              {/* <Modal
+                aria-labelledby="unstyled-modal-title"
+                aria-describedby="unstyled-modal-description"
+                open={openModal}
+                onClose={handleCloseModal}
+                BackdropComponent={Backdrop}
+                BackdropProps={{
+                  timeout: 500,
+                }}
+                sx={{
+                  "& .MuiBox-root": {
+                    border: "none",
+                  },
+                }}
+              >
+                <Box
+                  sx={{
+                    position: "absolute",
+                    top: "55%",
+                    left: "50%",
+                    transform: "translate(-50%, -50%)",
+                    width: "85vw",
+                    height: "70vh",
+                    bgcolor: "transparent",
+                    boxShadow: 24,
+                    p: 4,
+                    borderRadius: "20px",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    flexDirection: "column",
+                    // overflow: "auto",
+                  }}
+                >
+                  <Box
+                    sx={{
+                      backgroundColor: "#225560",
+                      width: "75%",
+                      height: "100%",
+                      left: 0,
+                      position: "absolute",
+                      borderRadius: "20px",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      flexDirection: "column",
+                    }}
+                  ></Box>
+                  <Box
+                    sx={{
+                      backgroundColor: "#225560",
+                      width: "23%",
+                      height: "100%",
+                      right: 0,
+                      position: "absolute",
+                      borderRadius: "20px",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      flexDirection: "column",
+                    }}
+                  ></Box>
+                </Box>
+              </Modal> */}
             </Box>
           </Box>
           <Box

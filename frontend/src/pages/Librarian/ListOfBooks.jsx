@@ -231,7 +231,6 @@ const ListOfBooks = () => {
                   width: "65vw",
                   height: "80vh",
                   bgcolor: "#225560",
-                  border: "2px solid #000",
                   boxShadow: 24,
                   p: 4,
                   borderRadius: "20px",
