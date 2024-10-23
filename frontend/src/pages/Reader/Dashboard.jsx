@@ -12,7 +12,6 @@ import { useBook } from "../../library/book.js";
 import SnackBar from "../../components/SnackBar";
 import Carousel from "react-spring-3d-carousel";
 import { v4 as uuidv4 } from "uuid";
-import { set } from "mongoose";
 
 const Dashboard = ({ open, updateOpen, successfulLogin }) => {
   const { fetchBook, books } = useBook();
@@ -21,6 +20,8 @@ const Dashboard = ({ open, updateOpen, successfulLogin }) => {
   }, [fetchBook]);
 
   const [currentIndex, setCurrentIndex] = useState(0);
+  
+  const [bookData, setBookData] = useState([]);
 
   const [bookTitles, setBookTitles] = useState([]);
 
@@ -32,39 +33,19 @@ const Dashboard = ({ open, updateOpen, successfulLogin }) => {
 
   useEffect(() => {
     if (books.length > 0) {
-      const titles = books.map((book) => book.title);
-      setBookTitles(titles);
-    }
-  }, [books]);
-
-  useEffect(() => {
-    if (books.length > 0) {
-      const authors = books.map((book) => book.author);
-      setBookAuthors(authors);
-    }
-  }, [books]);
-
-  useEffect(() => {
-    if (books.length > 0) {
-      const descriptions = books.map((book) => book.description);
-      setBookDescriptions(descriptions);
-    }
-  }, [books]);
-
-  useEffect(()=>{
-    if(books.length > 0){
-      const bookCreatedAt = books.map((book) => ({
+      const combinedData = books.map((book) => ({
         title: book.title,
         author: book.author,
-        createdAt: book.createdAt
-      }))
-      const sortedBooks = bookCreatedAt.sort((a, b) => {
-        return new Date(b.createdAt) - new Date(a.createdAt);
-      });
+        description: book.description,
+        createdAt: book.createdAt,
+      }));
+      setBookData(combinedData);
+                          // can use spread operator [...] or slice() so that it
+                          // doesn't mutate the original array
+      const sortedBooks = [...combinedData].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
       setBookCreation(sortedBooks);
-      console.log(bookCreation);
     }
-  }, [books])
+  }, [books]);
 
   const [goToSlide, setGoToSlide] = useState(null);
 
@@ -76,99 +57,20 @@ const Dashboard = ({ open, updateOpen, successfulLogin }) => {
     return `../../src/resources/${title?.toLowerCase().split(" ").join("")}.jpg`;
   };
 
-  const slides = [
-    {
-      key: uuidv4(),
-      content: (
-        <img
-          onClick={() => {
-            setGoToSlide(0), setCurrentIndex(0);
-          }}
-          src={bookTitles.length > 0 ? getImageUrl(bookTitles[0]) : ""}
-          alt="0"
-          style={{ borderRadius: "10px" }}
-        />
-      ),
-    },
-    {
-      key: uuidv4(),
-      content: (
-        <img
-          onClick={() => {
-            setGoToSlide(1), setCurrentIndex(1);
-          }}
-          src={bookTitles.length > 0 ? getImageUrl(bookTitles[1]) : ""}
-          alt="1"
-          style={{ borderRadius: "10px" }}
-        />
-      ),
-    },
-    {
-      key: uuidv4(),
-      content: (
-        <img
-          onClick={() => {
-            setGoToSlide(2), setCurrentIndex(2);
-          }}
-          src={bookTitles.length > 0 ? getImageUrl(bookTitles[2]) : ""}
-          alt="2"
-          style={{ borderRadius: "10px" }}
-        />
-      ),
-    },
-    {
-      key: uuidv4(),
-      content: (
-        <img
-          onClick={() => {
-            setGoToSlide(3), setCurrentIndex(3);
-          }}
-          src={bookTitles.length > 0 ? getImageUrl(bookTitles[3]) : ""}
-          alt="3"
-          style={{ borderRadius: "10px" }}
-        />
-      ),
-    },
-    {
-      key: uuidv4(),
-      content: (
-        <img
-          onClick={() => {
-            setGoToSlide(4), setCurrentIndex(4);
-          }}
-          src={bookTitles.length > 0 ? getImageUrl(bookTitles[4]) : ""}
-          alt="4"
-          style={{ borderRadius: "10px" }}
-        />
-      ),
-    },
-    {
-      key: uuidv4(),
-      content: (
-        <img
-          onClick={() => {
-            setGoToSlide(5), setCurrentIndex(5);
-          }}
-          src={bookTitles.length > 0 ? getImageUrl(bookTitles[5]) : ""}
-          alt="5"
-          style={{ borderRadius: "10px" }}
-        />
-      ),
-    },
-    {
-      key: uuidv4(),
-      content: (
-        <img
-          onClick={() => {
-            setGoToSlide(6), setCurrentIndex(6);
-          }}
-          src={bookTitles.length > 0 ? getImageUrl(bookTitles[6]) : ""}
-          alt="8"
-          style={{ borderRadius: "10px" }}
-        />
-      ),
-    },
-  ];
+  const slides = bookData.map((book, index) => ({
+    key: uuidv4(), // Generate a unique key for each slide
+    content: (
+      <img
+        onClick={() => {
+          setGoToSlide(index); // Set the active slide index
+          setCurrentIndex(index); // Update the current book index
+        }}
+        src={getImageUrl(book.title)} // Use the book title to generate the image URL
+        alt={`Slide ${index}`} // Use index for alt text
+        style={{ borderRadius: "10px" }} // Add style if needed
+      />
+    ),
+  }));
 
   return (
     <Box
@@ -258,21 +160,21 @@ const Dashboard = ({ open, updateOpen, successfulLogin }) => {
                   fontFamily: "Montserrat",
                 }}
               >
-                {bookTitles[currentIndex]}
+                {bookData[currentIndex]?.title}
               </Typography>
               <Typography
                 sx={{
                   color: "#F4F4F4",
                 }}
               >
-                By {bookAuthors[currentIndex]}
+                By {bookData[currentIndex]?.author}
               </Typography>
               <Typography
                 sx={{
                   color: "#F4F4F4",
                 }}
               >
-                {bookDescriptions[currentIndex]}
+                {bookData[currentIndex]?.description}
               </Typography>
               <Button
                 varianted="contained"
@@ -376,9 +278,9 @@ const Dashboard = ({ open, updateOpen, successfulLogin }) => {
                 gap: "5vw",
               }}
             >
-              {bookTitles.slice(0, 5).map((title, index) => (
+              {bookData.slice(0, 5).map((book, index) => (
                 <Card
-                  onMouseOver={() => setHoverPopularBook(title)}
+                  onMouseOver={() => setHoverPopularBook(book.title)}
                   onMouseOut={() => setHoverPopularBook(null)}
                   key={index}
                   sx={{
@@ -396,9 +298,12 @@ const Dashboard = ({ open, updateOpen, successfulLogin }) => {
                 >
                   <CardMedia
                     component="img"
-                    image={getImageUrl(title)}
+                    image={getImageUrl(book.title)}
+                    sx={{
+                      height: "100%",
+                    }}
                   ></CardMedia>
-                  {hoverPopularBook == title && (
+                  {hoverPopularBook == book.title && (
                     <CardContent
                       sx={{
                         position: "absolute",
@@ -429,7 +334,7 @@ const Dashboard = ({ open, updateOpen, successfulLogin }) => {
                             color: "#F4F4F4",
                           }}
                         >
-                          {bookTitles[index]}
+                          {book.title}
                         </Typography>
                         <Typography
                           sx={{
@@ -437,7 +342,7 @@ const Dashboard = ({ open, updateOpen, successfulLogin }) => {
                             fontSize: "14px",
                           }}
                         >
-                          By {bookAuthors[index]}
+                          By {book.author}
                         </Typography>
                       </Box>
                     </CardContent>
