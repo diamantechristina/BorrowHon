@@ -179,9 +179,9 @@ const ListOfBooks = () => {
           backgroundColor: "red",
           width: "100vw",
           marginTop: "10vh",
-          paddingY: "10vh",
+          paddingY: "5vh",
           marginX: "3vw",
-          rowGap: "5vh",
+          rowGap: "3vh",
         }}
       >
         <Card
@@ -193,6 +193,10 @@ const ListOfBooks = () => {
             width: "22.5vw",
             height: "67.5vh",
             borderRadius: "20px",
+            transition: "300ms",
+            "&:hover": {
+              transform: "scale(1.025)",
+            }
           }}
         >
           <CardActions>
