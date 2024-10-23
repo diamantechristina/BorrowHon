@@ -6,11 +6,13 @@ import {
   Card,
   CardMedia,
   CardContent,
+  Backdrop,
 } from "@mui/material";
 import Navbar from "../../components/Navbar";
 import { useBook } from "../../library/book.js";
 import SnackBar from "../../components/SnackBar";
 import Carousel from "react-spring-3d-carousel";
+import { Modal } from "@mui/material";
 import { v4 as uuidv4 } from "uuid";
 
 const Dashboard = ({ open, updateOpen, successfulLogin }) => {
@@ -20,16 +22,12 @@ const Dashboard = ({ open, updateOpen, successfulLogin }) => {
   }, [fetchBook]);
 
   const [currentIndex, setCurrentIndex] = useState(0);
-  
+
   const [bookData, setBookData] = useState([]);
 
-  const [bookTitles, setBookTitles] = useState([]);
-
-  const [bookAuthors, setBookAuthors] = useState([]);
-
-  const [bookDescriptions, setBookDescriptions] = useState([]);
-
   const [bookCreation, setBookCreation] = useState([]);
+
+  
 
   useEffect(() => {
     if (books.length > 0) {
@@ -40,9 +38,11 @@ const Dashboard = ({ open, updateOpen, successfulLogin }) => {
         createdAt: book.createdAt,
       }));
       setBookData(combinedData);
-                          // can use spread operator [...] or slice() so that it
-                          // doesn't mutate the original array
-      const sortedBooks = [...combinedData].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+      // can use spread operator [...] or slice() so that it
+      // doesn't mutate the original array
+      const sortedBooks = [...combinedData].sort(
+        (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+      );
       setBookCreation(sortedBooks);
     }
   }, [books]);
@@ -54,7 +54,10 @@ const Dashboard = ({ open, updateOpen, successfulLogin }) => {
   const [hoverRecentBook, setHoverRecentBook] = useState(false);
 
   const getImageUrl = (title) => {
-    return `../../src/resources/${title?.toLowerCase().split(" ").join("")}.jpg`;
+    return `../../src/resources/${title
+      ?.toLowerCase()
+      .split(" ")
+      .join("")}.jpg`;
   };
 
   const slides = bookData.map((book, index) => ({
@@ -197,6 +200,7 @@ const Dashboard = ({ open, updateOpen, successfulLogin }) => {
               >
                 See Book
               </Button>
+              
             </Box>
           </Box>
           <Box
@@ -321,7 +325,7 @@ const Dashboard = ({ open, updateOpen, successfulLogin }) => {
                     >
                       <Box
                         sx={{
-                          width: "90%", 
+                          width: "90%",
                           display: "flex",
                           flexDirection: "column",
                           marginTop: "33vh",
@@ -429,7 +433,7 @@ const Dashboard = ({ open, updateOpen, successfulLogin }) => {
                     >
                       <Box
                         sx={{
-                          width: "90%", 
+                          width: "90%",
                           display: "flex",
                           flexDirection: "column",
                           marginTop: "33vh",

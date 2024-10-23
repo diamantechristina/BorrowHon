@@ -197,6 +197,11 @@ const ListOfBooks = () => {
             BackdropProps={{
               timeout: 500,
             }}
+            sx={{
+              "& .MuiBox-root": {
+                border: "none",
+              },
+            }}
           >
             <Box
               sx={{
@@ -654,6 +659,11 @@ const ListOfBooks = () => {
                 BackdropComponent={Backdrop}
                 BackdropProps={{
                   timeout: 500,
+                }}
+                sx={{
+                  "& .MuiBox-root": {
+                    border: "none",
+                  },
                 }}
               >
                 <Box
