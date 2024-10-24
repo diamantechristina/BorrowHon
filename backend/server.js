@@ -3,12 +3,15 @@ import dotenv from "dotenv";
 import { connectDB } from './config/db.js';
 import bookRoutes from "./routes/book.route.js";
 import accountRoutes from "./routes/account.route.js";
-
+import bodyParser from 'body-parser';
 dotenv.config();
+
 
 const app = express();
 const PORT = process.env.PORT || 3000
 
+app.use(bodyParser.json({limit: '50mb'}));
+app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 app.use(express.json()); // for parsing application/json
 
 app.use("/api/books", bookRoutes)
