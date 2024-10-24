@@ -6,6 +6,7 @@ import { useLocation } from "react-router-dom";
 const ViewBook = () => {
   const location = useLocation();
   const bookData = location.state.bookData;
+  console.log(bookData);
   return (
     <Box
     sx={{

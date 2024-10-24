@@ -47,6 +47,10 @@ const Dashboard = ({ open, updateOpen, successfulLogin }) => {
         author: book.author,
         description: book.description,
         createdAt: book.createdAt,
+        genre: book.genre,
+        id: book._id,
+        coverImage: book.coverImage,
+        isbn: book.isbn,
       }));
       setBookData(combinedData);
       // can use spread operator [...] or slice() so that it
