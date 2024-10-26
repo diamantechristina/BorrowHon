@@ -9,15 +9,18 @@ import "@fontsource/montserrat";
 import { EyeCrossed, Eye } from "react-flaticons";
 import { InputAdornment } from "@mui/material";
 import { useAccount } from "../library/account.js";
-import SnackBar from "../components/SnackBar"
+import { useHistory } from "../library/history.js";
+import SnackBar from "../components/SnackBar";
 
-const Login = ({open, updateOpen, updateLogin, successfulLogin}) => {
-
-  
+const Login = ({ open, updateOpen, updateLogin, successfulLogin }) => {
   const navigate = useNavigate();
-  
 
   const { fetchAccount, account } = useAccount();
+  const { fetchHistory, history } = useHistory();
+
+  useEffect(()=>{
+    fetchHistory()
+  }, [fetchHistory])
 
   useEffect(() => {
     fetchAccount();
@@ -29,6 +32,10 @@ const Login = ({open, updateOpen, updateLogin, successfulLogin}) => {
     password: "",
   });
 
+  console.log(account);
+
+  console.log(history)
+
   const handleInputChange = (event) => {
     const { name, value } = event.target;
     setLogin((prevLogin) => ({
@@ -38,14 +45,13 @@ const Login = ({open, updateOpen, updateLogin, successfulLogin}) => {
   };
 
   const handleLoginClick = () => {
-    updateOpen(true)
+    updateOpen(true);
     for (const acc of account) {
       if (acc.username === login.username && acc.password === login.password) {
-          console.log("Login successful");
-          updateLogin(true);
-          navigate("/reader-dashboard", { state: login.username});
-          return;
-        
+        console.log("Login successful");
+        updateLogin(true);
+        navigate("/reader-dashboard", { state: login.username });
+        return;
       }
     }
     console.log("Login failed");
@@ -54,6 +60,7 @@ const Login = ({open, updateOpen, updateLogin, successfulLogin}) => {
   const togglePasswordVisibility = () => {
     setShowPassword((prev) => !prev);
   };
+
   return (
     <Box
       sx={{
@@ -64,7 +71,11 @@ const Login = ({open, updateOpen, updateLogin, successfulLogin}) => {
         padding: 0,
       }}
     >
-      <SnackBar open = {open} updateOpen = {updateOpen} successfulLogin = {successfulLogin} />
+      <SnackBar
+        open={open}
+        updateOpen={updateOpen}
+        successfulLogin={successfulLogin}
+      />
       <Box
         sx={{
           width: "50vw",

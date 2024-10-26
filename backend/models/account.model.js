@@ -1,15 +1,15 @@
 import mongoose from "mongoose"
-import AutoIncrement from "mongoose-sequence"
+import mongooseSequence from "mongoose-sequence"
 import bcrypt from "bcryptjs"
 import jwt from "jsonwebtoken"
 
-// const AutoIncrement = AutoIncrement(mongoose)
+const AutoIncrement = mongooseSequence(mongoose)
 
 const accountSchema = new mongoose.Schema({
-    acc_id:{
-        type: Number,
-        unique: true
-    },
+    // acc_id:{
+    //     type: Number,
+    //     unique: true
+    // },
     firstName:{
         type: String,
         required: true
@@ -53,7 +53,7 @@ const accountSchema = new mongoose.Schema({
 })
 
 
-accountSchema.plugin(AutoIncrement(mongoose), {inc_field: 'acc_id'})
+accountSchema.plugin(AutoIncrement, {inc_field: 'acc_id'})
 
 accountSchema.methods.comparePassword = async function (password) {
     return await bcrypt.compare(password, this.password)

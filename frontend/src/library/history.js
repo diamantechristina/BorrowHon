@@ -5,14 +5,8 @@ export const useHistory = create((set) => ({
 
     setHistories: (histories) => set({ histories: histories }),
 
-    fetchHistories: async () => {
-        const res = await fetch("/api/histories");
-        const data = await res.json();
-        set({ histories: data.data });
-    },
-
     createHistory: async (newHistory) => {
-        const res = await fetch("/api/histories", {
+        const res = await fetch("/api/history", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -24,5 +18,13 @@ export const useHistory = create((set) => ({
             histories: [...state.histories, data.data],
         }));
         return { success: true, message: "History added successfully." };
+    },
+    
+    fetchHistory: async () => {
+        const res = await fetch("/api/history")
+        const data = await res.json()
+        set({
+            history: data.data
+        })
     },
 }));

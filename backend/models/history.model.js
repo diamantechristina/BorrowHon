@@ -4,11 +4,11 @@ import mongooseSequence from "mongoose-sequence"
 const AutoIncrement = mongooseSequence(mongoose)
 
 const historySchema = new mongoose.Schema({
-    borrow_id:{
-        type: Number,
-        required: true,
-        unique: true
-    },
+    // borrow_id:{
+    //     type: Number,
+    //     required: true,
+    //     unique: true
+    // },
     acc_id:{
         type: Number,
         required: true
@@ -17,16 +17,16 @@ const historySchema = new mongoose.Schema({
         type: Number,
         required: true
     },
-    borrowdate:{
-        type: Date,
-        default: Date.now,
-        required: true
-    },
-    returndate:{
-        type: Date,
-        default: Date.now,
-        required: true
-    }
+    // borrowdate:{
+    //     type: Date,
+    //     default: Date.now,
+    //     required: true
+    // },
+    // returndate:{
+    //     type: Date,
+    //     default: Date.now,
+    //     required: true
+    // }
 })
 
 historySchema.plugin(AutoIncrement, {inc_field: 'borrow_id'})

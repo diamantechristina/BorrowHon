@@ -4,7 +4,7 @@ import mongoose from "mongoose"
 
 export const getHistory = async (req, res) => {
     try{
-        const history = await History.find().sort({createdAt: -1})
+        const history = await History.find({});
         res.status(200).json({success: true, data: history})
     } catch (error){
         console.log("Error in getting history: ",error.message)
