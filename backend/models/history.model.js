@@ -1,5 +1,7 @@
 import mongoose from "mongoose"
-import AutoIncrement from "mongoose-sequence"
+import mongooseSequence from "mongoose-sequence"
+
+const AutoIncrement = mongooseSequence(mongoose)
 
 const historySchema = new mongoose.Schema({
     borrow_id:{

@@ -1,33 +1,31 @@
-import React from 'react'
+import React from "react";
 import { useState, useMemo } from "react";
 import { Modal, Backdrop, Box, Typography, Button } from "@mui/material";
 import Resizer from "react-image-file-resizer";
 import { TextField, styled } from "@mui/material";
-import ConfirmAddBook from './ConfirmBook.jsx';
+import ConfirmAddBook from "./ConfirmBook.jsx";
 
 const ManageBook = ({open, setOpen, pageTitle, confirmPageTitle, handleHover, book}) => {
     const [selectedFiles, setSelectedFiles] = useState(null);
 
-    const [newBook, setNewBook] = useState({
-        title: "",
-        author: "",
-        genre: "",
-        isbn: "",
-        description: "",
-        coverImage: "",
-    });
-    const [confirmOpen, setConfirmOpen] = useState(false);
+  const [newBook, setNewBook] = useState({
+    title: "",
+    author: "",
+    genre: "",
+    isbn: "",
+    description: "",
+    coverImage: "",
+  });
+  const [confirmOpen, setConfirmOpen] = useState(false);
 
     const handleClose = () => {
         setOpen(false)
         handleHover(false)
     };
 
-    const handleConfirmOpen = () => {
-        setConfirmOpen(true);
-    };
-
-    
+  const handleConfirmOpen = () => {
+    setConfirmOpen(true);
+  };
 
     const handleDrop = (event) => {
         event.preventDefault();
@@ -35,24 +33,26 @@ const ManageBook = ({open, setOpen, pageTitle, confirmPageTitle, handleHover, bo
         setSelectedFiles(files);
     };
 
-    const handleDragOver = (event) => {
-        event.preventDefault();
-    };
+  const handleDragOver = (event) => {
+    event.preventDefault();
+  };
 
-    const VisuallyHiddenInput = styled("input")({
-        clip: "rect(0 0 0 0)",
-        clipPath: "inset(50%)",
-        height: 1,
-        overflow: "hidden",
-        position: "absolute",
-        bottom: 0,
-        left: 0,
-        whiteSpace: "nowrap",
-        width: 1,
-    });
+  const VisuallyHiddenInput = styled("input")({
+    clip: "rect(0 0 0 0)",
+    clipPath: "inset(50%)",
+    height: 1,
+    overflow: "hidden",
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    whiteSpace: "nowrap",
+    width: 1,
+  });
 
-    const backgroundImageUrl = book === undefined ? useMemo(() => {
-        if (selectedFiles && selectedFiles[0]) {
+  const backgroundImageUrl =
+    book === undefined
+      ? useMemo(() => {
+          if (selectedFiles && selectedFiles[0]) {
             return URL.createObjectURL(selectedFiles[0]);
         }
         return "";
@@ -64,13 +64,13 @@ const ManageBook = ({open, setOpen, pageTitle, confirmPageTitle, handleHover, bo
         return "";
     }, [selectedFiles]);
 
-    const handleInputChange = (event) => {
-        const { name, value } = event.target;
-        setNewBook((prevBook) => ({
-            ...prevBook,
-            [name]: value,
-        }));
-    };
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
+    setNewBook((prevBook) => ({
+      ...prevBook,
+      [name]: value,
+    }));
+  };
 
     const resizeFile = (file) =>
         new Promise((resolve) => {
@@ -568,4 +568,4 @@ const ManageBook = ({open, setOpen, pageTitle, confirmPageTitle, handleHover, bo
     )
 }
 
-export default ManageBook
+export default ManageBook;

@@ -14,8 +14,9 @@ import SnackBar from "../../components/SnackBar";
 import Carousel from "react-spring-3d-carousel";
 import { Modal } from "@mui/material";
 import { v4 as uuidv4 } from "uuid";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Navigate } from "react-router-dom";
+import Login from "../Login.jsx";
 
 const Dashboard = ({ open, updateOpen, successfulLogin }) => {
   const { fetchBook, books } = useBook();
@@ -33,6 +34,9 @@ const Dashboard = ({ open, updateOpen, successfulLogin }) => {
 
   const [openModal, setOpenModal] = useState(false);
 
+  const location = useLocation();
+  const userLoggedIn = location.state;
+
   const handleOpenModal = () => {
     setOpenModal(true);
   };
@@ -45,12 +49,12 @@ const Dashboard = ({ open, updateOpen, successfulLogin }) => {
       const combinedData = books.map((book) => ({
         title: book.title,
         author: book.author,
-        description: book.description,
-        createdAt: book.createdAt,
         genre: book.genre,
-        id: book._id,
-        coverImage: book.coverImage,
         isbn: book.isbn,
+        description: book.description,
+        status: book.status,
+        coverImage: book.coverImage,
+        createdAt: book.createdAt,
       }));
       setBookData(combinedData);
       // can use spread operator [...] or slice() so that it
@@ -67,16 +71,18 @@ const Dashboard = ({ open, updateOpen, successfulLogin }) => {
   const [hoverPopularBook, setHoverPopularBook] = useState(false);
 
   const [hoverRecentBook, setHoverRecentBook] = useState(false);
+  
+  useEffect(() => {
+    console.log(userLoggedIn);
+    console.log(bookData);
+  }, []);
 
-
-
-
-  const getImageUrl = (title) => {
-    return `../../src/resources/${title
-      ?.toLowerCase()
-      .split(" ")
-      .join("")}.jpg`;
-  };
+  // const getImageUrl = (title) => {
+  //   return `../../src/resources/${title
+  //     ?.toLowerCase()
+  //     .split(" ")
+  //     .join("")}.jpg`;
+  // };
 
   const slides = bookData.map((book, index) => ({
     key: uuidv4(), // Generate a unique key for each slide
@@ -86,7 +92,7 @@ const Dashboard = ({ open, updateOpen, successfulLogin }) => {
           setGoToSlide(index); // Set the active slide index
           setCurrentIndex(index); // Update the current book index
         }}
-        src={getImageUrl(book.title)} // Use the book title to generate the image URL
+        src={book.coverImage}
         alt={`Slide ${index}`} // Use index for alt text
         style={{ borderRadius: "10px" }} // Add style if needed
       />
@@ -198,12 +204,13 @@ const Dashboard = ({ open, updateOpen, successfulLogin }) => {
                 {bookData[currentIndex]?.description}
               </Typography>
               <Button
-                onClick={()=>{
+                onClick={() => {
                   navigate("/view-book", {
                     state: {
                       bookData: bookData[currentIndex],
-                    }
-                  })
+                      user: userLoggedIn,
+                    },
+                  });
                 }}
                 variant="contained"
                 sx={{
@@ -364,7 +371,8 @@ const Dashboard = ({ open, updateOpen, successfulLogin }) => {
                 height: "58vh",
                 // backgroundColor:"yellow",
                 display: "flex",
-                justifyContent: "center",
+                justifyContent: "flex-start",
+                marginLeft: "17vw",
                 alignItems: "center",
                 flexDirection: "row",
                 gap: "5vw",
@@ -391,7 +399,7 @@ const Dashboard = ({ open, updateOpen, successfulLogin }) => {
                 >
                   <CardMedia
                     component="img"
-                    image={getImageUrl(book.title)}
+                    image={book.coverImage}
                     sx={{
                       height: "100%",
                     }}
@@ -473,7 +481,8 @@ const Dashboard = ({ open, updateOpen, successfulLogin }) => {
                 height: "58vh",
                 // backgroundColor:"yellow",
                 display: "flex",
-                justifyContent: "center",
+                justifyContent: "flex-start",
+                marginLeft: "17vw",
                 alignItems: "center",
                 flexDirection: "row",
                 gap: "5vw",
@@ -500,7 +509,7 @@ const Dashboard = ({ open, updateOpen, successfulLogin }) => {
                 >
                   <CardMedia
                     component="img"
-                    image={getImageUrl(book.title)}
+                    image={book.coverImage}
                     sx={{
                       height: "100%",
                     }}
