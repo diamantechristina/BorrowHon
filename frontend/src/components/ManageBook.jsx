@@ -5,7 +5,7 @@ import Resizer from "react-image-file-resizer";
 import { TextField, styled } from "@mui/material";
 import ConfirmAddBook from './ConfirmBook.jsx';
 
-const ManageBook = ({open, setOpen, pageTitle, confirmPageTitle, book}) => {
+const ManageBook = ({open, setOpen, pageTitle, confirmPageTitle, handleHover, book}) => {
     const [selectedFiles, setSelectedFiles] = useState(null);
 
     const [newBook, setNewBook] = useState({
@@ -18,7 +18,10 @@ const ManageBook = ({open, setOpen, pageTitle, confirmPageTitle, book}) => {
     });
     const [confirmOpen, setConfirmOpen] = useState(false);
 
-    const handleClose = () => setOpen(false);
+    const handleClose = () => {
+        setOpen(false)
+        handleHover(false)
+    };
 
     const handleConfirmOpen = () => {
         setConfirmOpen(true);
@@ -30,7 +33,6 @@ const ManageBook = ({open, setOpen, pageTitle, confirmPageTitle, book}) => {
         event.preventDefault();
         const files = event.dataTransfer.files;
         setSelectedFiles(files);
-        console.log(files);
     };
 
     const handleDragOver = (event) => {
@@ -56,10 +58,11 @@ const ManageBook = ({open, setOpen, pageTitle, confirmPageTitle, book}) => {
         return "";
     }, [selectedFiles]) : useMemo(() => {
         if (book.coverImage) {
+            setSelectedFiles(book.coverImage)
             return book.coverImage;
         }
         return "";
-    });
+    }, [selectedFiles]);
 
     const handleInputChange = (event) => {
         const { name, value } = event.target;
@@ -91,23 +94,23 @@ const ManageBook = ({open, setOpen, pageTitle, confirmPageTitle, book}) => {
             ...prevBook,
             coverImage: image,
         }));
-        console.log(image);
     };
     return (
         <Modal
             aria-labelledby="unstyled-modal-title"
             aria-describedby="unstyled-modal-description"
-            open={open}
+            open={typeof open === "boolean" ? open : true}
             onClose={handleClose}
             // slots={{ backdrop: StyledBackdrop }}
             BackdropComponent={Backdrop}
             BackdropProps={{
                 timeout: 500,
             }}
+            sx={{ tabindex: "-1" }}
         >
             <Box
                 sx={{
-                    position: "absolute",
+                    position: "fixed",
                     top: "50%",
                     left: "50%",
                     transform: "translate(-50%, -50%)",
@@ -122,6 +125,7 @@ const ManageBook = ({open, setOpen, pageTitle, confirmPageTitle, book}) => {
                     alignItems: "center",
                     color: "#F4F4F4",
                     flexDirection: "column",
+                    tabindex: "-1",
                     // overflow: "auto",
                 }}
             >
@@ -187,7 +191,6 @@ const ManageBook = ({open, setOpen, pageTitle, confirmPageTitle, book}) => {
                                 role={undefined}
                                 name="coverImage"
                                 variant="contained"
-                                tabIndex={-1}
                                 onDragOver={handleDragOver}
                                 onDrop={handleDrop}
                                 onChange={onChange}
@@ -305,6 +308,7 @@ const ManageBook = ({open, setOpen, pageTitle, confirmPageTitle, book}) => {
                                     paddingLeft: "6px",
                                     fontFamily: "arimo",
                                     paddingTop: "2px",
+                                    
                                 },
                                 "& .MuiInputLabel-root.Mui-focused": {
                                     color: "#F4F4F4",
@@ -315,6 +319,7 @@ const ManageBook = ({open, setOpen, pageTitle, confirmPageTitle, book}) => {
                                     height: "60px",
                                     paddingLeft: "6px",
                                     paddingRight: "6px",
+                                    tabindex: "1",
                                 },
                                 "& .MuiOutlinedInput-notchedOutline": {
                                     borderColor: "#F4F4F4", // border color

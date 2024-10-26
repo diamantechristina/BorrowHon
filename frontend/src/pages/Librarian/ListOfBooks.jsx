@@ -24,6 +24,7 @@ const ListOfBooks = () => {
 
   const handleOpen = () => setOpen(true);
   
+  
   return (
     <Box
       sx={{
@@ -127,7 +128,7 @@ const ListOfBooks = () => {
           </CardActions>
         </Card>
         {books.map((book) => (
-          <BookCard key={book._id} book={book} />
+          <BookCard key={book._id} book={book} open={open} setOpen={setOpen}/>
         ))}
       </Box>
     </Box>

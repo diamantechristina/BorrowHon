@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Box, Typography, Button, Modal, Backdrop } from "@mui/material";
 import { useBook } from "../library/book.js";
 
-const ConfirmBook = ({pageTitle, confirmOpen, setConfirmOpen, backgroundImageUrl, newBook}) => {
+const ConfirmBook = ({pageTitle, confirmOpen, setConfirmOpen, backgroundImageUrl, handleHover, newBook}) => {
     const handleAddBook = async () => {
         const { success, message } = await createBook(newBook);
         console.log("Success:", success);
@@ -11,8 +11,12 @@ const ConfirmBook = ({pageTitle, confirmOpen, setConfirmOpen, backgroundImageUrl
     };
     const { createBook } = useBook();
 
+    
 
-    const handleConfirmClose = () => setConfirmOpen(false);
+    const handleConfirmClose = () => {
+        setConfirmOpen(false)
+        handleHover(false)
+    };
     return (
         <Modal
             aria-labelledby="unstyled-modal-title"

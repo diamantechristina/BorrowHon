@@ -1,18 +1,29 @@
 import { Box, Typography } from "@mui/material";
-import React from "react";
+import React, { useEffect } from "react";
 import { Trash, Pencil, Edit } from "react-flaticons";
 import ConfirmDeleteBook from "./ConfirmBook.jsx";
 import EditBook from "./ManageBook.jsx";
 import { useState } from "react";
 
-const BookCard = ({ book }) => {
+const BookCard = ({ book, open, setOpen }) => {
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
   const [isHover, setIsHover] = useState(false);
+
+  const handleOpen = () => {
+    setEditOpen(true)
+    setIsHover(false)
+  };
+  const handleConfirmOpen = () => {
+    setConfirmOpen(true)
+    setIsHover(false)
+  };
+  const handleHover = (hover) => setIsHover(hover);
+
   return (
     <Box
-      onMouseEnter={() => setIsHover(true)}
-      onMouseLeave={() => setIsHover(false)}
+      onMouseEnter={() => editOpen || confirmOpen ? () => {} : setIsHover(true)}
+      onMouseLeave={() => editOpen || confirmOpen ? () => {} : setIsHover(false)}
       sx={{
         width: "22.5vw",
         height: "67.5vh",
@@ -33,10 +44,10 @@ const BookCard = ({ book }) => {
         },
       }}
     >
-      {isHover && (
+      
         <Box
           sx={{
-            display: "flex",
+            display: isHover ? "flex" : "none",
             width: "100%",
             height: "100%",
             backgroundColor: "rgba(0, 0, 0, 0.75)",
@@ -66,39 +77,50 @@ const BookCard = ({ book }) => {
               fontSize: "clamp(0.5rem, 0.75rem, 1rem)",
               color: "#f4f4f4",
               paddingLeft: "1vw",
-              marginBottom: "2.5vh",
+              marginBottom: "2vh",
             }}
           >
             {book.author}
           </Typography>
+          <Box
+            sx ={{
+              width: "22.5vw",
+              display: "flex",
+              position: "relative",
+              justifyContent: "flex-end",
+              bottom: "5vh",
+              alignItems: "center",
+              paddingY: "0.5vh",
+            }}
+          >
           <Pencil
             color="#f4f4f4"
             style={{
               cursor: "pointer",
-              position: "fixed",
-              left: "18.5vw",
-              bottom: "3vh",
+              position: "relative",
+              right: "3.5vw",
             }}
             size={15}
-            onClick={setEditOpen}
+            onClick={handleOpen}
           />
           <Trash
             color="#f4f4f4"
             style={{
               cursor: "pointer",
-              position: "fixed",
-              left: "20.5vw",
-              bottom: "3vh",
+              position: "relative",
+              right: "2vw",
             }}
             size={15}
-            onClick={setConfirmOpen}
+            onClick={handleConfirmOpen}
           />
+          </Box>
           <EditBook 
             open={editOpen} 
             setOpen={setEditOpen} 
             pageTitle={"Edit Book"} 
             confirmPageTitle={"Confirm Edit Book"} 
             book={book}
+            handleHover={handleHover}
           />
 
           <ConfirmDeleteBook
@@ -107,9 +129,10 @@ const BookCard = ({ book }) => {
             pageTitle={"Delete Book"}
             backgroundImageUrl={book.coverImage}
             newBook={book}
+            handleHover={handleHover}
           />
         </Box>
-      )}
+      
     </Box>
   );
 };
