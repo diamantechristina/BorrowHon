@@ -1,566 +1,565 @@
-import React from 'react'
+import React from "react";
 import { useState, useMemo } from "react";
 import { Modal, Backdrop, Box, Typography, Button } from "@mui/material";
 import Resizer from "react-image-file-resizer";
 import { TextField, styled } from "@mui/material";
-import ConfirmAddBook from './ConfirmBook.jsx';
+import ConfirmAddBook from "./ConfirmBook.jsx";
 
-const ManageBook = ({open, setOpen, pageTitle, confirmPageTitle, book}) => {
-    const [selectedFiles, setSelectedFiles] = useState(null);
+const ManageBook = ({ open, setOpen, pageTitle, confirmPageTitle, book }) => {
+  const [selectedFiles, setSelectedFiles] = useState(null);
 
-    const [newBook, setNewBook] = useState({
-        title: "",
-        author: "",
-        genre: "",
-        isbn: "",
-        description: "",
-        coverImage: "",
-    });
-    const [confirmOpen, setConfirmOpen] = useState(false);
+  const [newBook, setNewBook] = useState({
+    title: "",
+    author: "",
+    genre: "",
+    isbn: "",
+    description: "",
+    coverImage: "",
+  });
+  const [confirmOpen, setConfirmOpen] = useState(false);
 
-    const handleClose = () => setOpen(false);
+  const handleClose = () => setOpen(false);
 
-    const handleConfirmOpen = () => {
-        setConfirmOpen(true);
-    };
+  const handleConfirmOpen = () => {
+    setConfirmOpen(true);
+  };
 
-    
+  const handleDrop = (event) => {
+    event.preventDefault();
+    const files = event.dataTransfer.files;
+    setSelectedFiles(files);
+    console.log(files);
+  };
 
-    const handleDrop = (event) => {
-        event.preventDefault();
-        const files = event.dataTransfer.files;
-        setSelectedFiles(files);
-        console.log(files);
-    };
+  const handleDragOver = (event) => {
+    event.preventDefault();
+  };
 
-    const handleDragOver = (event) => {
-        event.preventDefault();
-    };
+  const VisuallyHiddenInput = styled("input")({
+    clip: "rect(0 0 0 0)",
+    clipPath: "inset(50%)",
+    height: 1,
+    overflow: "hidden",
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    whiteSpace: "nowrap",
+    width: 1,
+  });
 
-    const VisuallyHiddenInput = styled("input")({
-        clip: "rect(0 0 0 0)",
-        clipPath: "inset(50%)",
-        height: 1,
-        overflow: "hidden",
-        position: "absolute",
-        bottom: 0,
-        left: 0,
-        whiteSpace: "nowrap",
-        width: 1,
-    });
-
-    const backgroundImageUrl = book === undefined ? useMemo(() => {
-        if (selectedFiles && selectedFiles[0]) {
+  const backgroundImageUrl =
+    book === undefined
+      ? useMemo(() => {
+          if (selectedFiles && selectedFiles[0]) {
             return URL.createObjectURL(selectedFiles[0]);
-        }
-        return "";
-    }, [selectedFiles]) : useMemo(() => {
-        if (book.coverImage) {
+          }
+          return "";
+        }, [selectedFiles])
+      : useMemo(() => {
+          if (book.coverImage) {
             return book.coverImage;
-        }
-        return "";
-    });
-
-    const handleInputChange = (event) => {
-        const { name, value } = event.target;
-        setNewBook((prevBook) => ({
-            ...prevBook,
-            [name]: value,
-        }));
-    };
-
-    const resizeFile = (file) =>
-        new Promise((resolve) => {
-            Resizer.imageFileResizer(
-                file,
-                500,
-                500,
-                "JPEG",
-                100,
-                0,
-                (uri) => {
-                    resolve(uri);
-                },
-                "base64"
-            );
+          }
+          return "";
         });
-    const onChange = async (event) => {
-        const file = event.target.files[0];
-        const image = await resizeFile(file);
-        setNewBook((prevBook) => ({
-            ...prevBook,
-            coverImage: image,
-        }));
-        console.log(image);
-    };
-    return (
-        <Modal
-            aria-labelledby="unstyled-modal-title"
-            aria-describedby="unstyled-modal-description"
-            open={open}
-            onClose={handleClose}
-            // slots={{ backdrop: StyledBackdrop }}
-            BackdropComponent={Backdrop}
-            BackdropProps={{
-                timeout: 500,
-            }}
+
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
+    setNewBook((prevBook) => ({
+      ...prevBook,
+      [name]: value,
+    }));
+  };
+
+  const resizeFile = (file) =>
+    new Promise((resolve) => {
+      Resizer.imageFileResizer(
+        file,
+        500,
+        500,
+        "JPEG",
+        100,
+        0,
+        (uri) => {
+          resolve(uri);
+        },
+        "base64"
+      );
+    });
+  const onChange = async (event) => {
+    const file = event.target.files[0];
+    const image = await resizeFile(file);
+    setNewBook((prevBook) => ({
+      ...prevBook,
+      coverImage: image,
+    }));
+    console.log(image);
+  };
+  return (
+    <Modal
+      aria-labelledby="unstyled-modal-title"
+      aria-describedby="unstyled-modal-description"
+      open={open}
+      onClose={handleClose}
+      // slots={{ backdrop: StyledBackdrop }}
+      BackdropComponent={Backdrop}
+      BackdropProps={{
+        timeout: 500,
+      }}
+    >
+      <Box
+        sx={{
+          position: "absolute",
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
+          width: "65vw",
+          height: "80vh",
+          bgcolor: "#225560",
+          boxShadow: 24,
+          p: 4,
+          borderRadius: "20px",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          color: "#F4F4F4",
+          flexDirection: "column",
+          // overflow: "auto",
+        }}
+      >
+        <Typography
+          sx={{
+            fontSize: "32px",
+            fontWeight: "bold",
+            fontFamily: "montserrat",
+          }}
         >
-            <Box
-                sx={{
-                    position: "absolute",
-                    top: "50%",
-                    left: "50%",
-                    transform: "translate(-50%, -50%)",
-                    width: "65vw",
-                    height: "80vh",
-                    bgcolor: "#225560",
-                    boxShadow: 24,
-                    p: 4,
-                    borderRadius: "20px",
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    color: "#F4F4F4",
-                    flexDirection: "column",
-                    // overflow: "auto",
-                }}
+          {pageTitle.toUpperCase()}
+        </Typography>
+        <Box
+          sx={{
+            width: "55vw",
+            height: "65vh",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            flexDirection: "row",
+            // backgroundColor: "yellow",
+          }}
+        >
+          <Box
+            sx={{
+              width: "50vw",
+              height: "inherit",
+              // backgroundColor: "red",
+              // marginLeft: "30px",
+              display: "flex",
+              // justifyContent: "center",
+              alignItems: "left",
+              flexDirection: "column",
+              gap: "2px",
+              paddingLeft: "20px",
+            }}
+          >
+            <Typography
+              sx={{
+                fontSize: "24px",
+                paddingTop: "30px",
+                fontFamily: "arimo",
+                color: "#F4F4F4",
+              }}
             >
-                <Typography
-                    sx={{
-                        fontSize: "32px",
-                        fontWeight: "bold",
-                        fontFamily: "montserrat",
-                    }}
-                >
-                    {pageTitle.toUpperCase()}
-                </Typography>
-                <Box
-                    sx={{
-                        width: "55vw",
-                        height: "65vh",
+              Cover Image
+            </Typography>
+            <Box
+              sx={{
+                //   backgroundColor: "pink",
+                height: "50vh",
+                width: "270px",
+                borderRadius: "20px",
+                border: selectedFiles
+                  ? "3px solid transparent"
+                  : "3px dashed #F4F4F4",
+                marginRight: "50px",
+                marginBottom: "20px",
+              }}
+            >
+              <Button
+                component="label"
+                role={undefined}
+                name="coverImage"
+                variant="contained"
+                tabIndex={-1}
+                onDragOver={handleDragOver}
+                onDrop={handleDrop}
+                onChange={onChange}
+                sx={{
+                  height: "inherit",
+                  width: "inherit",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  flexDirection: "column",
+                  borderRadius: "20px",
+                  backgroundColor: "transparent",
+                  textTransform: "none",
+                  fontSize: "18px",
+                  backgroundImage: `url(${backgroundImageUrl})`,
+                  backgroundSize: "cover",
+                  backgroundPosition: "center",
+                  backgroundRepeat: "no-repeat",
+                  "&:hover": {
+                    boxShadow: "none",
+                  },
+                  boxShadow: "none",
+                }}
+                style={{
+                  filter: selectedFiles ? "drop-shadow(0 0 5px black)" : "",
+                }}
+                // startIcon={<CloudUploadIcon />}
+              >
+                {selectedFiles ? (
+                  ""
+                ) : (
+                  <>
+                    <img
+                      src="src/resources/upload.png"
+                      alt=""
+                      style={{
+                        filter: "grayscale(1)",
+                      }}
+                    />
+                    Drag & Drop Here
+                    <Box
+                      sx={{
                         display: "flex",
                         justifyContent: "center",
                         alignItems: "center",
                         flexDirection: "row",
-                        // backgroundColor: "yellow",
-                    }}
-                >
-                    <Box
-                        sx={{
-                            width: "50vw",
-                            height: "inherit",
-                            // backgroundColor: "red",
-                            // marginLeft: "30px",
-                            display: "flex",
-                            // justifyContent: "center",
-                            alignItems: "left",
-                            flexDirection: "column",
-                            gap: "2px",
-                            paddingLeft: "20px",
-                        }}
+                        gap: "10px",
+                      }}
                     >
-                        <Typography
-                            sx={{
-                                fontSize: "24px",
-                                paddingTop: "30px",
-                                fontFamily: "arimo",
-                                color: "#F4F4F4",
-                            }}
-                        >
-                            Cover Image
-                        </Typography>
-                        <Box
-                            sx={{
-                                //   backgroundColor: "pink",
-                                height: "50vh",
-                                width: "270px",
-                                borderRadius: "20px",
-                                border: selectedFiles
-                                    ? "3px solid transparent"
-                                    : "3px dashed #F4F4F4",
-                                marginRight: "50px",
-                                marginBottom: "20px",
-                            }}
-                        >
-                            <Button
-                                component="label"
-                                role={undefined}
-                                name="coverImage"
-                                variant="contained"
-                                tabIndex={-1}
-                                onDragOver={handleDragOver}
-                                onDrop={handleDrop}
-                                onChange={onChange}
-                                sx={{
-                                    height: "inherit",
-                                    width: "inherit",
-                                    display: "flex",
-                                    justifyContent: "center",
-                                    alignItems: "center",
-                                    flexDirection: "column",
-                                    borderRadius: "20px",
-                                    backgroundColor: "transparent",
-                                    textTransform: "none",
-                                    fontSize: "18px",
-                                    backgroundImage: `url(${backgroundImageUrl})`,
-                                    backgroundSize: "cover",
-                                    backgroundPosition: "center",
-                                    backgroundRepeat: "no-repeat",
-                                    "&:hover": {
-                                        boxShadow: "none",
-                                    },
-                                    boxShadow: "none",
-                                }}
-                                style={{
-                                    filter: selectedFiles
-                                        ? "drop-shadow(0 0 5px black)"
-                                        : "",
-                                }}
-                            // startIcon={<CloudUploadIcon />}
-                            >
-                                {selectedFiles ? (
-                                    ""
-                                ) : (
-                                    <>
-                                        <img
-                                            src="src/resources/upload.png"
-                                            alt=""
-                                            style={{
-                                                filter: "grayscale(1)",
-                                            }}
-                                        />
-                                        Drag & Drop Here
-                                        <Box
-                                            sx={{
-                                                display: "flex",
-                                                justifyContent: "center",
-                                                alignItems: "center",
-                                                flexDirection: "row",
-                                                gap: "10px",
-                                            }}
-                                        >
-                                            <Box
-                                                sx={{
-                                                    width: "50px",
-                                                    height: "1px",
-                                                    backgroundColor: "#F4F4F4",
-                                                    display: "flex",
-                                                    justifyContent: "center",
-                                                    alignItems: "center",
-                                                    flexDirection: "column",
-                                                }}
-                                            ></Box>
-                                            OR
-                                            <Box
-                                                sx={{
-                                                    width: "50px",
-                                                    height: "1px",
-                                                    backgroundColor: "#F4F4F4",
-                                                    display: "flex",
-                                                    justifyContent: "center",
-                                                    alignItems: "center",
-                                                    flexDirection: "column",
-                                                }}
-                                            ></Box>
-                                        </Box>
-                                        Upload an Image
-                                    </>
-                                )}
-                                <VisuallyHiddenInput
-                                    type="file"
-                                    onChange={(event) =>
-                                        setSelectedFiles(event.target.files)
-                                    }
-                                    multiple
-                                />
-                            </Button>
-                        </Box>
-                    </Box>
-                    <Box
-                        component={"form"}
+                      <Box
                         sx={{
-                            width: "50vw",
-                            height: "inherit",
-                            // backgroundColor: "blue",
-                            display: "flex",
-                            justifyContent: "center",
-                            alignItems: "left",
-                            flexDirection: "column",
-                            gap: "20px",
-                            // marginRight: "30px",
+                          width: "50px",
+                          height: "1px",
+                          backgroundColor: "#F4F4F4",
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          flexDirection: "column",
                         }}
-                    >
-                        <TextField
-                            required
-                            type="text"
-                            variant="outlined"
-                            label="Title"
-                            name="title"
-                            value={ book === undefined ? newBook.title : book.title }
-                            onChange={handleInputChange}
-                            InputLabelProps={{ required: false }}
-                            sx={{
-                                "& .MuiInputLabel-root": {
-                                    color: "#F4F4F4",
-                                    paddingLeft: "6px",
-                                    fontFamily: "arimo",
-                                    paddingTop: "2px",
-                                },
-                                "& .MuiInputLabel-root.Mui-focused": {
-                                    color: "#F4F4F4",
-                                    // marginTop: "-18px",
-                                },
-                                "& .MuiOutlinedInput-root": {
-                                    width: "clamp(10rem, 25vw, 40rem)",
-                                    height: "60px",
-                                    paddingLeft: "6px",
-                                    paddingRight: "6px",
-                                },
-                                "& .MuiOutlinedInput-notchedOutline": {
-                                    borderColor: "#F4F4F4", // border color
-                                    borderRadius: "20px", // border radius
-                                    borderWidth: "2px", // border width
-                                    // backgroundColor: "#F4F4F4", // background color
-                                },
-                                "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline":
-                                {
-                                    borderColor: "#F4F4F4", // focus border color
-                                },
-                                "& .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline":
-                                {
-                                    borderColor: "#F4F4F4", // hover border color
-                                },
-                            }}
-                            InputProps={{
-                                style: {
-                                    color: "#F4F4F4",
-                                    fontFamily: "arimo",
-                                },
-                            }}
-                        />
-                        <TextField
-                            required
-                            type="text"
-                            variant="outlined"
-                            label="Author"
-                            name="author"
-                            value={book === undefined ? newBook.author : book.author}
-                            onChange={handleInputChange}
-                            InputLabelProps={{ required: false }}
-                            sx={{
-                                "& .MuiInputLabel-root": {
-                                    color: "#F4F4F4",
-                                    paddingLeft: "6px",
-                                    fontFamily: "arimo",
-                                    paddingTop: "2px",
-                                },
-                                "& .MuiInputLabel-root.Mui-focused": {
-                                    color: "#F4F4F4",
-                                },
-                                "& .MuiOutlinedInput-root": {
-                                    width: "clamp(10rem, 25vw, 40rem)",
-                                    height: "60px",
-                                    paddingLeft: "6px",
-                                    paddingRight: "6px",
-                                },
-                                "& .MuiOutlinedInput-notchedOutline": {
-                                    borderColor: "#F4F4F4", // border color
-                                    borderRadius: "20px", // border radius
-                                    borderWidth: "2px", // border width
-                                },
-                                "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline":
-                                {
-                                    borderColor: "#F4F4F4", // focus border color
-                                },
-                                "& .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline":
-                                {
-                                    borderColor: "#F4F4F4", // hover border color
-                                },
-                            }}
-                            InputProps={{
-                                style: {
-                                    color: "#F4F4F4",
-                                    fontFamily: "arimo",
-                                },
-                            }}
-                        />
-                        <TextField
-                            required
-                            type="text"
-                            variant="outlined"
-                            label="Genre"
-                            name="genre"
-                            value={book === undefined ? newBook.genre : book.genre}
-                            onChange={handleInputChange}
-                            InputLabelProps={{ required: false }}
-                            sx={{
-                                "& .MuiInputLabel-root": {
-                                    color: "#F4F4F4",
-                                    paddingLeft: "6px",
-                                    fontFamily: "arimo",
-                                    paddingTop: "2px",
-                                },
-                                "& .MuiInputLabel-root.Mui-focused": {
-                                    color: "#F4F4F4",
-                                },
-                                "& .MuiOutlinedInput-root": {
-                                    width: "clamp(10rem, 25vw, 40rem)",
-                                    height: "60px",
-                                    paddingLeft: "6px",
-                                    paddingRight: "6px",
-                                },
-                                "& .MuiOutlinedInput-notchedOutline": {
-                                    borderColor: "#F4F4F4", // border color
-                                    borderRadius: "20px", // border radius
-                                    borderWidth: "2px", // border width
-                                },
-                                "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline":
-                                {
-                                    borderColor: "#F4F4F4", // focus border color
-                                },
-                                "& .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline":
-                                {
-                                    borderColor: "#F4F4F4", // hover border color
-                                },
-                            }}
-                            InputProps={{
-                                style: {
-                                    color: "#F4F4F4",
-                                    fontFamily: "arimo",
-                                },
-                            }}
-                        />
-                        <TextField
-                            required
-                            type="text"
-                            variant="outlined"
-                            label="International Standard Book Number"
-                            name="isbn"
-                            value={book === undefined ? newBook.isbn: book.isbn}
-                            onChange={handleInputChange}
-                            InputLabelProps={{ required: false }}
-                            sx={{
-                                "& .MuiInputLabel-root": {
-                                    color: "#F4F4F4",
-                                    paddingLeft: "6px",
-                                    fontFamily: "arimo",
-                                    paddingTop: "2px",
-                                },
-                                "& .MuiInputLabel-root.Mui-focused": {
-                                    color: "#F4F4F4",
-                                },
-                                "& .MuiOutlinedInput-root": {
-                                    width: "clamp(10rem, 25vw, 40rem)",
-                                    height: "60px",
-                                    paddingLeft: "6px",
-                                    paddingRight: "6px",
-                                },
-                                "& .MuiOutlinedInput-notchedOutline": {
-                                    borderColor: "#F4F4F4", // border color
-                                    borderRadius: "20px", // border radius
-                                    borderWidth: "2px", // border width
-                                },
-                                "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline":
-                                {
-                                    borderColor: "#F4F4F4", // focus border color
-                                },
-                                "& .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline":
-                                {
-                                    borderColor: "#F4F4F4", // hover border color
-                                },
-                            }}
-                            InputProps={{
-                                style: {
-                                    color: "#F4F4F4",
-                                    fontFamily: "arimo",
-                                },
-                            }}
-                        />
-                        <TextField
-                            required
-                            type="text"
-                            variant="outlined"
-                            label="Description"
-                            name="description"
-                            value={book === undefined ? newBook.description : book.description }
-                            onChange={handleInputChange}
-                            InputLabelProps={{ required: false }}
-                            sx={{
-                                "& .MuiInputLabel-root": {
-                                    color: "#F4F4F4",
-                                    paddingLeft: "6px",
-                                    fontFamily: "arimo",
-                                    paddingTop: "2px",
-                                },
-                                "& .MuiInputLabel-root.Mui-focused": {
-                                    color: "#F4F4F4",
-                                },
-                                "& .MuiOutlinedInput-root": {
-                                    width: "clamp(10rem, 25vw, 40rem)",
-                                    height: "60px",
-                                    paddingLeft: "6px",
-                                    paddingRight: "6px",
-                                },
-                                "& .MuiOutlinedInput-notchedOutline": {
-                                    borderColor: "#F4F4F4", // border color
-                                    borderRadius: "20px", // border radius
-                                    borderWidth: "2px", // border width
-                                },
-                                "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline":
-                                {
-                                    borderColor: "#F4F4F4", // focus border color
-                                },
-                                "& .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline":
-                                {
-                                    borderColor: "#F4F4F4", // hover border color
-                                },
-                            }}
-                            InputProps={{
-                                style: {
-                                    color: "#F4F4F4",
-                                    fontFamily: "arimo",
-                                },
-                                sx: {
-                                    overflow: "hidden",
-                                },
-                            }}
-                        />
+                      ></Box>
+                      OR
+                      <Box
+                        sx={{
+                          width: "50px",
+                          height: "1px",
+                          backgroundColor: "#F4F4F4",
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          flexDirection: "column",
+                        }}
+                      ></Box>
                     </Box>
-                </Box>
-                <Button
-                    variant="contained"
-                    sx={{
-                        width: "clamp(10rem, 12vw, 40rem)",
-                        height: "70px",
-                        borderRadius: "20px", // border radius
-                        bgcolor: "#1FAA70",
-                        color: "#F4F4F4",
-                        "&:hover": {
-                            bgcolor: "#4dc995",
-                            color: "#F4F4F4",
-                            boxShadow: "none",
-                        },
-                        fontFamily: "Montserrat",
-                        fontWeight: "bold",
-                        boxShadow: "none",
-                        textTransform: "none",
-                        fontSize: "18px",
-                    }}
-                    tabIndex={-1}
-                    onClick={handleConfirmOpen}
-                >
-                    Confirm
-                </Button>
-                <ConfirmAddBook 
-                    confirmOpen={confirmOpen} 
-                    setConfirmOpen={setConfirmOpen} 
-                    pageTitle={confirmPageTitle} 
-                    backgroundImageUrl={backgroundImageUrl} 
-                    newBook={newBook}
+                    Upload an Image
+                  </>
+                )}
+                <VisuallyHiddenInput
+                  type="file"
+                  onChange={(event) => setSelectedFiles(event.target.files)}
+                  multiple
                 />
+              </Button>
             </Box>
-        </Modal>
-    )
-}
+          </Box>
+          <Box
+            component={"form"}
+            sx={{
+              width: "50vw",
+              height: "inherit",
+              // backgroundColor: "blue",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "left",
+              flexDirection: "column",
+              gap: "20px",
+              // marginRight: "30px",
+            }}
+          >
+            <TextField
+              required
+              type="text"
+              variant="outlined"
+              label="Title"
+              name="title"
+              value={book === undefined ? newBook.title : book.title}
+              onChange={handleInputChange}
+              InputLabelProps={{ required: false }}
+              sx={{
+                "& .MuiInputLabel-root": {
+                  color: "#F4F4F4",
+                  paddingLeft: "6px",
+                  fontFamily: "arimo",
+                  paddingTop: "2px",
+                },
+                "& .MuiInputLabel-root.Mui-focused": {
+                  color: "#F4F4F4",
+                  // marginTop: "-18px",
+                },
+                "& .MuiOutlinedInput-root": {
+                  width: "clamp(10rem, 25vw, 40rem)",
+                  height: "60px",
+                  paddingLeft: "6px",
+                  paddingRight: "6px",
+                },
+                "& .MuiOutlinedInput-notchedOutline": {
+                  borderColor: "#F4F4F4", // border color
+                  borderRadius: "20px", // border radius
+                  borderWidth: "2px", // border width
+                  // backgroundColor: "#F4F4F4", // background color
+                },
+                "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline":
+                  {
+                    borderColor: "#F4F4F4", // focus border color
+                  },
+                "& .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline":
+                  {
+                    borderColor: "#F4F4F4", // hover border color
+                  },
+              }}
+              InputProps={{
+                style: {
+                  color: "#F4F4F4",
+                  fontFamily: "arimo",
+                },
+              }}
+            />
+            <TextField
+              required
+              type="text"
+              variant="outlined"
+              label="Author"
+              name="author"
+              value={book === undefined ? newBook.author : book.author}
+              onChange={handleInputChange}
+              InputLabelProps={{ required: false }}
+              sx={{
+                "& .MuiInputLabel-root": {
+                  color: "#F4F4F4",
+                  paddingLeft: "6px",
+                  fontFamily: "arimo",
+                  paddingTop: "2px",
+                },
+                "& .MuiInputLabel-root.Mui-focused": {
+                  color: "#F4F4F4",
+                },
+                "& .MuiOutlinedInput-root": {
+                  width: "clamp(10rem, 25vw, 40rem)",
+                  height: "60px",
+                  paddingLeft: "6px",
+                  paddingRight: "6px",
+                },
+                "& .MuiOutlinedInput-notchedOutline": {
+                  borderColor: "#F4F4F4", // border color
+                  borderRadius: "20px", // border radius
+                  borderWidth: "2px", // border width
+                },
+                "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline":
+                  {
+                    borderColor: "#F4F4F4", // focus border color
+                  },
+                "& .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline":
+                  {
+                    borderColor: "#F4F4F4", // hover border color
+                  },
+              }}
+              InputProps={{
+                style: {
+                  color: "#F4F4F4",
+                  fontFamily: "arimo",
+                },
+              }}
+            />
+            <TextField
+              required
+              type="text"
+              variant="outlined"
+              label="Genre"
+              name="genre"
+              value={book === undefined ? newBook.genre : book.genre}
+              onChange={handleInputChange}
+              InputLabelProps={{ required: false }}
+              sx={{
+                "& .MuiInputLabel-root": {
+                  color: "#F4F4F4",
+                  paddingLeft: "6px",
+                  fontFamily: "arimo",
+                  paddingTop: "2px",
+                },
+                "& .MuiInputLabel-root.Mui-focused": {
+                  color: "#F4F4F4",
+                },
+                "& .MuiOutlinedInput-root": {
+                  width: "clamp(10rem, 25vw, 40rem)",
+                  height: "60px",
+                  paddingLeft: "6px",
+                  paddingRight: "6px",
+                },
+                "& .MuiOutlinedInput-notchedOutline": {
+                  borderColor: "#F4F4F4", // border color
+                  borderRadius: "20px", // border radius
+                  borderWidth: "2px", // border width
+                },
+                "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline":
+                  {
+                    borderColor: "#F4F4F4", // focus border color
+                  },
+                "& .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline":
+                  {
+                    borderColor: "#F4F4F4", // hover border color
+                  },
+              }}
+              InputProps={{
+                style: {
+                  color: "#F4F4F4",
+                  fontFamily: "arimo",
+                },
+              }}
+            />
+            <TextField
+              required
+              type="text"
+              variant="outlined"
+              label="International Standard Book Number"
+              name="isbn"
+              value={book === undefined ? newBook.isbn : book.isbn}
+              onChange={handleInputChange}
+              InputLabelProps={{ required: false }}
+              sx={{
+                "& .MuiInputLabel-root": {
+                  color: "#F4F4F4",
+                  paddingLeft: "6px",
+                  fontFamily: "arimo",
+                  paddingTop: "2px",
+                },
+                "& .MuiInputLabel-root.Mui-focused": {
+                  color: "#F4F4F4",
+                },
+                "& .MuiOutlinedInput-root": {
+                  width: "clamp(10rem, 25vw, 40rem)",
+                  height: "60px",
+                  paddingLeft: "6px",
+                  paddingRight: "6px",
+                },
+                "& .MuiOutlinedInput-notchedOutline": {
+                  borderColor: "#F4F4F4", // border color
+                  borderRadius: "20px", // border radius
+                  borderWidth: "2px", // border width
+                },
+                "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline":
+                  {
+                    borderColor: "#F4F4F4", // focus border color
+                  },
+                "& .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline":
+                  {
+                    borderColor: "#F4F4F4", // hover border color
+                  },
+              }}
+              InputProps={{
+                style: {
+                  color: "#F4F4F4",
+                  fontFamily: "arimo",
+                },
+              }}
+            />
+            <TextField
+              required
+              type="text"
+              variant="outlined"
+              label="Description"
+              name="description"
+              value={
+                book === undefined ? newBook.description : book.description
+              }
+              onChange={handleInputChange}
+              InputLabelProps={{ required: false }}
+              sx={{
+                "& .MuiInputLabel-root": {
+                  color: "#F4F4F4",
+                  paddingLeft: "6px",
+                  fontFamily: "arimo",
+                  paddingTop: "2px",
+                },
+                "& .MuiInputLabel-root.Mui-focused": {
+                  color: "#F4F4F4",
+                },
+                "& .MuiOutlinedInput-root": {
+                  width: "clamp(10rem, 25vw, 40rem)",
+                  height: "60px",
+                  paddingLeft: "6px",
+                  paddingRight: "6px",
+                },
+                "& .MuiOutlinedInput-notchedOutline": {
+                  borderColor: "#F4F4F4", // border color
+                  borderRadius: "20px", // border radius
+                  borderWidth: "2px", // border width
+                },
+                "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline":
+                  {
+                    borderColor: "#F4F4F4", // focus border color
+                  },
+                "& .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline":
+                  {
+                    borderColor: "#F4F4F4", // hover border color
+                  },
+              }}
+              InputProps={{
+                style: {
+                  color: "#F4F4F4",
+                  fontFamily: "arimo",
+                },
+                sx: {
+                  overflow: "hidden",
+                },
+              }}
+            />
+          </Box>
+        </Box>
+        <Button
+          variant="contained"
+          sx={{
+            width: "clamp(10rem, 12vw, 40rem)",
+            height: "70px",
+            borderRadius: "20px", // border radius
+            bgcolor: "#1FAA70",
+            color: "#F4F4F4",
+            "&:hover": {
+              bgcolor: "#4dc995",
+              color: "#F4F4F4",
+              boxShadow: "none",
+            },
+            fontFamily: "Montserrat",
+            fontWeight: "bold",
+            boxShadow: "none",
+            textTransform: "none",
+            fontSize: "18px",
+          }}
+          tabIndex={-1}
+          onClick={handleConfirmOpen}
+        >
+          Confirm
+        </Button>
+        <ConfirmAddBook
+          confirmOpen={confirmOpen}
+          setConfirmOpen={setConfirmOpen}
+          pageTitle={confirmPageTitle}
+          backgroundImageUrl={backgroundImageUrl}
+          newBook={newBook}
+        />
+      </Box>
+    </Modal>
+  );
+};
 
-export default ManageBook
+export default ManageBook;

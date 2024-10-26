@@ -1,5 +1,5 @@
 import { Snackbar, Typography } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Box } from "@mui/material";
 import { TextField, Button } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
@@ -40,13 +40,12 @@ const Login = ({open, updateOpen, updateLogin, successfulLogin}) => {
   const handleLoginClick = () => {
     updateOpen(true)
     for (const acc of account) {
-      if (acc.username === login.username) {
-        if (acc.password === login.password) {
+      if (acc.username === login.username && acc.password === login.password) {
           console.log("Login successful");
           updateLogin(true);
-          navigate("/reader-dashboard");
+          navigate("/reader-dashboard", { state: login.username});
           return;
-        }
+        
       }
     }
     console.log("Login failed");
@@ -227,6 +226,7 @@ const Login = ({open, updateOpen, updateLogin, successfulLogin}) => {
               endAdornment: (
                 <InputAdornment position="end">
                   <Button
+                    aria-label="toggle password visibility"
                     onClick={togglePasswordVisibility}
                     sx={{
                       color: "#F4F4F4",

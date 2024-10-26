@@ -1,13 +1,20 @@
 import { set } from "mongoose";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Modal, Backdrop, Box, Typography, Button } from "@mui/material";
 import { useLocation } from "react-router-dom";
+import { useHistory } from "../../library/history";
 import "@fontsource/montserrat";
 
 const ViewBook = () => {
   const location = useLocation();
   const bookData = location.state.bookData;
-  console.log(bookData);
+  const userLoggedIn = location.state.user;
+  useEffect(()=>{
+    console.log(bookData);
+    console.log("user: ", userLoggedIn);
+  })
+
+
   return (
     <Box
       sx={{
@@ -172,6 +179,7 @@ const ViewBook = () => {
                 &emsp;&emsp;{bookData.description}
               </Typography>
               <Button
+                // onClick={open}
                 variant="contained"
                 sx={{
                   width: "10vw",

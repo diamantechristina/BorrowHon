@@ -14,8 +14,9 @@ import SnackBar from "../../components/SnackBar";
 import Carousel from "react-spring-3d-carousel";
 import { Modal } from "@mui/material";
 import { v4 as uuidv4 } from "uuid";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Navigate } from "react-router-dom";
+import Login from "../Login.jsx";
 
 const Dashboard = ({ open, updateOpen, successfulLogin }) => {
   const { fetchBook, books } = useBook();
@@ -32,6 +33,9 @@ const Dashboard = ({ open, updateOpen, successfulLogin }) => {
   const [bookCreation, setBookCreation] = useState([]);
 
   const [openModal, setOpenModal] = useState(false);
+
+  const location = useLocation();
+  const userLoggedIn = location.state;
 
   const handleOpenModal = () => {
     setOpenModal(true);
@@ -67,7 +71,11 @@ const Dashboard = ({ open, updateOpen, successfulLogin }) => {
   const [hoverPopularBook, setHoverPopularBook] = useState(false);
 
   const [hoverRecentBook, setHoverRecentBook] = useState(false);
-  console.log(bookData)
+  
+  useEffect(() => {
+    console.log(userLoggedIn);
+    console.log(bookData);
+  }, []);
 
   // const getImageUrl = (title) => {
   //   return `../../src/resources/${title
@@ -84,7 +92,7 @@ const Dashboard = ({ open, updateOpen, successfulLogin }) => {
           setGoToSlide(index); // Set the active slide index
           setCurrentIndex(index); // Update the current book index
         }}
-        src= {book.coverImage}
+        src={book.coverImage}
         alt={`Slide ${index}`} // Use index for alt text
         style={{ borderRadius: "10px" }} // Add style if needed
       />
@@ -196,12 +204,13 @@ const Dashboard = ({ open, updateOpen, successfulLogin }) => {
                 {bookData[currentIndex]?.description}
               </Typography>
               <Button
-                onClick={()=>{
+                onClick={() => {
                   navigate("/view-book", {
                     state: {
                       bookData: bookData[currentIndex],
-                    }
-                  })
+                      user: userLoggedIn,
+                    },
+                  });
                 }}
                 variant="contained"
                 sx={{
