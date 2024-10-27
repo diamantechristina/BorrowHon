@@ -8,16 +8,16 @@ const logSchema = new mongoose.Schema({
         type: Number,
         required: true
     },
-    logindate:{
-        type: Date,
-        default: Date.now,
-        required: true
-    },
-    logoutdate:{
-        type: Date,
-        default: Date.now,
-        required: false
-    }
+    // logindate:{
+    //     type: Date,
+    //     default: Date.now,
+    //     required: true
+    // },
+    // logoutdate:{
+    //     type: Date,
+    //     default: Date.now,
+    //     required: false
+    // }
 })
 
 logSchema.plugin(AutoIncrement, {inc_field: 'log_id'})

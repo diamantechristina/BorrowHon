@@ -1,6 +1,4 @@
 import History from "../models/history.model.js"
-import mongoose from "mongoose"
-
 
 export const getHistory = async (req, res) => {
     try{
@@ -11,7 +9,6 @@ export const getHistory = async (req, res) => {
         res.status(500).json({success: false, message: 'Server error'})
     }
 }
-
 
 export const createHistory = async (req, res) => {
     const history = req.body
