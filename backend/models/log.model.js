@@ -1,11 +1,11 @@
 import mongoose from "mongoose"
-import AutoIncrement from "mongoose-sequence"
+import mongooseSequence from "mongoose-sequence"
 
 const AutoIncrement = mongooseSequence(mongoose)
 
 const logSchema = new mongoose.Schema({
     acc_id:{
-        type: Int,
+        type: Number,
         required: true
     },
     logindate:{

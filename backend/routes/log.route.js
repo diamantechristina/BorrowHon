@@ -1,6 +1,6 @@
 import express from "express";
 
-import { getLogs, createLog } from "../controller/log.controller.js";
+import { getLog, createLog } from "../controller/log.controller.js";
 
 const router = express.Router();
 
