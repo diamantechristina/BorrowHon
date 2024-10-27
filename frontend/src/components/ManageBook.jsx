@@ -20,7 +20,7 @@ const ManageBook = ({open, setOpen, pageTitle, confirmPageTitle, handleHover, bo
 
     const handleClose = () => {
         setOpen(false)
-        handleHover(false)
+        if(handleHover) handleHover(false)
     };
 
   const handleConfirmOpen = () => {
