@@ -19,7 +19,7 @@ app.use(express.json()); // for parsing application/json
 app.use("/api/books", bookRoutes)
 
 app.use("/api/accounts", accountRoutes)
-app.use("/api/accounts/login", accountRoutes)
+// app.use("/api/accounts/login", accountRoutes)
 
 app.use("/api/history", historyRoutes)
 app.use("/api/log", logRoutes)

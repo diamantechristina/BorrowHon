@@ -75,11 +75,11 @@ const Dashboard = ({ open, updateOpen, successfulLogin }) => {
 
   const [hoverRecentBook, setHoverRecentBook] = useState(false);
   
-  useEffect(() => {
-    // console.log(""userLoggedIn);
-    console.log("User Logged in: ", userLoggedIn.acc_id, userLoggedIn.username);
-    console.log("Book Data: ",bookData);
-  }, []);
+  // useEffect(() => {
+  //   // console.log(""userLoggedIn);
+  //   console.log("User Logged in: ", userLoggedIn.acc_id, userLoggedIn.username);
+  //   console.log("Book Data: ",bookData);
+  // }, []);
 
   // const getImageUrl = (title) => {
   //   return `../../src/resources/${title

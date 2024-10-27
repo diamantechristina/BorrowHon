@@ -8,11 +8,11 @@ const logSchema = new mongoose.Schema({
         type: Number,
         required: true
     },
-    // logindate:{
-    //     type: Date,
-    //     default: Date.now,
-    //     required: true
-    // },
+    logindate:{
+        type: Date,
+        default: Date.now,
+        required: true
+    },
     // logoutdate:{
     //     type: Date,
     //     default: Date.now,

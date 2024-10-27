@@ -10,10 +10,10 @@ const ViewBook = () => {
   const location = useLocation();
   const bookData = location.state.bookData;
   const userLoggedIn = location.state.user;
-  useEffect(() => {
-    console.log(bookData);
-    console.log("user: ", userLoggedIn.acc_id, userLoggedIn.username);
-  });
+  // useEffect(() => {
+  //   console.log(bookData);
+  //   console.log("user: ", userLoggedIn.acc_id, userLoggedIn.username);
+  // });
   const [open, setOpen] = useState(false);
 
   const history = useHistory();

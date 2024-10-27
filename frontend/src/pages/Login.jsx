@@ -9,18 +9,15 @@ import "@fontsource/montserrat";
 import { EyeCrossed, Eye } from "react-flaticons";
 import { InputAdornment } from "@mui/material";
 import { useAccount } from "../library/account.js";
-import { useHistory } from "../library/history.js";
+import { useLog } from "../library/log.js";
 import SnackBar from "../components/SnackBar";
 
 const Login = ({ open, updateOpen, updateLogin, successfulLogin }) => {
   const navigate = useNavigate();
 
   const { fetchAccount, account } = useAccount();
-  const { fetchHistory, history } = useHistory();
 
-  useEffect(()=>{
-    fetchHistory()
-  }, [fetchHistory])
+  const { createLog, log } = useLog();
 
   useEffect(() => {
     fetchAccount();
@@ -32,9 +29,8 @@ const Login = ({ open, updateOpen, updateLogin, successfulLogin }) => {
     password: "",
   });
 
-  console.log("Accounts: ",account);
 
-  console.log("History: ",history)
+  // console.log("Accounts: ",account);
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -49,24 +45,24 @@ const Login = ({ open, updateOpen, updateLogin, successfulLogin }) => {
     username: "",
   })
 
- 
-
-  const handleLoginClick = () => {
+  const handleLoginClick = async () => {
     for (const acc of account) {
       if (acc.username === login.username && acc.password === login.password) {
         console.log("Login successful");
+
+        await createLog({
+          acc_id: acc.acc_id,
+          logindate: new Date(),
+        });
+
         updateLogin(true);
         navigate("/reader-dashboard", { state: {userLoggedIn: acc} });
+        
         return;
       }
     }
     console.log("Login failed");
   };
-
-  // useEffect(()=>{
-  //   console.log("user : ",userLoggedIn)
-
-  // }, [userLoggedIn])
 
   const togglePasswordVisibility = () => {
     setShowPassword((prev) => !prev);
