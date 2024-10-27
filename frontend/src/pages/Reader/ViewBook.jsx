@@ -4,17 +4,21 @@ import { Modal, Backdrop, Box, Typography, Button } from "@mui/material";
 import { useLocation } from "react-router-dom";
 import { useHistory } from "../../library/history";
 // import  BorrowBook from "../../components/BorrowBook.jsx";
+import { ArrowSmallLeft } from "react-flaticons";
+import { useNavigate } from "react-router-dom";
 import "@fontsource/montserrat";
 
 const ViewBook = () => {
   const location = useLocation();
   const bookData = location.state.bookData;
   const userLoggedIn = location.state.user;
+
   // useEffect(() => {
   //   console.log(bookData);
   //   console.log("user: ", userLoggedIn.acc_id, userLoggedIn.username);
   // });
   const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
 
   const history = useHistory();
 
@@ -30,12 +34,11 @@ const ViewBook = () => {
     const newHistory = {
       book_id: bookData.book_id,
       acc_id: userLoggedIn.acc_id,
-    }
+    };
     const { success, message } = await createHistory(newHistory);
     console.log("Success:", success);
     console.log("Message:", message);
   };
-  
 
   return (
     <Box
@@ -68,6 +71,54 @@ const ViewBook = () => {
           // backgroundColor: "gray",
         }}
       >
+        <Box
+          sx={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100vw",
+            height: "15vh",
+            backgroundColor: "transparent",
+            zIndex: 1000, // Ensures it stays on top
+          }}
+        >
+          <Button
+          variant="text"
+          onClick={() => navigate(-1)}
+          sx={{
+            margin: 0,
+            borderRadius: "20px",
+            color: "#E8E8E8",
+            "&:hover": {
+              backgroundColor: "transparent",
+              filter: "drop-shadow(0 0 1px white)",
+              color: "#FFFFFF",
+            },
+            position:"absolute",
+            left:10,
+            top:10,
+          }}         
+        >
+          <ArrowSmallLeft
+            size={"75px"}
+            style={{
+              marginTop: "-10px",
+              marginLeft: "-15px",
+              marginRight: "-10px",
+              marginBottom: "-10px",
+            }}
+          />
+        </Button>
+        <img
+            src="src/resources/logo.png"
+            alt="BorrowHon"
+            style={{
+              width: "20vw",
+              marginTop: "20px",
+              marginLeft: "100px",
+            }}
+          />
+        </Box>
         <Box
           sx={{
             position: "absolute",
