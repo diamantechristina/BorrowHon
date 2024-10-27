@@ -32,9 +32,9 @@ const Login = ({ open, updateOpen, updateLogin, successfulLogin }) => {
     password: "",
   });
 
-  console.log(account);
+  console.log("Accounts: ",account);
 
-  console.log(history)
+  console.log("History: ",history)
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -44,18 +44,29 @@ const Login = ({ open, updateOpen, updateLogin, successfulLogin }) => {
     }));
   };
 
+  const [userLoggedIn, setUserLoggedIn] = useState({
+    acc_id: "",
+    username: "",
+  })
+
+ 
+
   const handleLoginClick = () => {
-    updateOpen(true);
     for (const acc of account) {
       if (acc.username === login.username && acc.password === login.password) {
         console.log("Login successful");
         updateLogin(true);
-        navigate("/reader-dashboard", { state: login.username });
+        navigate("/reader-dashboard", { state: {userLoggedIn: acc} });
         return;
       }
     }
     console.log("Login failed");
   };
+
+  // useEffect(()=>{
+  //   console.log("user : ",userLoggedIn)
+
+  // }, [userLoggedIn])
 
   const togglePasswordVisibility = () => {
     setShowPassword((prev) => !prev);

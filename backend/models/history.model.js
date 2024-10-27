@@ -17,16 +17,20 @@ const historySchema = new mongoose.Schema({
         type: Number,
         required: true
     },
-    // borrowdate:{
-    //     type: Date,
-    //     default: Date.now,
-    //     required: true
-    // },
-    // returndate:{
-    //     type: Date,
-    //     default: Date.now,
-    //     required: true
-    // }
+    borrowdate:{
+        type: Date,
+        required: false
+    },
+    status:{
+        type: String,
+        required: true,
+        enum: ['pending', 'onhand', 'returned'],
+        default: 'pending'
+    },
+    returndate:{
+        type: Date,
+        required: false
+    }
 })
 
 historySchema.plugin(AutoIncrement, {inc_field: 'borrow_id'})

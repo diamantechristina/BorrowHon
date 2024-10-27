@@ -1,13 +1,10 @@
 import mongoose from "mongoose"
 import AutoIncrement from "mongoose-sequence"
 
+const AutoIncrement = mongooseSequence(mongoose)
+
 const logSchema = new mongoose.Schema({
-    log_id:{
-        type: Int,
-        required: true,
-        unique: true
-    },
-    user_id:{
+    acc_id:{
         type: Int,
         required: true
     },
@@ -19,7 +16,7 @@ const logSchema = new mongoose.Schema({
     logoutdate:{
         type: Date,
         default: Date.now,
-        required: true
+        required: false
     }
 })
 

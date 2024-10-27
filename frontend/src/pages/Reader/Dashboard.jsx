@@ -35,7 +35,8 @@ const Dashboard = ({ open, updateOpen, successfulLogin }) => {
   const [openModal, setOpenModal] = useState(false);
 
   const location = useLocation();
-  const userLoggedIn = location.state;
+  const userLoggedIn = location.state.userLoggedIn;
+  
 
   const handleOpenModal = () => {
     setOpenModal(true);
@@ -47,6 +48,8 @@ const Dashboard = ({ open, updateOpen, successfulLogin }) => {
   useEffect(() => {
     if (books.length > 0) {
       const combinedData = books.map((book) => ({
+        _id: book._id,
+        book_id: book.book_id,
         title: book.title,
         author: book.author,
         genre: book.genre,
@@ -73,8 +76,9 @@ const Dashboard = ({ open, updateOpen, successfulLogin }) => {
   const [hoverRecentBook, setHoverRecentBook] = useState(false);
   
   useEffect(() => {
-    console.log(userLoggedIn);
-    console.log(bookData);
+    // console.log(""userLoggedIn);
+    console.log("User Logged in: ", userLoggedIn.acc_id, userLoggedIn.username);
+    console.log("Book Data: ",bookData);
   }, []);
 
   // const getImageUrl = (title) => {

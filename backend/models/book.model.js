@@ -1,4 +1,7 @@
 import mongoose from "mongoose"
+import mongooseSequence from "mongoose-sequence"
+
+const AutoIncrement = mongooseSequence(mongoose)
 
 const bookSchema = new mongoose.Schema({
     title:{
@@ -38,6 +41,7 @@ const bookSchema = new mongoose.Schema({
     timestamps: true // createdAt and updatedAt
 })
 
+bookSchema.plugin(AutoIncrement, {inc_field: 'book_id'})
 const Book = mongoose.model('Book', bookSchema)
 
 export default Book
