@@ -34,6 +34,7 @@ function App() {
       <Route path="/register" element={<Register />} />
       <Route path="/continue-register" element={<ContinueRegister />} />
       <Route path="/" element={<Login open = {open} updateOpen = {updateOpen} successfulLogin = {successfulLogin} updateLogin = {updateLogin}/>} />
+      <Route path="/login" element={<Login open = {open} updateOpen = {updateOpen} successfulLogin = {successfulLogin} updateLogin = {updateLogin}/>} />
       <Route path="/list-of-books" element={<LibrarianListOfBooks />} />
     </Routes>
   );

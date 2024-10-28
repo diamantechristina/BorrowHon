@@ -19,6 +19,17 @@ import { Navigate } from "react-router-dom";
 import Login from "../Login.jsx";
 
 const Dashboard = ({ open, updateOpen, successfulLogin }) => {
+  const location = useLocation();
+
+  try{
+    const userLoggedIn = location.state.userLoggedIn;
+  }catch(e){
+    useEffect(() => {
+      navigate("/login");
+    },[])
+    
+  }
+  
   const { fetchBook, books } = useBook();
   useEffect(() => {
     fetchBook();
@@ -34,10 +45,8 @@ const Dashboard = ({ open, updateOpen, successfulLogin }) => {
 
   const [openModal, setOpenModal] = useState(false);
 
-  const location = useLocation();
-  const userLoggedIn = location.state.userLoggedIn;
-  // console.log("User Logged In:", userLoggedIn);
-  // console.log("User Logged In:", userLoggedIn);
+  
+
 
   const handleOpenModal = () => {
     setOpenModal(true);
@@ -75,7 +84,7 @@ const Dashboard = ({ open, updateOpen, successfulLogin }) => {
   const [hoverPopularBook, setHoverPopularBook] = useState(false);
 
   const [hoverRecentBook, setHoverRecentBook] = useState(false);
-  
+
   // useEffect(() => {
   //   // console.log(""userLoggedIn);
   //   console.log("User Logged in: ", userLoggedIn.acc_id, userLoggedIn.username);
@@ -388,7 +397,9 @@ const Dashboard = ({ open, updateOpen, successfulLogin }) => {
                   onMouseOver={() => setHoverPopularBook(book.title)}
                   onMouseOut={() => setHoverPopularBook(null)}
                   onClick={() => {
-                    navigate(`/view-book`, {state:{bookData: book, user: userLoggedIn}});
+                    navigate(`/view-book`, {
+                      state: { bookData: book, user: userLoggedIn },
+                    });
                   }}
                   key={index}
                   sx={{
@@ -502,7 +513,13 @@ const Dashboard = ({ open, updateOpen, successfulLogin }) => {
                   onMouseOut={() => setHoverRecentBook(null)}
                   key={index}
                   onClick={() => {
-                    navigate(`/view-book`, {state:{bookData: book, user: userLoggedIn}});
+                    book === undefined
+                      ? navigate(`/reader-dashboard`, {
+                          state: { userLoggedIn: userLoggedIn },
+                        })
+                      : navigate(`/view-book`, {
+                          state: { bookData: book, user: userLoggedIn },
+                        });
                   }}
                   sx={{
                     width: "12.6vw",

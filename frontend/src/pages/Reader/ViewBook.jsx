@@ -10,8 +10,17 @@ import "@fontsource/montserrat";
 
 const ViewBook = () => {
   const location = useLocation();
-  const bookData = location.state.bookData;
-  const userLoggedIn = location.state.user;
+
+  try{
+    const bookData = location.state.bookData;
+    const userLoggedIn = location.state.user;
+    console.log("bookData: ", bookData);
+  }catch(e){
+    useEffect(() => {
+      navigate("/reader-dashboard");
+    },[])
+    
+  }
 
   // useEffect(() => {
   //   console.log(bookData);
