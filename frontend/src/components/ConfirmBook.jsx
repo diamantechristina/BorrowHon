@@ -3,11 +3,14 @@ import { useState } from "react";
 import { Box, Typography, Button, Modal, Backdrop } from "@mui/material";
 import { useBook } from "../library/book.js";
 
-const ConfirmBook = ({pageTitle, confirmOpen, setConfirmOpen, backgroundImageUrl, handleHover, newBook}) => {
+const ConfirmBook = ({pageTitle, confirmOpen, setOpen, setConfirmOpen, backgroundImageUrl, handleHover, newBook}) => {
     const handleAddBook = async () => {
         const { success, message } = await createBook(newBook);
         console.log("Success:", success);
         console.log("Message:", message);
+        setConfirmOpen(false)
+        setOpen(false)
+        
     };
     const { createBook } = useBook();
 

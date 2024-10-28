@@ -25,8 +25,8 @@ const BookCard = ({ book, open, setOpen }) => {
       onMouseEnter={() => editOpen || confirmOpen ? () => {} : setIsHover(true)}
       onMouseLeave={() => editOpen || confirmOpen ? () => {} : setIsHover(false)}
       sx={{
-        width: "22.5vw",
-        height: "67.5vh",
+        width: "20vw",
+        height: "60vh",
         objectFit: "contain",
         background:
           book.coverImage !== undefined
@@ -42,6 +42,7 @@ const BookCard = ({ book, open, setOpen }) => {
         "&:hover": {
           transform: "scale(1.025)",
         },
+        boxShadow: "0px 0px 20px 3px rgba(34,85,96,0.9)",
       }}
     >
       
@@ -108,7 +109,7 @@ const BookCard = ({ book, open, setOpen }) => {
             style={{
               cursor: "pointer",
               position: "relative",
-              right: "2vw",
+              right: "3vw",
             }}
             size={15}
             onClick={handleConfirmOpen}
