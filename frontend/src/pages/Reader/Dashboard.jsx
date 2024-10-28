@@ -36,7 +36,8 @@ const Dashboard = ({ open, updateOpen, successfulLogin }) => {
 
   const location = useLocation();
   const userLoggedIn = location.state.userLoggedIn;
-  
+  // console.log("User Logged In:", userLoggedIn);
+  // console.log("User Logged In:", userLoggedIn);
 
   const handleOpenModal = () => {
     setOpenModal(true);
@@ -88,7 +89,7 @@ const Dashboard = ({ open, updateOpen, successfulLogin }) => {
   //     .join("")}.jpg`;
   // };
 
-  const slides = bookData.map((book, index) => ({
+  const slides = bookData.slice(0, 5).map((book, index) => ({
     key: uuidv4(), // Generate a unique key for each slide
     content: (
       <img
@@ -386,6 +387,9 @@ const Dashboard = ({ open, updateOpen, successfulLogin }) => {
                 <Card
                   onMouseOver={() => setHoverPopularBook(book.title)}
                   onMouseOut={() => setHoverPopularBook(null)}
+                  onClick={() => {
+                    navigate(`/view-book`, {state:{bookData: book, user: userLoggedIn}});
+                  }}
                   key={index}
                   sx={{
                     width: "12.6vw",
@@ -497,6 +501,9 @@ const Dashboard = ({ open, updateOpen, successfulLogin }) => {
                   onMouseOver={() => setHoverRecentBook(book.title)}
                   onMouseOut={() => setHoverRecentBook(null)}
                   key={index}
+                  onClick={() => {
+                    navigate(`/view-book`, {state:{bookData: book, user: userLoggedIn}});
+                  }}
                   sx={{
                     width: "12.6vw",
                     height: "40vh",
