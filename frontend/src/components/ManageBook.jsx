@@ -557,6 +557,7 @@ const ManageBook = ({open, setOpen, pageTitle, confirmPageTitle, handleHover, bo
                     Confirm
                 </Button>
                 <ConfirmAddBook 
+                    setOpen={setOpen}
                     confirmOpen={confirmOpen} 
                     setConfirmOpen={setConfirmOpen} 
                     pageTitle={confirmPageTitle} 
