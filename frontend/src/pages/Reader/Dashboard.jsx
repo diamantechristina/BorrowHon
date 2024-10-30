@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   Box,
   Button,
@@ -21,15 +21,19 @@ import Login from "../Login.jsx";
 const Dashboard = ({ open, updateOpen, successfulLogin }) => {
   const location = useLocation();
 
-  try{
-    const userLoggedIn = location.state.userLoggedIn;
-  }catch(e){
-    useEffect(() => {
-      navigate("/login");
-    },[])
-    
-  }
+  const [userLoggedIn, setUserLoggedIn] = useState(
+    location.state?.userLoggedIn
+  );
+
+  useMemo(() => {
+    setUserLoggedIn(location.state?.userLoggedIn);
+  }, [location.state]);
   
+  useEffect(() => {
+    if (!userLoggedIn){
+      navigate("/login");}
+  }, []);
+
   const { fetchBook, books } = useBook();
   useEffect(() => {
     fetchBook();
@@ -44,9 +48,6 @@ const Dashboard = ({ open, updateOpen, successfulLogin }) => {
   const [bookCreation, setBookCreation] = useState([]);
 
   const [openModal, setOpenModal] = useState(false);
-
-  
-
 
   const handleOpenModal = () => {
     setOpenModal(true);

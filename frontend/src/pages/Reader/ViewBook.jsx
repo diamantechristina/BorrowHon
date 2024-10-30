@@ -1,5 +1,5 @@
 import { set } from "mongoose";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { Modal, Backdrop, Box, Typography, Button } from "@mui/material";
 import { useLocation } from "react-router-dom";
 import { useHistory } from "../../library/history";
@@ -10,24 +10,29 @@ import "@fontsource/montserrat";
 
 const ViewBook = () => {
   const location = useLocation();
+  const navigate = useNavigate();
+  const [bookData, setBookData] = useState(location.state?.bookData);
+  const [userLoggedIn, setUserLoggedIn] = useState(location.state?.user);
+  console.log("bookData: ", bookData);
 
-  try{
-    const bookData = location.state.bookData;
-    const userLoggedIn = location.state.user;
-    console.log("bookData: ", bookData);
-  }catch(e){
-    useEffect(() => {
-      navigate("/reader-dashboard");
-    },[])
-    
-  }
+  useMemo(() => {
+    setBookData(location.state?.bookData);
+    setUserLoggedIn(location.state?.user);
+  }, [location.state]);
+  console.log("bookData: ", bookData);
+
+  useEffect(() => {
+    if (bookData?.coverImage === undefined && userLoggedIn === undefined) {
+      navigate("/login");
+    }
+  }, [bookData, userLoggedIn]);
 
   // useEffect(() => {
   //   console.log(bookData);
   //   console.log("user: ", userLoggedIn.acc_id, userLoggedIn.username);
   // });
+
   const [open, setOpen] = useState(false);
-  const navigate = useNavigate();
 
   const history = useHistory();
 
@@ -92,33 +97,33 @@ const ViewBook = () => {
           }}
         >
           <Button
-          variant="text"
-          onClick={() => navigate(-1)}
-          sx={{
-            margin: 0,
-            borderRadius: "20px",
-            color: "#E8E8E8",
-            "&:hover": {
-              backgroundColor: "transparent",
-              filter: "drop-shadow(0 0 1px white)",
-              color: "#FFFFFF",
-            },
-            position:"absolute",
-            left:10,
-            top:10,
-          }}         
-        >
-          <ArrowSmallLeft
-            size={"75px"}
-            style={{
-              marginTop: "-10px",
-              marginLeft: "-15px",
-              marginRight: "-10px",
-              marginBottom: "-10px",
+            variant="text"
+            onClick={() => navigate(-1)}
+            sx={{
+              margin: 0,
+              borderRadius: "20px",
+              color: "#E8E8E8",
+              "&:hover": {
+                backgroundColor: "transparent",
+                filter: "drop-shadow(0 0 1px white)",
+                color: "#FFFFFF",
+              },
+              position: "absolute",
+              left: 10,
+              top: 10,
             }}
-          />
-        </Button>
-        <img
+          >
+            <ArrowSmallLeft
+              size={"75px"}
+              style={{
+                marginTop: "-10px",
+                marginLeft: "-15px",
+                marginRight: "-10px",
+                marginBottom: "-10px",
+              }}
+            />
+          </Button>
+          <img
             src="src/resources/logo.png"
             alt="BorrowHon"
             style={{
@@ -181,7 +186,7 @@ const ViewBook = () => {
               >
                 <Box
                   sx={{
-                    backgroundImage: `url(${bookData.coverImage})`,
+                    backgroundImage: `url(${bookData?.coverImage})`,
                     backgroundSize: "cover",
                     borderRadius: "20px",
                     width: "100%",
@@ -220,14 +225,14 @@ const ViewBook = () => {
                     fontFamily: "montserrat",
                   }}
                 >
-                  {bookData.title}
+                  {bookData?.title}
                 </Typography>
                 <Typography
                   sx={{
                     color: "#F4F4F4",
                   }}
                 >
-                  {bookData.genre.join(", ")}
+                  {bookData?.genre.join(", ")}
                 </Typography>
                 <Typography
                   sx={{
@@ -235,14 +240,14 @@ const ViewBook = () => {
                     fontWeight: "bold",
                   }}
                 >
-                  {bookData.author}
+                  {bookData?.author}
                 </Typography>
                 <Typography
                   sx={{
                     color: "#F4F4F4",
                   }}
                 >
-                  ISBN: {bookData.isbn}
+                  ISBN: {bookData?.isbn}
                 </Typography>
                 <Box
                   sx={{
@@ -258,7 +263,7 @@ const ViewBook = () => {
                     textAlign: "justify",
                   }}
                 >
-                  &emsp;&emsp;{bookData.description}
+                  &emsp;&emsp;{bookData?.description}
                 </Typography>
                 <Button
                   onClick={handleOpen}
@@ -344,7 +349,7 @@ const ViewBook = () => {
                             //   width: "25vw",
                             height: "55vh",
 
-                            backgroundImage: `url(${bookData.coverImage})`,
+                            backgroundImage: `url(${bookData?.coverImage})`,
                             backgroundSize: "contain",
                             backgroundRepeat: "no-repeat",
                             mx: "1.5vw",
@@ -368,7 +373,7 @@ const ViewBook = () => {
                             textTransform: "uppercase",
                           }}
                         >
-                          {bookData.title}
+                          {bookData?.title}
                         </Typography>
                         <Typography
                           sx={{
@@ -377,7 +382,7 @@ const ViewBook = () => {
                             fontFamily: "montserrat",
                           }}
                         >
-                          {bookData.genre}
+                          {bookData?.genre}
                         </Typography>
                         <Typography
                           sx={{
@@ -386,7 +391,7 @@ const ViewBook = () => {
                             fontFamily: "montserrat",
                           }}
                         >
-                          {bookData.author}
+                          {bookData?.author}
                         </Typography>
                         <Typography
                           sx={{
@@ -395,7 +400,7 @@ const ViewBook = () => {
                             my: "2vh",
                           }}
                         >
-                          ISBN: {bookData.isbn}
+                          ISBN: {bookData?.isbn}
                         </Typography>
                         <Box
                           sx={{
@@ -411,7 +416,7 @@ const ViewBook = () => {
                             fontFamily: "montserrat",
                           }}
                         >
-                          {bookData.description}
+                          {bookData?.description}
                         </Typography>
                       </Box>
                     </Box>

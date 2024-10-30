@@ -40,11 +40,6 @@ const Login = ({ open, updateOpen, updateLogin, successfulLogin }) => {
     }));
   };
 
-  const [userLoggedIn, setUserLoggedIn] = useState({
-    acc_id: "",
-    username: "",
-  })
-
   const handleLoginClick = async () => {
     for (const acc of account) {
       if (acc.username === login.username && acc.password === login.password) {
