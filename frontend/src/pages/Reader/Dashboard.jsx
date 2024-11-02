@@ -28,11 +28,13 @@ const Dashboard = ({ open, updateOpen, successfulLogin }) => {
   useMemo(() => {
     setUserLoggedIn(location.state?.userLoggedIn);
   }, [location.state]);
-  
+
   useEffect(() => {
-    if (!userLoggedIn){
-      navigate("/login");}
+    if (!userLoggedIn) {
+      navigate("/login");
+    }
   }, []);
+  console.log("User: ", userLoggedIn);
 
   const { fetchBook, books } = useBook();
   useEffect(() => {
@@ -85,19 +87,6 @@ const Dashboard = ({ open, updateOpen, successfulLogin }) => {
   const [hoverPopularBook, setHoverPopularBook] = useState(false);
 
   const [hoverRecentBook, setHoverRecentBook] = useState(false);
-
-  // useEffect(() => {
-  //   // console.log(""userLoggedIn);
-  //   console.log("User Logged in: ", userLoggedIn.acc_id, userLoggedIn.username);
-  //   console.log("Book Data: ",bookData);
-  // }, []);
-
-  // const getImageUrl = (title) => {
-  //   return `../../src/resources/${title
-  //     ?.toLowerCase()
-  //     .split(" ")
-  //     .join("")}.jpg`;
-  // };
 
   const slides = bookData.slice(0, 5).map((book, index) => ({
     key: uuidv4(), // Generate a unique key for each slide
@@ -152,14 +141,7 @@ const Dashboard = ({ open, updateOpen, successfulLogin }) => {
           updateOpen={updateOpen}
           successfulLogin={successfulLogin}
         />
-        <Navbar
-          sx={{
-            position: "fixed",
-            top: 0,
-            width: "inherit",
-            zIndex: 9999,
-          }}
-        />
+        <Navbar userLoggedIn={userLoggedIn} />
         <Box
           sx={{
             display: "flex",
@@ -377,7 +359,6 @@ const Dashboard = ({ open, updateOpen, successfulLogin }) => {
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
-              
             }}
           >
             <Box

@@ -11,6 +11,7 @@ import SnackBar from "./components/SnackBar.jsx";
 import { set } from "mongoose";
 import AccountSettings from "./pages/AccountSettings.jsx";
 import ViewBook from "./pages/Reader/ViewBook.jsx";
+import History from "./pages/Reader/History.jsx";
 
 function App() {
   const [open, setOpen] = useState(false);
@@ -23,6 +24,7 @@ function App() {
   }
   return (
     <Routes>
+      <Route path="/borrow-history" element = {<History/>}/>
       <Route path="/view-book" element = {<ViewBook/>}/>
       <Route path="/settings" element = {<AccountSettings/>}/>
       <Route path="/reader-dashboard" element={<Reader_Dashboard open = {open} updateOpen = {updateOpen} successfulLogin = {successfulLogin}/>} />

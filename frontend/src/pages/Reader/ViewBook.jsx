@@ -1,6 +1,16 @@
 import { set } from "mongoose";
-import React, { useState, useEffect, useMemo } from "react";
-import { Modal, Backdrop, Box, Typography, Button, TextField, InputAdornment } from "@mui/material";
+import React, { useState, useEffect, useMemo, useRef } from "react";
+import {
+  Modal,
+  Backdrop,
+  Box,
+  Typography,
+  Button,
+  TextField,
+  InputAdornment,
+  Snackbar,
+  SnackbarContent,
+} from "@mui/material";
 import { useLocation } from "react-router-dom";
 import { useHistory } from "../../library/history";
 // import  BorrowBook from "../../components/BorrowBook.jsx";
@@ -72,19 +82,32 @@ const ViewBook = () => {
   const handleClose = () => {
     setOpen(false);
   };
+
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+
   const { createHistory } = useHistory();
   const handleBorrowBook = async () => {
     if (userLoggedIn?.password === pass.password) {
       const newHistory = {
-      book_id: bookData.book_id,
-      acc_id: userLoggedIn.acc_id,
-    };
-    const { success, message } = await createHistory(newHistory);
-    console.log("Success:", success);
-    console.log("Message:", message);
+        book_id: bookData.book_id,
+        acc_id: userLoggedIn.acc_id,
+      };
+      const { success, message } = await createHistory(newHistory);
+      console.log("Success:", success);
+      console.log("Message:", message);
+      setOpen(false);
+      setSnackbarMessage("Book borrow request sent!");
+      setOpenSnackbar(true);
+    } else {
+      setSnackbarMessage("Incorrect password!");
+      setOpenSnackbar(true);
     }
-    
   };
+  const statusRef = useRef(null);
+
+  const statusContent = statusRef.current?.textContent
+  // console.log("statusContent: ", statusContent);
 
   return (
     <Box
@@ -107,6 +130,19 @@ const ViewBook = () => {
         },
       }}
     >
+      <Snackbar
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+        open={openSnackbar}
+        autoHideDuration={3000}
+        onClose={() => setOpenSnackbar(false)}
+      >
+        <SnackbarContent 
+          message={snackbarMessage}
+          style={{
+            backgroundColor: snackbarMessage === "Book borrow request sent!" ? "green" : "red",
+          }}
+        />
+      </Snackbar>
       <Box
         sx={{
           display: "flex",
@@ -252,6 +288,7 @@ const ViewBook = () => {
                 }}
               >
                 <Typography
+                  ref={statusRef}
                   sx={{
                     color: "#F4F4F4",
                     fontWeight: "bold",
@@ -327,7 +364,9 @@ const ViewBook = () => {
                 >
                   &emsp;&emsp;{bookData?.description}
                 </Typography>
-
+                {statusContent === "Available" ? (
+                  
+                
                 <Button
                   onClick={handleOpen}
                   variant="contained"
@@ -349,6 +388,7 @@ const ViewBook = () => {
                 >
                   Borrow
                 </Button>
+                ): null}
                 <Modal
                   aria-labelledby="unstyled-modal-title"
                   aria-describedby="unstyled-modal-description"
@@ -368,19 +408,15 @@ const ViewBook = () => {
                       transform: "translate(-50%, -50%)",
                       width: "60vw",
                       height: "80vh",
-                      border: "2px solid #000",
-                      boxShadow: 24,
                       p: 4,
-                      backgroundColor: "black",
+                      backgroundColor: "#225560",
                       borderRadius: "20px",
                       display: "flex",
                       justifyContent: "center",
                       alignItems: "center",
                       color: "#F4F4F4",
                       flexDirection: "column",
-                      // marginTop:
                       gap: "20px",
-                      // overflow: "auto",
                     }}
                   >
                     <Typography
@@ -499,71 +535,70 @@ const ViewBook = () => {
                             {bookData?.description}
                           </Typography>
                         </Box>
-                          <TextField
-                            required
-                            type={showPassword ? "text" : "password"}
-                            // id='outlined-basic'
-                            variant="outlined"
-                            label="Password"
-                            name="password"
-                            // value={login.password}
-                            onChange={handleInputChange}
-                            InputLabelProps={{ required: false }}
-                            sx={{
-                              "& .MuiInputLabel-root": {
-                                color: "#F4F4F4", // label color
-                                paddingLeft: "6px",
+                        <TextField
+                          required
+                          type={showPassword ? "text" : "password"}
+                          // id='outlined-basic'
+                          variant="outlined"
+                          label="Password"
+                          name="password"
+                          // value={login.password}
+                          onChange={handleInputChange}
+                          InputLabelProps={{ required: false }}
+                          sx={{
+                            "& .MuiInputLabel-root": {
+                              color: "#F4F4F4", // label color
+                              paddingLeft: "6px",
+                            },
+                            "& .MuiInputLabel-root.Mui-focused": {
+                              color: "#F4F4F4",
+                            },
+                            "& .MuiOutlinedInput-root": {
+                              width: "clamp(10rem, 23vw, 40rem)",
+                              height: "52px",
+                              paddingLeft: "6px",
+                              paddingRight: "6px",
+                            },
+                            "& .MuiOutlinedInput-notchedOutline": {
+                              borderColor: "#F4F4F4", // border color
+                              borderRadius: "20px", // border radius
+                              borderWidth: "2px",
+                            },
+                            "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline":
+                              {
+                                borderColor: "#F4F4F4", // focus border color
                               },
-                              "& .MuiInputLabel-root.Mui-focused": {
-                                color: "#F4F4F4",
+                            "& .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline":
+                              {
+                                borderColor: "#F4F4F4", // hover border color
                               },
-                              "& .MuiOutlinedInput-root": {
-                                width: "clamp(10rem, 23vw, 40rem)",
-                                height: "52px",
-                                paddingLeft: "6px",
-                                paddingRight: "6px",
-                              },
-                              "& .MuiOutlinedInput-notchedOutline": {
-                                borderColor: "#F4F4F4", // border color
-                                borderRadius: "20px", // border radius
-                                borderWidth: "2px",
-                              },
-                              "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline":
-                                {
-                                  borderColor: "#F4F4F4", // focus border color
-                                },
-                              "& .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline":
-                                {
-                                  borderColor: "#F4F4F4", // hover border color
-                                },
-                            }}
-                            InputProps={{
-                              style: {
-                                color: "#F4F4F4",
-                              },
-                              endAdornment: (
-                                <InputAdornment position="end">
-                                  <Button
-                                    aria-label="toggle password visibility"
-                                    onClick={togglePasswordVisibility}
-                                    sx={{
-                                      color: "#F4F4F4",
-                                      // backgroundColor: "red",
-                                      marginRight: "15px",
-                                      minWidth: 0,
-                                    }}
-                                  >
-                                    {showPassword ? (
-                                      <Eye size={17} />
-                                    ) : (
-                                      <EyeCrossed size={17} />
-                                    )}
-                                  </Button>
-                                </InputAdornment>
-                              ),
-                            }}
-                          />
-                        
+                          }}
+                          InputProps={{
+                            style: {
+                              color: "#F4F4F4",
+                            },
+                            endAdornment: (
+                              <InputAdornment position="end">
+                                <Button
+                                  aria-label="toggle password visibility"
+                                  onClick={togglePasswordVisibility}
+                                  sx={{
+                                    color: "#F4F4F4",
+                                    // backgroundColor: "red",
+                                    marginRight: "15px",
+                                    minWidth: 0,
+                                  }}
+                                >
+                                  {showPassword ? (
+                                    <Eye size={17} />
+                                  ) : (
+                                    <EyeCrossed size={17} />
+                                  )}
+                                </Button>
+                              </InputAdornment>
+                            ),
+                          }}
+                        />
                       </Box>
                     </Box>
                     <Button

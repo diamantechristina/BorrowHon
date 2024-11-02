@@ -12,30 +12,17 @@ import {
 } from "@mui/material";
 import React, { useState, useEffect, useCallback } from "react";
 import { Search, Filter, Bell, MenuBurger } from "react-flaticons";
+import { useNavigate } from "react-router-dom";
 import "@fontsource/arimo";
 
-const Navbar = () => {
+const Navbar = (userLoggedIn) => {
+  const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const [selectedFilter, setSelectedFilter] = useState("Filter");
   const [scrolled, setScrolled] = useState(false);
-
-  // useEffect(() => {
-  //   const handleScroll = () => {
-  //     if (window.scrollY > 0) {
-  //       setScrolled(true);
-  //       console.log("scrolled");
-  //     } else {
-  //       setScrolled(false);
-  //       console.log("not scrolled");
-  //     }
-  //   };
-  //   window.addEventListener("scroll", handleScroll);
-  //   return () => {
-  //     window.removeEventListener("scroll", handleScroll);
-  //   };
-  // }, [window]);
-
+  
+  console.log("userLoggedIn: ", userLoggedIn);
   useEffect(() => {
     const handleScroll = () => {
       if (window.scrollY > 0) {
@@ -63,6 +50,7 @@ const Navbar = () => {
   };
   const handleClose = () => {
     setAnchorEl(null);
+    setBurgerAnchorEl(null);
   };
 
   const getFilterText = () => {
@@ -78,6 +66,13 @@ const Navbar = () => {
       default:
         return "Search";
     }
+  };
+
+  const [burgerAnchorEl, setBurgerAnchorEl] = React.useState(null);
+  const burgerOpen = Boolean(burgerAnchorEl);
+
+  const handleBurgerClick = (event) => {
+    setBurgerAnchorEl(event.currentTarget);
   };
 
   return (
@@ -96,17 +91,10 @@ const Navbar = () => {
     >
       <Box
         sx={{
-          // backgroundImage: "linear-gradient(rgba(25,25,25,.9), rgba(25,25,25,.05))",
           height: "90px",
-          // width: "100%",
-          // position: "fixed",
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
-          // transition: "all 0.3s ease", // Smooth transition for other elements
-
-          // marginTop: "10px",
-          // zIndex: "100",
         }}
       >
         <Box
@@ -258,6 +246,7 @@ const Navbar = () => {
                       PaperProps={{
                         style: {
                           width: "123px",
+                          backgroundColor: "#D9D9D9",
                         },
                       }}
                     >
@@ -314,11 +303,14 @@ const Navbar = () => {
             />
           </Button>
           <Button
+            id="burger-btn"
+            aria-controls={burgerOpen ? "burger-menu" : undefined}
+            aria-haspopup="true"
+            aria-expanded={burgerOpen ? "true" : undefined}
+            onClick={handleBurgerClick}
             sx={{
-              // backgroundColor: "red",
-              color: "#F4F4F4",
-              // width:"60px",
-              // height:"50px",
+              backgroundColor: burgerAnchorEl===null ? "transparent" : "#D9D9D9",
+              color: burgerAnchorEl===null ? "#F4F4F4" : "#191919",
               borderRadius: "15px",
               "&:hover": {
                 backgroundColor: "#D9D9D9",
@@ -335,6 +327,29 @@ const Navbar = () => {
               }}
             />
           </Button>
+          <Menu
+            id="burger-menu"
+            anchorEl={burgerAnchorEl}
+            open={burgerOpen}
+            onClose={() => setBurgerAnchorEl(null)}
+            MenuListProps={{
+              "aria-labelledby": "burger-btn",
+            }}
+            PaperProps={{
+              style: {
+                width: "155px",
+                backgroundColor: "#D9D9D9",
+              },
+            }}
+            transformOrigin={{ horizontal: "right", vertical: "top" }}
+            anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+          >
+            <MenuItem onClick={() => setBurgerAnchorEl(null)}>
+              Account Settings
+            </MenuItem>
+            <MenuItem onClick={() => navigate("/borrow-history", { state: { userLoggedIn: userLoggedIn }})}>History</MenuItem>
+            <MenuItem onClick={() => setBurgerAnchorEl(null)}>Log Out</MenuItem>
+          </Menu>
         </Stack>
       </Box>
     </Box>
