@@ -42,7 +42,7 @@ const Login = ({ open, updateOpen, updateLogin, successfulLogin }) => {
 
   const handleLoginClick = async () => {
     for (const acc of account) {
-      if (acc.username === login.username && acc.password === login.password) {
+      if (acc.username.toLowerCase() === login.username.toLowerCase() && acc.password === login.password) {
         console.log("Login successful");
 
         await createLog({

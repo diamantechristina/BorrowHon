@@ -376,8 +376,8 @@ const Dashboard = ({ open, updateOpen, successfulLogin }) => {
               },
               display: "flex",
               flexDirection: "column",
-              justifyContent: "center",
               alignItems: "center",
+              
             }}
           >
             <Box

@@ -1,11 +1,12 @@
 import { set } from "mongoose";
 import React, { useState, useEffect, useMemo } from "react";
-import { Modal, Backdrop, Box, Typography, Button } from "@mui/material";
+import { Modal, Backdrop, Box, Typography, Button, TextField, InputAdornment } from "@mui/material";
 import { useLocation } from "react-router-dom";
 import { useHistory } from "../../library/history";
 // import  BorrowBook from "../../components/BorrowBook.jsx";
-import { ArrowSmallLeft } from "react-flaticons";
+import { ArrowSmallLeft, EyeCrossed, Eye } from "react-flaticons";
 import { useNavigate } from "react-router-dom";
+import { useLog } from "../../library/log";
 import "@fontsource/montserrat";
 
 const ViewBook = () => {
@@ -14,27 +15,55 @@ const ViewBook = () => {
   const [bookData, setBookData] = useState(location.state?.bookData);
   const [userLoggedIn, setUserLoggedIn] = useState(location.state?.user);
   console.log("bookData: ", bookData);
+  const { fetchHistory, history } = useHistory();
+
+  const [showPassword, setShowPassword] = useState(false);
+  const togglePasswordVisibility = () => {
+    setShowPassword((prev) => !prev);
+  };
+
+  const [pass, setPass] = useState({
+    password: "",
+  });
+
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
+    setPass((prevLogin) => ({
+      ...prevLogin,
+      [name]: value,
+    }));
+  };
+
+  useEffect(() => {
+    fetchHistory();
+  }, [fetchHistory]);
+
+  console.log("User: ", userLoggedIn);
+
+  // Locate the specific history entry that matches the current book and user
+  const currentBookHistory = useMemo(() => {
+    return history?.find(
+      (entry) =>
+        entry.book_id === bookData?.book_id &&
+        entry.acc_id === userLoggedIn?.acc_id
+    );
+  }, [history, bookData, userLoggedIn]);
 
   useMemo(() => {
     setBookData(location.state?.bookData);
     setUserLoggedIn(location.state?.user);
   }, [location.state]);
+
   console.log("bookData: ", bookData);
 
+  //get book dat
   useEffect(() => {
-    if (bookData?.coverImage === undefined && userLoggedIn === undefined) {
+    if (bookData === undefined && userLoggedIn === undefined) {
       navigate("/login");
     }
   }, [bookData, userLoggedIn]);
 
-  // useEffect(() => {
-  //   console.log(bookData);
-  //   console.log("user: ", userLoggedIn.acc_id, userLoggedIn.username);
-  // });
-
   const [open, setOpen] = useState(false);
-
-  const history = useHistory();
 
   const handleOpen = () => {
     setOpen(true);
@@ -45,13 +74,16 @@ const ViewBook = () => {
   };
   const { createHistory } = useHistory();
   const handleBorrowBook = async () => {
-    const newHistory = {
+    if (userLoggedIn?.password === pass.password) {
+      const newHistory = {
       book_id: bookData.book_id,
       acc_id: userLoggedIn.acc_id,
     };
     const { success, message } = await createHistory(newHistory);
     console.log("Success:", success);
     console.log("Message:", message);
+    }
+    
   };
 
   return (
@@ -160,7 +192,7 @@ const ViewBook = () => {
               height: "100%",
               left: 0,
               position: "absolute",
-              borderRadius: "20px",
+              borderRadius: "30px",
               display: "flex",
               // justifyContent: "center",
               alignItems: "center",
@@ -172,23 +204,23 @@ const ViewBook = () => {
                 // backgroundColor: "red",
                 width: "35%",
                 height: "100%",
-                borderRadius: "20px",
+                borderRadius: "30px",
                 display: "flex",
-                justifyContent: "right",
                 alignItems: "center",
               }}
             >
               <Box
                 sx={{
-                  width: "93%",
-                  height: "90%",
+                  marginLeft: "10px",
+                  width: "100%",
+                  height: "96%",
                 }}
               >
                 <Box
                   sx={{
                     backgroundImage: `url(${bookData?.coverImage})`,
                     backgroundSize: "cover",
-                    borderRadius: "20px",
+                    borderRadius: "25px",
                     width: "100%",
                     height: "100%",
                   }}
@@ -215,14 +247,40 @@ const ViewBook = () => {
                   justifyContent: "center",
                   marginTop: "20px",
                   // alignItems: "center",
+                  // backgroundColor: "red",
+                  gap: "10px",
                 }}
               >
                 <Typography
                   sx={{
                     color: "#F4F4F4",
-                    fontSize: "40px",
                     fontWeight: "bold",
                     fontFamily: "montserrat",
+                    textTransform: "capitalize",
+                    textDecoration: "underline",
+                    textUnderlineOffset: "7px",
+                  }}
+                >
+                  {currentBookHistory
+                    ? currentBookHistory?.status
+                    : "Available"}
+                </Typography>
+                {/* <Box
+                  sx={{
+                    width: "20%",
+                    height: "0.5px",
+                    left: 0,
+                    right: 0,
+                    backgroundColor: "#F4F4F4",
+                  }}
+                ></Box> */}
+                <Typography
+                  sx={{
+                    color: "#F4F4F4",
+                    fontSize: "clamp(1.5vw, 3vw, 3vw)",
+                    fontWeight: "bold",
+                    fontFamily: "montserrat",
+                    textTransform: "uppercase",
                   }}
                 >
                   {bookData?.title}
@@ -230,6 +288,7 @@ const ViewBook = () => {
                 <Typography
                   sx={{
                     color: "#F4F4F4",
+                    fontFamily: "montserrat",
                   }}
                 >
                   {bookData?.genre.join(", ")}
@@ -238,6 +297,7 @@ const ViewBook = () => {
                   sx={{
                     color: "#F4F4F4",
                     fontWeight: "bold",
+                    fontFamily: "montserrat",
                   }}
                 >
                   {bookData?.author}
@@ -245,13 +305,14 @@ const ViewBook = () => {
                 <Typography
                   sx={{
                     color: "#F4F4F4",
+                    fontFamily: "montserrat",
                   }}
                 >
                   ISBN: {bookData?.isbn}
                 </Typography>
                 <Box
                   sx={{
-                    width: "90%",
+                    width: "100%",
                     height: "1px",
                     left: 0,
                     backgroundColor: "#F4F4F4",
@@ -261,15 +322,18 @@ const ViewBook = () => {
                   sx={{
                     color: "#F4F4F4",
                     textAlign: "justify",
+                    fontFamily: "montserrat",
                   }}
                 >
                   &emsp;&emsp;{bookData?.description}
                 </Typography>
+
                 <Button
                   onClick={handleOpen}
                   variant="contained"
                   sx={{
-                    width: "10vw",
+                    width: "clamp(10vw, 10vw, 10vw)",
+                    height: "clamp(6vh, 6vh, 6vh)",
                     boxShadow: "none",
                     border: "2px solid #f4f4f4",
                     backgroundColor: "transparent",
@@ -277,6 +341,10 @@ const ViewBook = () => {
                     "&:hover": {
                       boxShadow: "none",
                     },
+                    borderRadius: "13px",
+                    fontWeight: "bold",
+                    fontSize: "15px",
+                    marginTop: "20px",
                   }}
                 >
                   Borrow
@@ -300,10 +368,10 @@ const ViewBook = () => {
                       transform: "translate(-50%, -50%)",
                       width: "60vw",
                       height: "80vh",
-                      bgcolor: "#225560",
                       border: "2px solid #000",
                       boxShadow: 24,
                       p: 4,
+                      backgroundColor: "black",
                       borderRadius: "20px",
                       display: "flex",
                       justifyContent: "center",
@@ -393,7 +461,7 @@ const ViewBook = () => {
                         >
                           {bookData?.author}
                         </Typography>
-                        <Typography
+                        {/* <Typography
                           sx={{
                             fontSize: "20px",
                             fontFamily: "montserrat",
@@ -401,7 +469,7 @@ const ViewBook = () => {
                           }}
                         >
                           ISBN: {bookData?.isbn}
-                        </Typography>
+                        </Typography> */}
                         <Box
                           sx={{
                             width: "100%",
@@ -410,14 +478,92 @@ const ViewBook = () => {
                             my: "2vh",
                           }}
                         ></Box>
-                        <Typography
+                        <Box
                           sx={{
-                            fontSize: "20px",
-                            fontFamily: "montserrat",
+                            height: "20vh",
+                            overflowY: "scroll",
+                            // backgroundColor: "#F4F4F4",
+                            "&::-webkit-scrollbar": {
+                              display: "none", // Hide scrollbars for WebKit browsers
+                            },
+                            // backgroundImage:
+                            //   "linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0), rgba(0, 0, 0, 0), rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.5))",
                           }}
                         >
-                          {bookData?.description}
-                        </Typography>
+                          <Typography
+                            sx={{
+                              textAlign: "justify",
+                              fontFamily: "montserrat",
+                            }}
+                          >
+                            {bookData?.description}
+                          </Typography>
+                        </Box>
+                          <TextField
+                            required
+                            type={showPassword ? "text" : "password"}
+                            // id='outlined-basic'
+                            variant="outlined"
+                            label="Password"
+                            name="password"
+                            // value={login.password}
+                            onChange={handleInputChange}
+                            InputLabelProps={{ required: false }}
+                            sx={{
+                              "& .MuiInputLabel-root": {
+                                color: "#F4F4F4", // label color
+                                paddingLeft: "6px",
+                              },
+                              "& .MuiInputLabel-root.Mui-focused": {
+                                color: "#F4F4F4",
+                              },
+                              "& .MuiOutlinedInput-root": {
+                                width: "clamp(10rem, 23vw, 40rem)",
+                                height: "52px",
+                                paddingLeft: "6px",
+                                paddingRight: "6px",
+                              },
+                              "& .MuiOutlinedInput-notchedOutline": {
+                                borderColor: "#F4F4F4", // border color
+                                borderRadius: "20px", // border radius
+                                borderWidth: "2px",
+                              },
+                              "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline":
+                                {
+                                  borderColor: "#F4F4F4", // focus border color
+                                },
+                              "& .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline":
+                                {
+                                  borderColor: "#F4F4F4", // hover border color
+                                },
+                            }}
+                            InputProps={{
+                              style: {
+                                color: "#F4F4F4",
+                              },
+                              endAdornment: (
+                                <InputAdornment position="end">
+                                  <Button
+                                    aria-label="toggle password visibility"
+                                    onClick={togglePasswordVisibility}
+                                    sx={{
+                                      color: "#F4F4F4",
+                                      // backgroundColor: "red",
+                                      marginRight: "15px",
+                                      minWidth: 0,
+                                    }}
+                                  >
+                                    {showPassword ? (
+                                      <Eye size={17} />
+                                    ) : (
+                                      <EyeCrossed size={17} />
+                                    )}
+                                  </Button>
+                                </InputAdornment>
+                              ),
+                            }}
+                          />
+                        
                       </Box>
                     </Box>
                     <Button
