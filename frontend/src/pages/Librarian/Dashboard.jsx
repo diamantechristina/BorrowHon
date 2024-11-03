@@ -8,10 +8,26 @@ import {
   MenuItem,
   CircularProgress,
 } from "@mui/material";
+import { LineChart } from "@mui/x-charts";
 import { Bell, MenuBurger, BookAlt, BookOpenReader } from "react-flaticons";
 import { useBook } from "../../library/book.js";
 import { useHistory } from "../../library/history.js";
 import { useNavigate } from "react-router-dom";
+
+const months = [
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
+];
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -41,6 +57,7 @@ const Dashboard = () => {
   }, [history]);
 
   console.log("pendingBooks: ", pendingBooks);
+
 
   return (
     <Box
@@ -201,7 +218,7 @@ const Dashboard = () => {
             sx={{
               width: "90vw",
               height: "76vh",
-            //   backgroundColor: "blue",
+              //   backgroundColor: "blue",
               display: "flex",
               justifyContent: "space-between",
               alignItems: "center",
@@ -388,7 +405,7 @@ const Dashboard = () => {
                 sx={{
                   width: "44vw",
                   height: "10vh",
-                //   backgroundColor: "pink",
+                  //   backgroundColor: "pink",
                   borderRadius: "20px",
                   justifyContent: "space-between",
                   display: "flex",
@@ -462,16 +479,29 @@ const Dashboard = () => {
                 width: "44vw",
                 right: 0,
                 height: "inherit",
-                backgroundColor: "pink",
+                // backgroundColor: "pink",
               }}
             >
               <Box
                 sx={{
                   width: "44vw",
-                  height: "50vh",
-                  backgroundColor: "red",
+                  height: "45vh",
+                  backgroundColor: "#2E2E2E",
+                  borderRadius: "20px",
+                  area: "false",
                 }}
-              ></Box>
+              >
+                <LineChart
+                  xAxis={[{ scaleType: "point", data: months }]}
+                  series={[
+                    {
+                      name: "Reader Sign Ins",
+                      data: [20, 5, 35, 50, 10, 40, 15, 30, 25, 45, 5, 10],
+                      curve: "linear",
+                    },
+                  ]}
+                ></LineChart>
+              </Box>
             </Box>
           </Box>
         </Box>
