@@ -1,11 +1,9 @@
-import { Box, Typography } from "@mui/material";
+import { Box, Typography, Button } from "@mui/material";
 import React, { useEffect } from "react";
-import { Trash, Pencil, Edit } from "react-flaticons";
-import ConfirmDeleteBook from "./ConfirmBook.jsx";
-import EditBook from "./ManageBook.jsx";
+import "@fontsource/arimo"
 import { useState } from "react";
 
-const PendingBookCard = ({ book}) => {
+const PendingBookCard = ({ book, account }) => {
   
 
   return (
@@ -15,15 +13,17 @@ const PendingBookCard = ({ book}) => {
         height: "60vh",
         objectFit: "contain",
         background:
-          book.coverImage !== undefined
-            ? `url(${book.coverImage})`
+          book?.coverImage !== undefined
+            ? `url(${book?.coverImage})`
             : 'url("src/resources/defaultCover.png")',
         backgroundColor: "#225560",
-        backgroundSize: book.coverImage !== undefined ? "cover" : "contain",
+        backgroundSize: book?.coverImage !== undefined ? "cover" : "contain",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
         display: "flex",
         borderRadius: "20px",
+        flexDirection: "column",
+        justifyContent: "flex-end",
         transition: "300ms",
         "&:hover": {
           transform: "scale(1.025)",
@@ -36,8 +36,8 @@ const PendingBookCard = ({ book}) => {
           sx={{
             display:"flex",
             width: "100%",
-            height: "100%",
-            backgroundColor: "rgba(0, 0, 0, 0.75)",
+            height: "50%",
+            backgroundImage: "linear-gradient(to top, rgba(0, 0, 0, 0.75),rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0))",
             flexDirection: "column",
             justifyContent: "flex-end",
             alignItems: "left",
@@ -57,7 +57,7 @@ const PendingBookCard = ({ book}) => {
             }}
             gutterBottom
           >
-            {book.title.toUpperCase()}
+            {book?.title.toUpperCase()}
           </Typography>
           <Typography
             sx={{
@@ -67,10 +67,56 @@ const PendingBookCard = ({ book}) => {
               marginBottom: "2vh",
             }}
           >
-            {book.author}
+            {account?.firstName} {account?.lastName}
           </Typography>
           
-          
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-evenly",
+              alignItems: "center",
+              marginBottom: "1vh",
+              width: "100%",
+            }}
+          >
+            <Button
+                variant="outlined"
+                sx={{
+                    color: "#f4f4f4",
+                    borderRadius: "20px",
+                    width: "8vw",
+                    borderColor: "#f4f4f4",
+                    "&:hover": {
+                        borderColor: "#f4f4f4",
+                    },
+                    fontFamily: "Arimo",
+                    fontWeight: "bold",
+                    fontSize: "clamp(0.5rem, 0.75rem, 1rem)",
+                    textTransform: "none",
+                }}
+            >
+                Accept
+            </Button>
+            <Button
+                variant="outlined"
+                sx={{
+                    color: "#f4f4f4",
+                    borderRadius: "20px",
+                    width: "8vw",
+                    borderColor: "#f4f4f4",
+                    "&:hover": {
+                        borderColor: "#f4f4f4",
+                    },
+                    fontFamily: "Arimo",
+                    fontWeight: "bold",
+                    fontSize: "clamp(0.5rem, 0.75rem, 1rem)",
+                    textTransform: "none",
+
+                }}
+            >
+                Decline
+            </Button>
+          </Box>
         </Box>
       
     </Box>

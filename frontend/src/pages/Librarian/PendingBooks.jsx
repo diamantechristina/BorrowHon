@@ -3,12 +3,14 @@ import { ArrowSmallLeft } from "react-flaticons";
 import { useBook } from "../../library/book";
 import { useAccount } from "../../library/account";
 import { useHistory } from "../../library/history";
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
+import PendingBookCard from "../../components/PendingBookCard";
 
 const PendingBooks = () => {
   const { fetchHistory, history } = useHistory();
   const { fetchAccount, account } = useAccount();
   const { fetchBook, books } = useBook();
+  const [pendings, setPendings] = React.useState(0);
   useEffect(() => {
     fetchHistory();
   }, [fetchHistory]);
@@ -20,9 +22,22 @@ const PendingBooks = () => {
   useEffect(() => {
     fetchBook();
   }, [fetchBook]);
+  const pendingHistories = useMemo(() => {
+    setPendings(history?.filter((item) => item.status === "pending").length)
+    return history?.filter((item) => item.status === "pending")
+  }, [history]);
 
-  const pendingHistories = history?.filter((item) => item.status === "pending");
-  console.log(pendingHistories)
+  const pendingBooks = useMemo(() => {
+      return books?.filter((book) => {
+        return pendingHistories?.map((item) => item.book_id).includes(book.book_id);
+      })
+  }, [books]);
+  const borrowerAccounts = useMemo(() => {
+      return account?.filter((acc) => {
+        return pendingHistories?.map((item) => item.acc_id).includes(acc.acc_id);
+      })
+  }, [account]);
+      
   return (
     <Box
       sx={{
@@ -30,6 +45,7 @@ const PendingBooks = () => {
         justifyContent: "center",
         backgroundColor: "#191919",
         position: "relative",
+
       }}
     >
       <Button
@@ -79,18 +95,26 @@ const PendingBooks = () => {
           display: "flex",
           flexDirection: "row",
           alignItems: "center",
-          justifyContent: "flex-start",
+          justifyContent: pendings < 5 ? "center" : "flex-start",
           flexWrap: "wrap",
           backgroundColor: "#191919",
           width: "100vw",
-          marginTop: "10vh",
+          height: pendings < 5 ? "95vh" : "auto",
+          marginTop: pendings < 5 ? "" : "10vh",
+          paddingTop: pendings < 5 ? "" : "5vh",
           gap: "3.5vw",
-          paddingY: "5vh",
+          paddingBottom: "5vh",
           marginX: "3vw",
           rowGap: "3vh",
         }}
       >
-
+        {pendingHistories?.map((history) => (
+          <PendingBookCard
+            key={history._id}
+            book={pendingBooks?.find((book) => book.book_id === history.book_id)}
+            account={borrowerAccounts?.find((acc) => acc.acc_id === history.acc_id)}
+          />
+        ))}
       </Box>
     </Box>
   );
