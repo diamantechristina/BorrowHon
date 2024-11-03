@@ -15,7 +15,7 @@ import { Search, Filter, Bell, MenuBurger } from "react-flaticons";
 import { useNavigate } from "react-router-dom";
 import "@fontsource/arimo";
 
-const Navbar = (userLoggedIn) => {
+const Navbar = ({userLoggedIn}) => {
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);

@@ -141,7 +141,7 @@ const Dashboard = ({ open, updateOpen, successfulLogin }) => {
           updateOpen={updateOpen}
           successfulLogin={successfulLogin}
         />
-        <Navbar userLoggedIn={userLoggedIn} />
+        <Navbar userLoggedIn={{...userLoggedIn}} />
         <Box
           sx={{
             display: "flex",

@@ -1,6 +1,6 @@
 import React from "react";
 import { useEffect, useMemo } from "react";
-import { useNavigate, useLocation, } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Box, Button, Typography } from "@mui/material";
 import { ArrowSmallLeft } from "react-flaticons";
 import { useHistory } from "../../library/history";
@@ -23,30 +23,20 @@ const History = () => {
   }, [fetchBook]);
 
   console.log("books: ", books);
-
-  //   const bookHistories = history?.filter(
-  //     (history) => history.book_id === books?.book_id
-  //   )
-  //   console.log()
-
-  const userHistories = useMemo(() => {
-    return history?.filter(
-      () =>
-        history.acc_id === userLoggedIn.acc_id
-    );
-  }, [history, userLoggedIn]);
-  
-  const bookHistory = useMemo(() => {
-    return books?.filter(
-      () =>
-        userHistories?.book_id === books.book_id
-    );
-  }, [userHistories, books]);
-
-  console.log("userHistories: ", userHistories); 
-  console.log("bookHistory: ", bookHistory);
-
   console.log("userLoggedIn: ", userLoggedIn);
+
+  const userHistory = useMemo(() => {
+    return history?.filter((item) => item.acc_id === userLoggedIn.acc_id);
+  }, [history, userLoggedIn]);
+
+  console.log("userHistory: ", userHistory);
+
+  const booksHistory = books.filter((book) => {
+    return userHistory.some((item) => item.book_id === book.book_id);
+  });
+
+  console.log("booksHistory: ", booksHistory);
+
   return (
     <Box
       sx={{
@@ -117,7 +107,14 @@ const History = () => {
           height: "85vh",
           backgroundColor: "red",
         }}
-      ></Box>
+      >
+        {userHistory?.map((history) => (
+          <Box key = {history.book_id}>
+            <Typography>{booksHistory.find((book) => book.book_id === history.book_id)?.title}</Typography>
+            <Typography>{history.status}</Typography>
+          </Box>
+        ))}
+      </Box>
     </Box>
   );
 };
