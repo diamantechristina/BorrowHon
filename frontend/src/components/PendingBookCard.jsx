@@ -4,7 +4,7 @@ import "@fontsource/arimo";
 import { useState } from "react";
 import PendingConfirm from "./PendingConfirm";
 
-const PendingBookCard = ({ book, account }) => {
+const PendingBookCard = ({ book, account, history }) => {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   return (
@@ -104,6 +104,7 @@ const PendingBookCard = ({ book, account }) => {
             setOpen={setOpen}
             book={book}
             account={account}
+            history={history}
           />
           <Button
             variant="outlined"
