@@ -41,7 +41,7 @@ const History = () => {
   console.log("userHistory: ", userHistory);
 
   const booksHistory = books.filter((book) => {
-    return userHistory.some((item) => item.book_id === book.book_id);
+    return userHistory?.some((item) => item.book_id === book.book_id);
   });
 
   console.log("booksHistory: ", booksHistory);
