@@ -111,6 +111,7 @@ const PendingBooks = () => {
         {pendingHistories?.map((history) => (
           <PendingBookCard
             key={history._id}
+            history={history}
             book={pendingBooks?.find((book) => book.book_id === history.book_id)}
             account={borrowerAccounts?.find((acc) => acc.acc_id === history.acc_id)}
           />
