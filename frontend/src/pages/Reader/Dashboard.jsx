@@ -414,8 +414,9 @@ const Dashboard = ({ open, updateOpen, successfulLogin }) => {
                         width: "100%",
                         height: "100%",
                         display: "flex",
-                        justifyContent: "center",
+                        justifyContent: "flex-end",
                         flexDirection: "column",
+                        
                         color: "#F4F4F4",
                         backgroundImage:
                           "linear-gradient(to bottom, rgba(0, 20, 20, 0.3), rgba(20, 20, 20, 1))",
@@ -533,7 +534,7 @@ const Dashboard = ({ open, updateOpen, successfulLogin }) => {
                         width: "100%",
                         height: "100%",
                         display: "flex",
-                        justifyContent: "center",
+                        justifyContent: "flex-end",
                         flexDirection: "column",
                         color: "#F4F4F4",
                         backgroundImage:

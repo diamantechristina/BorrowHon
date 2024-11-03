@@ -140,6 +140,7 @@ const ViewBook = () => {
           message={snackbarMessage}
           style={{
             backgroundColor: snackbarMessage === "Book borrow request sent!" ? "green" : "red",
+            justifyContent: "center",
           }}
         />
       </Snackbar>

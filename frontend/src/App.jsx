@@ -12,6 +12,7 @@ import PendingBooks from "./pages/Librarian/PendingBooks.jsx";
 import AccountSettings from "./pages/AccountSettings.jsx";
 import ViewBook from "./pages/Reader/ViewBook.jsx";
 import History from "./pages/Reader/History.jsx";
+import Librarian_Dashboard from "./pages/Librarian/Dashboard.jsx";
 
 function App() {
   const [open, setOpen] = useState(false);
@@ -24,6 +25,7 @@ function App() {
   }
   return (
     <Routes>
+      <Route path="/librarian-dashboard" element = {<Librarian_Dashboard/>}/>
       <Route path="/borrow-history" element = {<History/>}/>
       <Route path="/view-book" element = {<ViewBook/>}/>
       <Route path="/settings" element = {<AccountSettings/>}/>

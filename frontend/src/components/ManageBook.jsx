@@ -172,7 +172,7 @@ const ManageBook = ({open, setOpen, pageTitle, confirmPageTitle, handleHover, bo
                             sx={{
                                 //   backgroundColor: "pink",
                                 height: "50vh",
-                                width: "270px",
+                                width: "250px",
                                 borderRadius: "20px",
                                 border: (book!==undefined ? book.coverImage : newBook.coverImage)
                                     ? "3px solid transparent"
