@@ -30,4 +30,32 @@ export const useBook = create((set) => ({
             books: data.data
         })
     },
+
+    deleteBook: async (id) => {
+        const res = await fetch(`/api/books/${id}`, {
+            method: "DELETE",
+        })
+        const data = await res.json()
+        set((state) => ({
+            books: state.books.filter((book) => book._id !== id),
+        }))
+        return {success:true, message:"Book deleted successfully."}
+    },
+
+    updateBook: async (id, updatedBook) => {
+        const res = await fetch(`/api/books/${id}`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(updatedBook),
+        })
+        const data = await res.json()
+        set((state) => ({
+            books: state.books.map((book) =>
+                book._id === id ? data.data : book
+            ),
+        }))
+        return {success:true, message:"Book updated successfully."}
+            }
 }))

@@ -11,6 +11,7 @@ const BookCard = ({ book, open, setOpen }) => {
   const [isHover, setIsHover] = useState(false);
 
   const handleOpen = () => {
+    console.log("book: ", book)
     setEditOpen(true)
     setIsHover(false)
   };
@@ -127,7 +128,7 @@ const BookCard = ({ book, open, setOpen }) => {
           <ConfirmDeleteBook
             confirmOpen={confirmOpen}
             setConfirmOpen={setConfirmOpen}
-            pageTitle={"Delete Book"}
+            pageTitle={"Confirm Delete Book"}
             backgroundImageUrl={book.coverImage}
             newBook={book}
             handleHover={handleHover}

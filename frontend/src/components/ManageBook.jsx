@@ -6,7 +6,6 @@ import { TextField, styled } from "@mui/material";
 import ConfirmAddBook from "./ConfirmBook.jsx";
 
 const ManageBook = ({open, setOpen, pageTitle, confirmPageTitle, handleHover, book}) => {
-    const [selectedFiles, setSelectedFiles] = useState(null);
 
   const [newBook, setNewBook] = useState({
     title: "",
@@ -19,6 +18,7 @@ const ManageBook = ({open, setOpen, pageTitle, confirmPageTitle, handleHover, bo
   const [confirmOpen, setConfirmOpen] = useState(false);
 
     const handleClose = () => {
+        setNewBook({ title: "", author: "", genre: "", isbn: "", description: "", coverImage: "" })
         setOpen(false)
         if(handleHover) handleHover(false)
     };
@@ -27,10 +27,14 @@ const ManageBook = ({open, setOpen, pageTitle, confirmPageTitle, handleHover, bo
     setConfirmOpen(true);
   };
 
-    const handleDrop = (event) => {
+    const handleDrop = async (event) => {
         event.preventDefault();
-        const files = event.dataTransfer.files;
-        setSelectedFiles(files);
+        const file = event.dataTransfer.files[0];
+        const image = await resizeFile(file);
+        setNewBook((prevBook) => ({
+            ...prevBook,
+            coverImage: image,
+        }));
     };
 
   const handleDragOver = (event) => {
@@ -49,27 +53,18 @@ const ManageBook = ({open, setOpen, pageTitle, confirmPageTitle, handleHover, bo
     width: 1,
   });
 
-  const backgroundImageUrl =
-    book === undefined
-      ? useMemo(() => {
-          if (selectedFiles && selectedFiles[0]) {
-            return URL.createObjectURL(selectedFiles[0]);
-        }
-        return "";
-    }, [selectedFiles]) : useMemo(() => {
-        if (book.coverImage) {
-            setSelectedFiles(book.coverImage)
-            return book.coverImage;
-        }
-        return "";
-    }, [selectedFiles]);
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
+    if(book !== undefined){
+        book[name] = value
+    }
+    
     setNewBook((prevBook) => ({
-      ...prevBook,
-      [name]: value,
-    }));
+        ...prevBook,
+        [name]: value,
+        }));
+
   };
 
     const resizeFile = (file) =>
@@ -179,7 +174,7 @@ const ManageBook = ({open, setOpen, pageTitle, confirmPageTitle, handleHover, bo
                                 height: "50vh",
                                 width: "270px",
                                 borderRadius: "20px",
-                                border: selectedFiles
+                                border: (book!==undefined ? book.coverImage : newBook.coverImage)
                                     ? "3px solid transparent"
                                     : "3px dashed #F4F4F4",
                                 marginRight: "50px",
@@ -205,7 +200,7 @@ const ManageBook = ({open, setOpen, pageTitle, confirmPageTitle, handleHover, bo
                                     backgroundColor: "transparent",
                                     textTransform: "none",
                                     fontSize: "18px",
-                                    backgroundImage: `url(${backgroundImageUrl})`,
+                                    backgroundImage: `url(${book!==undefined ? book.coverImage : newBook.coverImage})`,
                                     backgroundSize: "cover",
                                     backgroundPosition: "center",
                                     backgroundRepeat: "no-repeat",
@@ -215,13 +210,13 @@ const ManageBook = ({open, setOpen, pageTitle, confirmPageTitle, handleHover, bo
                                     boxShadow: "none",
                                 }}
                                 style={{
-                                    filter: selectedFiles
+                                    filter: (book!==undefined ? book.coverImage : newBook.coverImage)
                                         ? "drop-shadow(0 0 5px black)"
                                         : "",
                                 }}
                             // startIcon={<CloudUploadIcon />}
                             >
-                                {selectedFiles ? (
+                                {(book!==undefined ? book.coverImage : newBook.coverImage) ? (
                                     ""
                                 ) : (
                                     <>
@@ -271,8 +266,12 @@ const ManageBook = ({open, setOpen, pageTitle, confirmPageTitle, handleHover, bo
                                 )}
                                 <VisuallyHiddenInput
                                     type="file"
-                                    onChange={(event) =>
-                                        setSelectedFiles(event.target.files)
+                                    onChange={async (event) =>{
+                                        image = await resizeFile(event.target.files[0])
+                                        setNewBook((prevBook) => ({
+                                            ...prevBook,
+                                            coverImage: iamge
+                                        }))}
                                     }
                                     multiple
                                 />
@@ -561,8 +560,7 @@ const ManageBook = ({open, setOpen, pageTitle, confirmPageTitle, handleHover, bo
                     confirmOpen={confirmOpen} 
                     setConfirmOpen={setConfirmOpen} 
                     pageTitle={confirmPageTitle} 
-                    backgroundImageUrl={backgroundImageUrl} 
-                    newBook={newBook}
+                    newBook={book === undefined ? newBook : book}
                 />
             </Box>
         </Modal>

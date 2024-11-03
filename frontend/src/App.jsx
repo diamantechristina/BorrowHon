@@ -8,7 +8,7 @@ import ContinueForgotPassword from "./pages/ContinueForgotPassword.jsx";
 import { Route, Routes } from "react-router-dom";
 import LibrarianListOfBooks from "./pages/Librarian/ListOfBooks.jsx";
 import SnackBar from "./components/SnackBar.jsx";
-import { set } from "mongoose";
+import PendingBooks from "./pages/Librarian/PendingBooks.jsx";
 import AccountSettings from "./pages/AccountSettings.jsx";
 import ViewBook from "./pages/Reader/ViewBook.jsx";
 import History from "./pages/Reader/History.jsx";
@@ -33,6 +33,7 @@ function App() {
         path="/continue-forgot-password"
         element={<ContinueForgotPassword />}
       />
+      <Route path="/pending-books" element={<PendingBooks />} />
       <Route path="/register" element={<Register />} />
       <Route path="/continue-register" element={<ContinueRegister />} />
       <Route path="/" element={<Login open = {open} updateOpen = {updateOpen} successfulLogin = {successfulLogin} updateLogin = {updateLogin}/>} />

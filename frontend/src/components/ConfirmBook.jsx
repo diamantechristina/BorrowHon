@@ -3,18 +3,32 @@ import { useState } from "react";
 import { Box, Typography, Button, Modal, Backdrop } from "@mui/material";
 import { useBook } from "../library/book.js";
 
-const ConfirmBook = ({pageTitle, confirmOpen, setOpen, setConfirmOpen, backgroundImageUrl, handleHover, newBook}) => {
+const ConfirmBook = ({pageTitle, confirmOpen, setOpen, setConfirmOpen, handleHover, newBook}) => {
+    const { createBook, deleteBook,updateBook } = useBook();
+    
     const handleAddBook = async () => {
         const { success, message } = await createBook(newBook);
         console.log("Success:", success);
         console.log("Message:", message);
         setConfirmOpen(false)
-        setOpen(false)
+        setOpen !== null ? setOpen(false) : () => {}
         
     };
-    const { createBook } = useBook();
+    const handleDeleteBook = async () => {
+        const { success, message } = await deleteBook(newBook._id);
+        console.log("Success:", success);
+        console.log("Message:", message);
+        setConfirmOpen(false)
+        setOpen !== null ? setOpen(false) : () => {}
+    }
 
-    
+    const handleUpdateBook = async () => {
+        const { success, message } = await updateBook(newBook._id,newBook);
+        console.log("Success:", success);
+        console.log("Message:", message);
+        setConfirmOpen(false)
+        setOpen !== null ? setOpen(false) : () => {}
+    }
 
     const handleConfirmClose = () => {
         setConfirmOpen(false)
@@ -89,7 +103,7 @@ const ConfirmBook = ({pageTitle, confirmOpen, setOpen, setConfirmOpen, backgroun
                                 //   width: "25vw",
                                 height: "55vh",
 
-                                backgroundImage: `url(${backgroundImageUrl})`,
+                                backgroundImage: `url(${newBook.coverImage})`,
                                 backgroundSize: "contain",
                                 backgroundRepeat: "no-repeat",
                                 mx: "1.5vw",
@@ -180,7 +194,7 @@ const ConfirmBook = ({pageTitle, confirmOpen, setOpen, setConfirmOpen, backgroun
                         fontSize: "18px",
                     }}
                     tabIndex={-1}
-                    onClick={handleAddBook}
+                    onClick={pageTitle === "Confirm Add Book" ? handleAddBook : (pageTitle === "Confirm Delete Book") ? handleDeleteBook : handleUpdateBook}
                 >
                     Confirm
                 </Button>
