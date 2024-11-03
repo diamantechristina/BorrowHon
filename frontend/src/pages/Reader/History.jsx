@@ -1,7 +1,16 @@
 import React from "react";
 import { useEffect, useMemo } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { Box, Button, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Typography,
+  Table,
+  TableHead,
+  TableRow,
+  TableCell,
+  TableBody,
+} from "@mui/material";
 import { ArrowSmallLeft } from "react-flaticons";
 import { useHistory } from "../../library/history";
 import { useBook } from "../../library/book";
@@ -105,15 +114,177 @@ const History = () => {
           marginTop: "15vh",
           width: "100vw",
           height: "85vh",
-          backgroundColor: "red",
+          // backgroundColor: "red",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
         }}
       >
-        {userHistory?.map((history) => (
-          <Box key = {history.book_id}>
-            <Typography>{booksHistory.find((book) => book.book_id === history.book_id)?.title}</Typography>
-            <Typography>{history.status}</Typography>
-          </Box>
-        ))}
+        <Box
+          sx={{
+            width: "90vw",
+            backgroundColor: "#2e2e2e",
+          }}
+        >
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell
+                  sx={{
+                    fontWeight: "bold",
+                    color: "#f4f4f4",
+                    textAlign: "center",
+                    fontSize: "clamp(1vw, 2.2vw, 2.5vw)",
+                    borderWidth: "0px",
+                  }}
+                >
+                  Book Name
+                </TableCell>
+                <TableCell
+                  sx={{
+                    fontWeight: "bold",
+                    color: "#f4f4f4",
+                    textAlign: "center",
+                    fontSize: "clamp(1vw, 2.2vw, 2.5vw)",
+                    borderWidth: "0px",
+                  }}
+                >
+                  Date Borrowed
+                </TableCell>
+                <TableCell
+                  sx={{
+                    fontWeight: "bold",
+                    color: "#f4f4f4",
+                    textAlign: "center",
+                    fontSize: "clamp(1vw, 2.2vw, 2.5vw)",
+                    borderWidth: "0px",
+                  }}
+                >
+                  Date Returned
+                </TableCell>
+                <TableCell
+                  sx={{
+                    fontWeight: "bold",
+                    color: "#f4f4f4",
+                    textAlign: "center",
+                    fontSize: "clamp(1vw, 2.2vw, 2.5vw)",
+                    borderWidth: "0px",
+                  }}
+                >
+                  Status
+                </TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {userHistory?.map((history, index) => (
+                <TableRow
+                  key={history.book_id}
+                  sx={{
+                    backgroundColor:
+                      index % 2 === 0 ? "rgba(34, 85, 96, 0.15)" : "#2e2e2e",
+                  }}
+                >
+                  <TableCell
+                    sx={{
+                      width: "20vw",
+                      color: "#f4f4f4",
+                      textAlign: "center",
+                      fontFamily: "Inria Serif",
+                      borderWidth: "0px",
+                      fontSize: "clamp(1vw, 1.2vw, 1.5vw)",
+                      borderRadius:
+                        index % 2 === 0
+                          ? "20px 0px 0px 20px"
+                          : null,
+                    }}
+                  >
+                    {
+                      booksHistory.find(
+                        (book) => book.book_id === history.book_id
+                      )?.title
+                    }
+                  </TableCell>
+                  <TableCell
+                    sx={{
+                      width: "20vw",
+                      color: "#f4f4f4",
+                      textAlign: "center",
+                      fontFamily: "Inria Serif",
+                      borderWidth: "0px",
+                      fontSize: "clamp(1vw, 1.2vw, 1.5vw)",
+                    }}
+                  >
+                    {history.borrow_date ? (
+                      history.borrow_date
+                    ) : (
+                      <span
+                        style={{
+                          display: "flex",
+                          justifyContent: "center",
+                          textAlign: "center",
+                        }}
+                      >
+                        <Box
+                          sx={{
+                            height: "1px",
+                            width: "20%",
+                            backgroundColor: "#f4f4f4",
+                          }}
+                        ></Box>
+                      </span>
+                    )}
+                  </TableCell>
+                  <TableCell
+                    sx={{
+                      width: "20vw",
+                      color: "#f4f4f4",
+                      fontFamily: "Inria Serif",
+                      borderWidth: "0px",
+                      fontSize: "clamp(1vw, 1.2vw, 1.5vw)",
+                    }}
+                  >
+                    {history.return_date ? (
+                      history.return_date
+                    ) : (
+                      <span
+                        style={{
+                          display: "flex",
+                          justifyContent: "center",
+                          textAlign: "center",
+                        }}
+                      >
+                        <Box
+                          sx={{
+                            height: "1px",
+                            width: "20%",
+                            backgroundColor: "#f4f4f4",
+                          }}
+                        ></Box>
+                      </span>
+                    )}
+                  </TableCell>
+                  <TableCell
+                    sx={{
+                      width: "20vw",
+                      color: "#f4f4f4",
+                      textAlign: "center",
+                      textTransform: "capitalize",
+                      fontFamily: "Inria Serif",
+                      borderWidth: "0px",
+                      fontSize: "clamp(1vw, 1.2vw, 1.5vw)",
+                      borderRadius:
+                        index % 2 === 0
+                          ? "0px 20px 20px 0px"
+                          : null,
+                    }}
+                  >
+                    {history.status}
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </Box>
       </Box>
     </Box>
   );
