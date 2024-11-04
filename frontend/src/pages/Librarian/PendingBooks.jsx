@@ -24,23 +24,22 @@ const PendingBooks = () => {
   useEffect(() => {
     fetchBook();
   }, [fetchBook]);
-  const pendingHistories = useMemo(() => {
-    setPendings(history?.filter((item) => item.status === "pending").length);
-    return history?.filter((item) => item.status === "pending");
-  }, [history]);
+  const pendingHistories = history?.filter((item) => item.status === "pending");
+    
+  useEffect(() => {
+    setPendings(pendingHistories?.length);
 
-  const pendingBooks = useMemo(() => {
-    return books?.filter((book) => {
+  },[pendingHistories])    
+
+  const pendingBooks = books?.filter((book) => {
       return pendingHistories
         ?.map((item) => item.book_id)
         .includes(book.book_id);
     });
-  }, [books]);
-  const borrowerAccounts = useMemo(() => {
-    return account?.filter((acc) => {
+
+  const borrowerAccounts = account?.filter((acc) => {
       return pendingHistories?.map((item) => item.acc_id).includes(acc.acc_id);
     });
-  }, [account]);
 
   return (
     <Box
@@ -110,7 +109,7 @@ const PendingBooks = () => {
             flexDirection:"column",
             width:"inherit",
             height:"100vh",
-            marginTop:"20vh",
+            marginTop: pendings < 5 ? "" :"20vh",
             paddingLeft:"5vw"
           }}
         >
@@ -119,7 +118,7 @@ const PendingBooks = () => {
             display: "flex",
             flexDirection: "row",
             alignItems: "center",
-            justifyContent: pendings < 5 ? "center" : "flex-start",
+            justifyContent: pendings < 5 ? "flex-start" : "center",
             flexWrap: "wrap",
             backgroundColor: "#191919",
             width: "95vw",

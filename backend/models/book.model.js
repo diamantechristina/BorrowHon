@@ -29,7 +29,7 @@ const bookSchema = new mongoose.Schema({
     status:{
         type: String,
         required: true,
-        enum: ['available', 'unavailable', 'borrowed'],
+        enum: ['available', 'unavailable'],
         default: 'available'
     },
     coverImage:{

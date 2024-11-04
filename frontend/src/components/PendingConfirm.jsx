@@ -7,8 +7,10 @@ import "@fontsource/montserrat/500.css";
 import "@fontsource/montserrat/400.css";
 import "@fontsource/montserrat/300.css";
 import "@fontsource/montserrat/200.css";
+import { useBook } from "../library/book.js";
+import { useHistory } from "../library/history.js";
 
-const PendingConfirm = ({ open, setOpen, book, account }) => {
+const PendingConfirm = ({ open, setOpen, pageTitle, book, account, history }) => {
   const handleClose = () => setOpen(false);
   const [titleHover, setTitleHover] = useState(false);
   const handleTitleHover = useMemo(() => {
@@ -17,6 +19,39 @@ const PendingConfirm = ({ open, setOpen, book, account }) => {
   const handleTitleLeave = useMemo(() => {
     return () => setTitleHover(false);
   },[titleHover]);
+
+  const { updateBook } = useBook();
+  const { updateHistory, deleteHistory } = useHistory();
+
+  const handleUpdateBook = async (id,book) => {
+    const { success, message } = await updateBook(id,book);
+    console.log("Success:", success);
+    console.log("Message:", message);
+  }
+
+  const handleUpdateHistory = async (id,history) => {
+    const { success, message } = await updateHistory(id,history);
+    console.log("Success:", success);
+    console.log("Message:", message);
+  }
+
+  const handleDeleteHistory = async () => {
+    const { success, message } = await deleteHistory(history._id);
+    console.log("Success:", success);
+    console.log("Message:", message);
+    setOpen !== null ? setOpen(false) : () => {}
+  }
+
+  const handleAcceptPending = () => {
+    book["status"] = "unavailable";
+    history["status"] = "onhand";
+    history["borrowdate"] = borrowDate;
+    history["returndate"] = returnDate;
+    handleUpdateBook(book._id,book);
+    handleUpdateHistory(history._id,history);
+    setOpen !== null ? setOpen(false) : () => {}
+  }
+
   const months = [
     "January",
     "February",
@@ -37,6 +72,7 @@ const PendingConfirm = ({ open, setOpen, book, account }) => {
   const year = currentDate.getFullYear();
   const borrowDate = `${month} ${day}, ${year}`;
   const returnDate = `${month} ${day+5}, ${year}`;
+
   
   return (
     <Modal
@@ -84,7 +120,7 @@ const PendingConfirm = ({ open, setOpen, book, account }) => {
               alignItems: "center",
             }}
           >
-            ACCEPT PENDING
+            {pageTitle.toUpperCase()}
           </Typography>
         </Box>
         <Box
@@ -294,6 +330,7 @@ const PendingConfirm = ({ open, setOpen, book, account }) => {
         <Box>
           <Button 
           variant="contained"
+          onClick={pageTitle === "Accept Pending" ? handleAcceptPending : handleDeleteHistory}
           sx={{
             backgroundColor: "#1FAA70",
             color: "#F4F4F4",

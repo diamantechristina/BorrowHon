@@ -6,6 +6,8 @@ import PendingConfirm from "./PendingConfirm";
 
 const PendingBookCard = ({ book, account, history }) => {
   const [open, setOpen] = useState(false);
+  const [declineOpen, setDeclineOpen] = useState(false);
+  const handleDeclineOpen = () => setDeclineOpen(true);
   const handleOpen = () => setOpen(true);
   return (
     <Box
@@ -105,9 +107,11 @@ const PendingBookCard = ({ book, account, history }) => {
             book={book}
             account={account}
             history={history}
+            pageTitle={"Accept Pending"}
           />
           <Button
             variant="outlined"
+            onClick={handleDeclineOpen}
             sx={{
               color: "#f4f4f4",
               borderRadius: "20px",
@@ -124,7 +128,14 @@ const PendingBookCard = ({ book, account, history }) => {
           >
             Decline
           </Button>
-
+          <PendingConfirm
+            open={declineOpen}
+            setOpen={setDeclineOpen}
+            book={book}
+            account={account}
+            history={history}
+            pageTitle={"Decline Pending"}
+          />
           
         </Box>
       </Box>
