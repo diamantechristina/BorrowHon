@@ -106,20 +106,20 @@ const ViewBook = () => {
   };
   const statusRef = useRef(null);
 
-  const statusContent = statusRef.current?.textContent
+  const statusContent = statusRef.current?.textContent;
 
-  const handleKeyPress = (event) =>{
-    if (event.key === "Enter"){
+  const handleKeyPress = (event) => {
+    if (event.key === "Enter") {
       handleBorrowBook();
     }
-  }
+  };
 
   useEffect(() => {
-    document.addEventListener('keypress', handleKeyPress);
+    document.addEventListener("keypress", handleKeyPress);
     return () => {
-      document.removeEventListener('keypress', handleKeyPress);
-    } 
-  })
+      document.removeEventListener("keypress", handleKeyPress);
+    };
+  });
   return (
     <Box
       sx={{
@@ -147,10 +147,11 @@ const ViewBook = () => {
         autoHideDuration={3000}
         onClose={() => setOpenSnackbar(false)}
       >
-        <SnackbarContent 
+        <SnackbarContent
           message={snackbarMessage}
           style={{
-            backgroundColor: snackbarMessage === "Book borrow request sent!" ? "green" : "red",
+            backgroundColor:
+              snackbarMessage === "Book borrow request sent!" ? "green" : "red",
             justifyContent: "center",
           }}
         />
@@ -165,7 +166,7 @@ const ViewBook = () => {
           // backgroundColor: "gray",
         }}
       >
-              {/* navbar */}
+        {/* navbar */}
         <Box
           sx={{
             position: "fixed",
@@ -311,19 +312,15 @@ const ViewBook = () => {
                     textUnderlineOffset: "7px",
                   }}
                 >
-                  {currentBookHistory
-                    ? currentBookHistory?.status
-                    : "Available"}
+                  {/* conditioning for book status. when reader has book in their history,
+                   then use current book history, if not then use book data */}
+                  {currentBookHistory &&
+                  currentBookHistory.book_id === bookData.book_id
+                    ? currentBookHistory?.status === "onhand"
+                      ? "Borrowed"
+                      : currentBookHistory?.status
+                    : bookData.status}
                 </Typography>
-                {/* <Box
-                  sx={{
-                    width: "20%",
-                    height: "0.5px",
-                    left: 0,
-                    right: 0,
-                    backgroundColor: "#F4F4F4",
-                  }}
-                ></Box> */}
                 <Typography
                   sx={{
                     color: "#F4F4F4",
@@ -377,31 +374,81 @@ const ViewBook = () => {
                 >
                   &emsp;&emsp;{bookData?.description}
                 </Typography>
-                {statusContent === "Available" ? (
-                  
-                
-                <Button
-                  onClick={handleOpen}
-                  variant="contained"
-                  sx={{
-                    width: "clamp(10vw, 10vw, 10vw)",
-                    height: "clamp(6vh, 6vh, 6vh)",
-                    boxShadow: "none",
-                    border: "2px solid #f4f4f4",
-                    backgroundColor: "transparent",
-                    textTransform: "none",
-                    "&:hover": {
+                {statusContent === "available" ? (
+                  <Button
+                    onClick={handleOpen}
+                    variant="contained"
+                    sx={{
+                      width: "clamp(10vw, 10vw, 10vw)",
+                      height: "clamp(6vh, 6vh, 6vh)",
                       boxShadow: "none",
-                    },
-                    borderRadius: "13px",
-                    fontWeight: "bold",
-                    fontSize: "15px",
-                    marginTop: "20px",
-                  }}
-                >
-                  Borrow
-                </Button>
-                ): null}
+                      border: "2px solid #f4f4f4",
+                      backgroundColor: "transparent",
+                      textTransform: "none",
+                      "&:hover": {
+                        boxShadow: "none",
+                      },
+                      borderRadius: "13px",
+                      fontWeight: "bold",
+                      fontSize: "15px",
+                      marginTop: "20px",
+                    }}
+                  >
+                    Borrow
+                  </Button>
+                ) : null}
+                {statusContent === "Borrowed" ? (
+                  <Box
+                    sx={{
+                      display: "flex",
+                      flexDirection: "row",
+                      gap: "2vw",
+                      // justifyContent: "flex-start",
+                    }}
+                  >
+                    <Button
+                      onClick={handleOpen}
+                      variant="contained"
+                      sx={{
+                        width: "clamp(10vw, 10vw, 10vw)",
+                        height: "clamp(6vh, 6vh, 6vh)",
+                        boxShadow: "none",
+                        backgroundColor: "#1FAA70",
+                        textTransform: "none",
+                        "&:hover": {
+                          boxShadow: "none",
+                        },
+                        borderRadius: "13px",
+                        fontWeight: "bold",
+                        fontSize: "15px",
+                        marginTop: "20px",
+                      }}
+                    >
+                      Return
+                    </Button>
+                    <Button
+                      onClick={handleOpen}
+                      variant="contained"
+                      sx={{
+                        width: "clamp(10vw, 10vw, 10vw)",
+                        height: "clamp(6vh, 6vh, 6vh)",
+                        boxShadow: "none",
+                        border: "2px solid #f4f4f4",
+                        backgroundColor: "transparent",
+                        textTransform: "none",
+                        "&:hover": {
+                          boxShadow: "none",
+                        },
+                        borderRadius: "13px",
+                        fontWeight: "bold",
+                        fontSize: "15px",
+                        marginTop: "20px",
+                      }}
+                    >
+                      Renew
+                    </Button>
+                  </Box>
+                ) : null}
                 <Modal
                   aria-labelledby="unstyled-modal-title"
                   aria-describedby="unstyled-modal-description"

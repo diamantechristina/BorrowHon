@@ -45,7 +45,8 @@ const History = () => {
   });
 
   console.log("booksHistory: ", booksHistory);
-  console.log("borrowDate: ", userHistory?.borrowdate)
+  
+  // console.log("borrowdate: ", userHistory?.map((item) => item.borrowdate));
 
   return (
     <Box
@@ -213,8 +214,12 @@ const History = () => {
                       fontSize: "clamp(1vw, 1.2vw, 1.5vw)",
                     }}
                   >
-                    {history.borrow_date ? (
-                      history.borrow_date
+                    {history.borrowdate ? (
+                      new Date(history.borrowdate).toLocaleString('default', {
+                        month: 'long',
+                        day: 'numeric',
+                        year: 'numeric',
+                      })
                     ) : (
                       <span
                         style={{
@@ -237,13 +242,18 @@ const History = () => {
                     sx={{
                       width: "20vw",
                       color: "#f4f4f4",
+                      textAlign: "center",
                       fontFamily: "Inria Serif",
                       borderWidth: "0px",
                       fontSize: "clamp(1vw, 1.2vw, 1.5vw)",
                     }}
                   >
-                    {history.return_date ? (
-                      history.return_date
+                    {history.returndate ? (
+                      new Date(history.returndate).toLocaleString('default', {
+                        month: 'long',
+                        day: 'numeric',
+                        year: 'numeric',
+                      })
                     ) : (
                       <span
                         style={{
