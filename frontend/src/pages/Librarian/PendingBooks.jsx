@@ -118,7 +118,7 @@ const PendingBooks = () => {
             display: "flex",
             flexDirection: "row",
             alignItems: "center",
-            justifyContent: pendings < 5 ? "flex-start" : "center",
+            justifyContent: "flex-start",
             flexWrap: "wrap",
             backgroundColor: "#191919",
             width: "95vw",
