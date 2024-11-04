@@ -26,4 +26,31 @@ export const useHistory = create((set) => ({
       history: data.data,
     });
   },
+  deleteHistory: async (id) => {
+    const res = await fetch(`/api/history/${id}`, {
+      method: "DELETE",
+    });
+    const data = await res.json();
+    set((state) => ({
+      history: state.history.filter((history) => history._id !== id),
+    }));
+    return { success: true, message: "History deleted successfully." };
+  },
+  
+  updateHistory: async (id, updatedHistory) => {
+    const res = await fetch(`/api/history/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(updatedHistory),
+    });
+    const data = await res.json();
+    set((state) => ({
+      histories: state.histories.map((history) =>
+        history._id === id ? data.data : history
+      ),
+    }));
+    return { success: true, message: "History updated successfully." };
+  },
 }));
