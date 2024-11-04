@@ -1,5 +1,5 @@
 import { Snackbar, Typography } from "@mui/material";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState, } from "react";
 import { Box } from "@mui/material";
 import { TextField, Button } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
@@ -14,6 +14,17 @@ import SnackBar from "../components/SnackBar";
 
 const Login = ({ open, updateOpen, updateLogin, successfulLogin }) => {
   const navigate = useNavigate();
+  const handleKeyPress = (event) => {
+    if (event.key === "Enter") {
+      handleLoginClick();
+    }
+  }
+  useEffect(() => {
+    document.addEventListener('keypress', handleKeyPress);
+    return () => {
+      document.removeEventListener('keypress', handleKeyPress);
+    }
+  })
 
   const { fetchAccount, account } = useAccount();
 
@@ -262,10 +273,8 @@ const Login = ({ open, updateOpen, updateLogin, successfulLogin }) => {
             }}
           />
           <Button
+            // ref= {loginButtonRef}
             variant="contained"
-            // onClick={() => {
-            //   handleLoginClick();
-            // }}
             onClick={handleLoginClick}
             sx={{
               width: "clamp(10rem, 23vw, 40rem)",

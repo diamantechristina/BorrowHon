@@ -107,8 +107,19 @@ const ViewBook = () => {
   const statusRef = useRef(null);
 
   const statusContent = statusRef.current?.textContent
-  // console.log("statusContent: ", statusContent);
 
+  const handleKeyPress = (event) =>{
+    if (event.key === "Enter"){
+      handleBorrowBook();
+    }
+  }
+
+  useEffect(() => {
+    document.addEventListener('keypress', handleKeyPress);
+    return () => {
+      document.removeEventListener('keypress', handleKeyPress);
+    } 
+  })
   return (
     <Box
       sx={{
