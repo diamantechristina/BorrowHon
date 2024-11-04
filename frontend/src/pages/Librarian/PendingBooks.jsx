@@ -5,8 +5,10 @@ import { useAccount } from "../../library/account";
 import { useHistory } from "../../library/history";
 import React, { useEffect, useMemo } from "react";
 import PendingBookCard from "../../components/PendingBookCard";
+import { useNavigate } from "react-router-dom";
 
 const PendingBooks = () => {
+  const navigate = useNavigate()
   const { fetchHistory, history } = useHistory();
   const { fetchAccount, account } = useAccount();
   const { fetchBook, books } = useBook();

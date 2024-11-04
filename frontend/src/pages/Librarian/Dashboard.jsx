@@ -415,6 +415,7 @@ const Dashboard = () => {
                 }}
               >
                 <Button
+                  onClick={()=> navigate("/list-of-books")}
                   variant="contained"
                   sx={{
                     backgroundColor: "#2E2E2E",
@@ -489,10 +490,22 @@ const Dashboard = () => {
                   backgroundColor: "#2E2E2E",
                   borderRadius: "20px",
                   area: "false",
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  alignItems: "center",
                 }}
               >
+                <Typography
+                  sx={{
+                    color: "#F4F4F4",
+                    fontFamily: "Montserrat",
+                    marginTop: "10px",
+                    marginBottom: "-50px",
+                  }}
+                >Reader Sign Ins</Typography>
                 <LineChart
-                  xAxis={[{ scaleType: "point", data: months }]}
+                  xAxis={[{ scaleType: "point", data: months}]}
                   series={[
                     {
                       name: "Reader Sign Ins",
@@ -500,6 +513,9 @@ const Dashboard = () => {
                       curve: "linear",
                     },
                   ]}
+                  sx={{
+                    color: "white",
+                  }}
                 ></LineChart>
               </Box>
             </Box>
