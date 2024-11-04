@@ -54,7 +54,7 @@ const ViewBook = () => {
   const currentBookHistory = useMemo(() => {
     return history?.find(
       (entry) =>
-        entry.book_id === bookData?.book_id &&
+        entry?.book_id === bookData?.book_id &&
         entry.acc_id === userLoggedIn?.acc_id
     );
   }, [history, bookData, userLoggedIn]);

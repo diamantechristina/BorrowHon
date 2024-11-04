@@ -45,6 +45,7 @@ const History = () => {
   });
 
   console.log("booksHistory: ", booksHistory);
+  console.log("borrowDate: ", userHistory?.borrowdate)
 
   return (
     <Box
@@ -64,8 +65,6 @@ const History = () => {
           left: 0,
           width: "100vw",
           height: "15vh",
-          //   backgroundColor: "green",
-          //   backgroundColor: "transparent",
           zIndex: 1000, // Ensures it stays on top
         }}
       >

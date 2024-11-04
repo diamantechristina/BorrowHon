@@ -367,8 +367,8 @@ const Dashboard = ({ open, updateOpen, successfulLogin }) => {
                 height: "58vh",
                 // backgroundColor:"yellow",
                 display: "flex",
-                justifyContent: "flex-start",
-                marginLeft: "17vw",
+                justifyContent: "center",
+                // marginLeft: "17vw",
                 alignItems: "center",
                 flexDirection: "row",
                 gap: "5vw",
@@ -475,22 +475,25 @@ const Dashboard = ({ open, updateOpen, successfulLogin }) => {
               flexDirection: "column",
               justifyContent: "center",
               alignItems: "center",
+              width: "87vw",
+              marginLeft: "6.5vw",
+              // borderRadius: "50px",
             }}
           >
             <Box
               sx={{
-                width: "100vw",
+                // width: "100vw",
                 height: "58vh",
                 // backgroundColor:"yellow",
                 display: "flex",
-                justifyContent: "flex-start",
-                marginLeft: "17vw",
+                justifyContent: "center",
+                marginLeft: "35vw",
                 alignItems: "center",
                 flexDirection: "row",
                 gap: "5vw",
               }}
             >
-              {bookCreation.slice(0, 5).map((book, index) => (
+              {bookCreation.slice(0, bookData.length).map((book, index) => (
                 <Card
                   onMouseOver={() => setHoverRecentBook(book.title)}
                   onMouseOut={() => setHoverRecentBook(null)}
