@@ -45,7 +45,7 @@ const History = () => {
   });
 
   console.log("booksHistory: ", booksHistory);
-  
+
   // console.log("borrowdate: ", userHistory?.map((item) => item.borrowdate));
 
   return (
@@ -123,176 +123,192 @@ const History = () => {
         <Box
           sx={{
             width: "90vw",
+            height: "70vh",
             backgroundColor: "#2e2e2e",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
           }}
         >
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell
-                  sx={{
-                    fontWeight: "bold",
-                    color: "#f4f4f4",
-                    textAlign: "center",
-                    fontSize: "clamp(1vw, 2.2vw, 2.5vw)",
-                    borderWidth: "0px",
-                  }}
-                >
-                  Book Name
-                </TableCell>
-                <TableCell
-                  sx={{
-                    fontWeight: "bold",
-                    color: "#f4f4f4",
-                    textAlign: "center",
-                    fontSize: "clamp(1vw, 2.2vw, 2.5vw)",
-                    borderWidth: "0px",
-                  }}
-                >
-                  Date Borrowed
-                </TableCell>
-                <TableCell
-                  sx={{
-                    fontWeight: "bold",
-                    color: "#f4f4f4",
-                    textAlign: "center",
-                    fontSize: "clamp(1vw, 2.2vw, 2.5vw)",
-                    borderWidth: "0px",
-                  }}
-                >
-                  Date Returned
-                </TableCell>
-                <TableCell
-                  sx={{
-                    fontWeight: "bold",
-                    color: "#f4f4f4",
-                    textAlign: "center",
-                    fontSize: "clamp(1vw, 2.2vw, 2.5vw)",
-                    borderWidth: "0px",
-                  }}
-                >
-                  Status
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {userHistory?.map((history, index) => (
-                <TableRow
-                  key={history.book_id}
-                  sx={{
-                    backgroundColor:
-                      index % 2 === 0 ? "rgba(34, 85, 96, 0.15)" : "#2e2e2e",
-                  }}
-                >
+          {history?.length > 0 ? (
+            <Table>
+              <TableHead>
+                <TableRow>
                   <TableCell
                     sx={{
-                      width: "20vw",
+                      fontWeight: "bold",
                       color: "#f4f4f4",
                       textAlign: "center",
-                      fontFamily: "Inria Serif",
+                      fontSize: "clamp(1vw, 2.2vw, 2.5vw)",
                       borderWidth: "0px",
-                      fontSize: "clamp(1vw, 1.2vw, 1.5vw)",
-                      borderRadius:
-                        index % 2 === 0
-                          ? "20px 0px 0px 20px"
-                          : null,
                     }}
                   >
-                    {
-                      booksHistory.find(
-                        (book) => book.book_id === history.book_id
-                      )?.title
-                    }
+                    Book Name
                   </TableCell>
                   <TableCell
                     sx={{
-                      width: "20vw",
+                      fontWeight: "bold",
                       color: "#f4f4f4",
                       textAlign: "center",
-                      fontFamily: "Inria Serif",
+                      fontSize: "clamp(1vw, 2.2vw, 2.5vw)",
                       borderWidth: "0px",
-                      fontSize: "clamp(1vw, 1.2vw, 1.5vw)",
                     }}
                   >
-                    {history.borrowdate ? (
-                      new Date(history.borrowdate).toLocaleString('default', {
-                        month: 'long',
-                        day: 'numeric',
-                        year: 'numeric',
-                      })
-                    ) : (
-                      <span
-                        style={{
-                          display: "flex",
-                          justifyContent: "center",
-                          textAlign: "center",
-                        }}
-                      >
-                        <Box
-                          sx={{
-                            height: "1px",
-                            width: "20%",
-                            backgroundColor: "#f4f4f4",
-                          }}
-                        ></Box>
-                      </span>
-                    )}
+                    Date Borrowed
                   </TableCell>
                   <TableCell
                     sx={{
-                      width: "20vw",
+                      fontWeight: "bold",
                       color: "#f4f4f4",
                       textAlign: "center",
-                      fontFamily: "Inria Serif",
+                      fontSize: "clamp(1vw, 2.2vw, 2.5vw)",
                       borderWidth: "0px",
-                      fontSize: "clamp(1vw, 1.2vw, 1.5vw)",
                     }}
                   >
-                    {history.returndate ? (
-                      new Date(history.returndate).toLocaleString('default', {
-                        month: 'long',
-                        day: 'numeric',
-                        year: 'numeric',
-                      })
-                    ) : (
-                      <span
-                        style={{
-                          display: "flex",
-                          justifyContent: "center",
-                          textAlign: "center",
-                        }}
-                      >
-                        <Box
-                          sx={{
-                            height: "1px",
-                            width: "20%",
-                            backgroundColor: "#f4f4f4",
-                          }}
-                        ></Box>
-                      </span>
-                    )}
+                    Date Returned
                   </TableCell>
                   <TableCell
                     sx={{
-                      width: "20vw",
+                      fontWeight: "bold",
                       color: "#f4f4f4",
                       textAlign: "center",
-                      textTransform: "capitalize",
-                      fontFamily: "Inria Serif",
+                      fontSize: "clamp(1vw, 2.2vw, 2.5vw)",
                       borderWidth: "0px",
-                      fontSize: "clamp(1vw, 1.2vw, 1.5vw)",
-                      borderRadius:
-                        index % 2 === 0
-                          ? "0px 20px 20px 0px"
-                          : null,
                     }}
                   >
-                    {history.status}
+                    Status
                   </TableCell>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+              </TableHead>
+              <TableBody>
+                {userHistory?.map((history, index) => (
+                  <TableRow
+                    key={history.book_id}
+                    sx={{
+                      backgroundColor:
+                        index % 2 === 0 ? "rgba(34, 85, 96, 0.15)" : "#2e2e2e",
+                    }}
+                  >
+                    <TableCell
+                      sx={{
+                        width: "20vw",
+                        color: "#f4f4f4",
+                        textAlign: "center",
+                        fontFamily: "Inria Serif",
+                        borderWidth: "0px",
+                        fontSize: "clamp(1vw, 1.2vw, 1.5vw)",
+                        borderRadius:
+                          index % 2 === 0 ? "20px 0px 0px 20px" : null,
+                      }}
+                    >
+                      {
+                        booksHistory.find(
+                          (book) => book.book_id === history.book_id
+                        )?.title
+                      }
+                    </TableCell>
+                    <TableCell
+                      sx={{
+                        width: "20vw",
+                        color: "#f4f4f4",
+                        textAlign: "center",
+                        fontFamily: "Inria Serif",
+                        borderWidth: "0px",
+                        fontSize: "clamp(1vw, 1.2vw, 1.5vw)",
+                      }}
+                    >
+                      {history.borrowdate ? (
+                        new Date(history.borrowdate).toLocaleString("default", {
+                          month: "long",
+                          day: "numeric",
+                          year: "numeric",
+                        })
+                      ) : (
+                        <span
+                          style={{
+                            display: "flex",
+                            justifyContent: "center",
+                            textAlign: "center",
+                          }}
+                        >
+                          <Box
+                            sx={{
+                              height: "1px",
+                              width: "20%",
+                              backgroundColor: "#f4f4f4",
+                            }}
+                          ></Box>
+                        </span>
+                      )}
+                    </TableCell>
+                    <TableCell
+                      sx={{
+                        width: "20vw",
+                        color: "#f4f4f4",
+                        textAlign: "center",
+                        fontFamily: "Inria Serif",
+                        borderWidth: "0px",
+                        fontSize: "clamp(1vw, 1.2vw, 1.5vw)",
+                      }}
+                    >
+                      {history.returndate ? (
+                        new Date(history.returndate).toLocaleString("default", {
+                          month: "long",
+                          day: "numeric",
+                          year: "numeric",
+                        })
+                      ) : (
+                        <span
+                          style={{
+                            display: "flex",
+                            justifyContent: "center",
+                            textAlign: "center",
+                          }}
+                        >
+                          <Box
+                            sx={{
+                              height: "1px",
+                              width: "20%",
+                              backgroundColor: "#f4f4f4",
+                            }}
+                          ></Box>
+                        </span>
+                      )}
+                    </TableCell>
+                    <TableCell
+                      sx={{
+                        width: "20vw",
+                        color: "#f4f4f4",
+                        textAlign: "center",
+                        textTransform: "capitalize",
+                        fontFamily: "Inria Serif",
+                        borderWidth: "0px",
+                        fontSize: "clamp(1vw, 1.2vw, 1.5vw)",
+                        borderRadius:
+                          index % 2 === 0 ? "0px 20px 20px 0px" : null,
+                      }}
+                    >
+                      {history.status}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          ) : (
+            <Typography
+              sx={{
+                margin: 0,
+                // left: 75,
+                top: 10,
+                color: "#E8E8E8",
+                fontFamily: "Montserrat",
+                fontWeight: "bold",
+                fontSize: "clamp(1.25rem, 3vw, 2rem)",
+              }}
+            >
+              NO HISTORY RECORD
+            </Typography>
+          )}
         </Box>
       </Box>
     </Box>
