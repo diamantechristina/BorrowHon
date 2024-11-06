@@ -13,11 +13,11 @@ const logSchema = new mongoose.Schema({
         default: Date.now,
         required: true
     },
-    // logoutdate:{
-    //     type: Date,
-    //     default: Date.now,
-    //     required: false
-    // }
+    logoutdate:{
+        type: Date,
+        default: Date.now,
+        required: false
+    }
 })
 
 logSchema.plugin(AutoIncrement, {inc_field: 'log_id'})

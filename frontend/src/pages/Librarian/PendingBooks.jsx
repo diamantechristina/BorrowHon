@@ -110,7 +110,8 @@ const PendingBooks = () => {
             width:"inherit",
             height:"100vh",
             marginTop: pendings < 5 ? "" :"20vh",
-            paddingLeft:"5vw"
+            paddingLeft: pendingHistories?.length === 0 ? "" :"5vw"
+            // paddingLeft: "5vw"
           }}
         >
         <Box
@@ -130,7 +131,34 @@ const PendingBooks = () => {
             rowGap: "3vh",
           }}
         >
-          {pendingHistories?.map((history) => (
+          {pendingHistories?.length === 0 ? (
+            <Box
+              sx={{
+                width: "100vw",
+                height: "100vh",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                // paddingTop: "100px"
+                paddingLeft: "5vw"
+              }}
+            >
+              <Typography
+              sx={{
+                margin: 0,
+                // left: 75,
+                top: 10,
+                color: "#E8E8E8",
+                fontFamily: "Montserrat",
+                fontWeight: "bold",
+                fontSize: "clamp(1.25rem, 3vw, 2rem)",
+              }}
+            >
+              NO PENDING REQUEST
+            </Typography></Box>
+            
+          ) : (
+            pendingHistories?.map((history) => (
             <PendingBookCard
               key={history._id}
               history={history}
@@ -141,7 +169,10 @@ const PendingBooks = () => {
                 (acc) => acc.acc_id === history.acc_id
               )}
             />
-          ))}
+          ))
+        )}
+          
+          
           
         </Box>
         
