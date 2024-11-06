@@ -35,7 +35,17 @@ const History = () => {
   console.log("userLoggedIn: ", userLoggedIn);
 
   const userHistory = useMemo(() => {
-    return history?.filter((item) => item.acc_id === userLoggedIn.acc_id);
+    return history?.filter((item) => item.acc_id === userLoggedIn.acc_id)
+      .sort((a, b) =>{
+        const statusOrder = ['pending', 'onhand', 'returned'];
+        const statusA = statusOrder.indexOf(a.status);
+        const statusB = statusOrder.indexOf(b.status);
+        if (statusA !== statusB){
+          return statusA - statusB;
+        } else {
+          return new Date(b.borrowdate) - new Date(a.borrowdate);
+        }
+      })
   }, [history, userLoggedIn]);
 
   console.log("userHistory: ", userHistory);
@@ -125,12 +135,26 @@ const History = () => {
             width: "90vw",
             height: "70vh",
             backgroundColor: "#2e2e2e",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
+            display: userHistory?.length > 0 ? "" : "flex",
+            justifyContent: userHistory?.length > 0 ? "" : "center",
+            alignItems: userHistory?.length > 0 ? "" : "center",
           }}
         >
-          {history?.length > 0 ? (
+          {userHistory?.length === 0 ? (
+            <Typography
+              sx={{
+                margin: 0,
+                // left: 75,
+                top: 10,
+                color: "#E8E8E8",
+                fontFamily: "Montserrat",
+                fontWeight: "bold",
+                fontSize: "clamp(1.25rem, 3vw, 2rem)",
+              }}
+            >
+              NO HISTORY RECORD
+            </Typography>
+          ) : (
             <Table>
               <TableHead>
                 <TableRow>
@@ -294,20 +318,6 @@ const History = () => {
                 ))}
               </TableBody>
             </Table>
-          ) : (
-            <Typography
-              sx={{
-                margin: 0,
-                // left: 75,
-                top: 10,
-                color: "#E8E8E8",
-                fontFamily: "Montserrat",
-                fontWeight: "bold",
-                fontSize: "clamp(1.25rem, 3vw, 2rem)",
-              }}
-            >
-              NO HISTORY RECORD
-            </Typography>
           )}
         </Box>
       </Box>
