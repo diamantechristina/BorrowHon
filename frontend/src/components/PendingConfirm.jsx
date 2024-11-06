@@ -1,5 +1,5 @@
 import { Modal, Box, Backdrop, Typography, Button } from "@mui/material";
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import "@fontsource/montserrat";
 import "@fontsource/montserrat/700.css";
 import "@fontsource/montserrat/600.css";
@@ -10,47 +10,65 @@ import "@fontsource/montserrat/200.css";
 import { useBook } from "../library/book.js";
 import { useHistory } from "../library/history.js";
 
-const PendingConfirm = ({ open, setOpen, pageTitle, book, account, history }) => {
+const PendingConfirm = ({
+  open,
+  setOpen,
+  pageTitle,
+  book,
+  account,
+  userHistory,
+}) => {
+  const { updateBook } = useBook();
+  const { fetchHistory, updateHistory, deleteHistory } = useHistory();
+  useEffect(() => {
+    fetchHistory();
+  }, [fetchHistory]);
+  // const pendingHistories = history?.filter((item) => item.status === "pending" && item.acc_id === account?.acc_id);
+
   const handleClose = () => setOpen(false);
   const [titleHover, setTitleHover] = useState(false);
   const handleTitleHover = useMemo(() => {
     return () => setTitleHover(true);
-  },[titleHover]);
+  }, [titleHover]);
   const handleTitleLeave = useMemo(() => {
     return () => setTitleHover(false);
-  },[titleHover]);
+  }, [titleHover]);
 
-  const { updateBook } = useBook();
-  const { updateHistory, deleteHistory } = useHistory();
-
-  const handleUpdateBook = async (id,book) => {
-    const { success, message } = await updateBook(id,book);
+  const handleUpdateBook = async (id, book) => {
+    const { success, message } = await updateBook(id, book);
     console.log("Success:", success);
     console.log("Message:", message);
-  }
+  };
 
-  const handleUpdateHistory = async (id,history) => {
-    const { success, message } = await updateHistory(id,history);
+  const handleUpdateHistory = async (id, history) => {
+    const { success, message } = await updateHistory(id, history);
     console.log("Success:", success);
     console.log("Message:", message);
-  }
+  };
 
   const handleDeleteHistory = async () => {
-    const { success, message } = await deleteHistory(history._id);
+    const { success, message } = await deleteHistory(userHistory._id);
     console.log("Success:", success);
     console.log("Message:", message);
-    setOpen !== null ? setOpen(false) : () => {}
-  }
+    setOpen !== null ? setOpen(false) : () => {};
+  };
 
   const handleAcceptPending = () => {
-    book["status"] = "unavailable";
-    history["status"] = "onhand";
-    history["borrowdate"] = borrowDate;
-    history["returndate"] = returnDate;
-    handleUpdateBook(book._id,book);
-    handleUpdateHistory(history._id,history);
-    setOpen !== null ? setOpen(false) : () => {}
-  }
+    const updatedBook = { ...book };
+    updatedBook.status = "unavailable";
+    const updatedUserHistory = { ...userHistory };
+    updatedUserHistory.status = "onhand";
+    updatedUserHistory.borrowdate = borrowDate;
+    updatedUserHistory.returndate = returnDate;
+    handleUpdateBook(updatedBook._id, updatedBook);
+    handleUpdateHistory(updatedUserHistory._id, updatedUserHistory);
+    pendingHistories?.map(async (history) => {
+      const { success, message } = await deleteHistory(history._id);
+      console.log("Success:", success);
+      console.log("Message:", message);
+    });
+    setOpen !== null ? setOpen(false) : () => {};
+  };
 
   const months = [
     "January",
@@ -71,9 +89,8 @@ const PendingConfirm = ({ open, setOpen, pageTitle, book, account, history }) =>
   const day = currentDate.getDate();
   const year = currentDate.getFullYear();
   const borrowDate = `${month} ${day}, ${year}`;
-  const returnDate = `${month} ${day+5}, ${year}`;
+  const returnDate = `${month} ${day + 5}, ${year}`;
 
-  
   return (
     <Modal
       aria-labelledby="unstyled-modal-title"
@@ -174,64 +191,59 @@ const PendingConfirm = ({ open, setOpen, pageTitle, book, account, history }) =>
             }}
           >
             <Box
-                sx={{
-                    width: "29vw",
-                    overflow: "hidden",
-
-                }}
-            >
-            {book?.title.length > 17 ? 
-            <Typography
-              onMouseEnter={handleTitleHover}
-              onMouseLeave={handleTitleLeave}
               sx={{
-                "@keyframes text-overflow": {
-                    "0%": {
-                        transform:"translateX(0%)",
-                    },
-                    "50%": {
-                        transform:`translateX(-${6.2*(book?.title.length-17)}%)`,
-                    },
-                    "100%": {
-                        transform:"translateX(0%)",
-                    },
-
-                },
-
-                color: "#F4F4F4",
-                fontFamily: "Montserrat",
-                fontSize: "clamp(1.5rem, 2.75vw, 2.5rem)",
-                fontWeight: "600",
-                whiteSpace: "nowrap",
+                width: "29vw",
                 overflow: "hidden",
-                animation: "none",
-                textOverflow: titleHover? "none" : "ellipsis",
-                '&:hover': {
-                    overflow: "visible",
-                    transition: "3000ms",
-                    animation: "text-overflow 10s linear infinite",
-
-                }
               }}
             >
-              {book?.title.toUpperCase()}
-            </Typography> 
-            : 
-            <Typography
-              
-              sx={{
-                
+              {book?.title.length > 17 ? (
+                <Typography
+                  onMouseEnter={handleTitleHover}
+                  onMouseLeave={handleTitleLeave}
+                  sx={{
+                    "@keyframes text-overflow": {
+                      "0%": {
+                        transform: "translateX(0%)",
+                      },
+                      "50%": {
+                        transform: `translateX(-${
+                          6.2 * (book?.title.length - 17)
+                        }%)`,
+                      },
+                      "100%": {
+                        transform: "translateX(0%)",
+                      },
+                    },
 
-                color: "#F4F4F4",
-                fontFamily: "Montserrat",
-                fontSize: "clamp(1.5rem, 2.75vw, 2.5rem)",
-                fontWeight: "600",
-                
-              }}
-            >
-              {book?.title.toUpperCase()}
-            </Typography>}
-            
+                    color: "#F4F4F4",
+                    fontFamily: "Montserrat",
+                    fontSize: "clamp(1.5rem, 2.75vw, 2.5rem)",
+                    fontWeight: "600",
+                    whiteSpace: "nowrap",
+                    overflow: "hidden",
+                    animation: "none",
+                    textOverflow: titleHover ? "none" : "ellipsis",
+                    "&:hover": {
+                      overflow: "visible",
+                      transition: "3000ms",
+                      animation: "text-overflow 10s linear infinite",
+                    },
+                  }}
+                >
+                  {book?.title.toUpperCase()}
+                </Typography>
+              ) : (
+                <Typography
+                  sx={{
+                    color: "#F4F4F4",
+                    fontFamily: "Montserrat",
+                    fontSize: "clamp(1.5rem, 2.75vw, 2.5rem)",
+                    fontWeight: "600",
+                  }}
+                >
+                  {book?.title.toUpperCase()}
+                </Typography>
+              )}
             </Box>
             <Typography
               sx={{
@@ -263,28 +275,28 @@ const PendingConfirm = ({ open, setOpen, pageTitle, book, account, history }) =>
               }}
             />
             <Typography
-                sx={{
-                    marginTop: "2.5vh",
-                    color: "#F4F4F4",
-                    fontFamily: "Montserrat",
-                    fontSize: "clamp(1.5rem, 1.65vw, 2.5rem)",
-                    fontWeight: "600",
-                  }}
+              sx={{
+                marginTop: "2.5vh",
+                color: "#F4F4F4",
+                fontFamily: "Montserrat",
+                fontSize: "clamp(1.5rem, 1.65vw, 2.5rem)",
+                fontWeight: "600",
+              }}
             >
               {account?.firstName} {account?.lastName}
             </Typography>
             <Typography
-                sx={{
-                    color: "#F4F4F4",
-                    fontFamily: "Montserrat",
-                    fontSize: "clamp(1rem, 1vw, 1.75rem)",
-                    fontWeight: "200",
-                  }}
+              sx={{
+                color: "#F4F4F4",
+                fontFamily: "Montserrat",
+                fontSize: "clamp(1rem, 1vw, 1.75rem)",
+                fontWeight: "200",
+              }}
             >
-                {account?.username}
+              {account?.username}
             </Typography>
             <Typography
-            sx={{
+              sx={{
                 marginTop: "3vh",
                 color: "#F4F4F4",
                 fontFamily: "Montserrat",
@@ -292,20 +304,20 @@ const PendingConfirm = ({ open, setOpen, pageTitle, book, account, history }) =>
                 fontWeight: "500",
               }}
             >
-                Date of Borrow
+              Date of Borrow
             </Typography>
             <Typography
-                sx={{
-                    color: "#F4F4F4",
-                    fontFamily: "Montserrat",
-                    fontSize: "clamp(1.25rem, 1.25vw, 2rem)",
-                    fontWeight: "300",
-                  }}
+              sx={{
+                color: "#F4F4F4",
+                fontFamily: "Montserrat",
+                fontSize: "clamp(1.25rem, 1.25vw, 2rem)",
+                fontWeight: "300",
+              }}
             >
-                {borrowDate}
+              {borrowDate}
             </Typography>
             <Typography
-            sx={{
+              sx={{
                 marginTop: "3.5vh",
                 color: "#F4F4F4",
                 fontFamily: "Montserrat",
@@ -313,39 +325,42 @@ const PendingConfirm = ({ open, setOpen, pageTitle, book, account, history }) =>
                 fontWeight: "500",
               }}
             >
-                Date of Return
+              Date of Return
             </Typography>
             <Typography
-                sx={{
-                    color: "#F4F4F4",
-                    fontFamily: "Montserrat",
-                    fontSize: "clamp(1.25rem, 1.25vw, 2rem)",
-                    fontWeight: "300",
-                  }}
+              sx={{
+                color: "#F4F4F4",
+                fontFamily: "Montserrat",
+                fontSize: "clamp(1.25rem, 1.25vw, 2rem)",
+                fontWeight: "300",
+              }}
             >
-                {returnDate}
+              {returnDate}
             </Typography>
           </Box>
         </Box>
         <Box>
-          <Button 
-          variant="contained"
-          onClick={pageTitle === "Accept Pending" ? handleAcceptPending : handleDeleteHistory}
-          sx={{
-            backgroundColor: "#1FAA70",
-            color: "#F4F4F4",
-            borderRadius: "15px",
-            height: "7.5vh",
-            width: "12.5vw",
-            textTransform: "none",
-            fontFamily: "Montserrat",
-            fontSize: "clamp(1rem, 1.25vw, 1.5rem)",
-            fontWeight: "600",
-            
-          }}
+          <Button
+            variant="contained"
+            onClick={
+              pageTitle === "Accept Pending"
+                ? handleAcceptPending
+                : handleDeleteHistory
+            }
+            sx={{
+              backgroundColor: "#1FAA70",
+              color: "#F4F4F4",
+              borderRadius: "15px",
+              height: "7.5vh",
+              width: "12.5vw",
+              textTransform: "none",
+              fontFamily: "Montserrat",
+              fontSize: "clamp(1rem, 1.25vw, 1.5rem)",
+              fontWeight: "600",
+            }}
           >
             Confirm
-        </Button>
+          </Button>
         </Box>
       </Box>
     </Modal>

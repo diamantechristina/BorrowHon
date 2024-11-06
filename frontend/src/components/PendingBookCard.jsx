@@ -133,7 +133,7 @@ const PendingBookCard = ({ book, account, history }) => {
             setOpen={setDeclineOpen}
             book={book}
             account={account}
-            history={history}
+            userHistory={history}
             pageTitle={"Decline Pending"}
           />
           
