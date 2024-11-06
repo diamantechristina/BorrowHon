@@ -9,7 +9,7 @@ import {
   CircularProgress,
 } from "@mui/material";
 import { LineChart } from "@mui/x-charts";
-import { Bell, MenuBurger, BookAlt, BookOpenReader } from "react-flaticons";
+import { Bell, MenuBurger, BookAlt, BookOpenReader, BowArrow } from "react-flaticons";
 import { useBook } from "../../library/book.js";
 import { useHistory } from "../../library/history.js";
 import { useNavigate } from "react-router-dom";
@@ -55,6 +55,14 @@ const Dashboard = () => {
   const pendingBooks = useMemo(() => {
     return history?.filter((item) => item.status === "pending").length;
   }, [history]);
+
+  const availableBooks = useMemo(()=>{
+    return books?.filter((item) => item.status === "available").length
+  },[books])
+
+  const unavailableBooks = useMemo(()=>{
+    return books?.filter((item) => item.status === "unavailable").length
+  },[books])
 
   console.log("pendingBooks: ", pendingBooks);
 
@@ -269,7 +277,7 @@ const Dashboard = () => {
                   {/* pending books */}
                   <CircularProgress
                     variant="determinate"
-                    value={((pendingBooks + 4) / booksLength) * 100}
+                    value={((pendingBooks + unavailableBooks) / booksLength) * 100}
                     sx={{
                       color: "#27D18A", // Color for the actual progress
                       position: "absolute", // Overlay on top of the background circle
@@ -282,7 +290,7 @@ const Dashboard = () => {
                   {/* Foreground circle (borrowed books portion) */}
                   <CircularProgress
                     variant="determinate"
-                    value={(4 / booksLength) * 100}
+                    value={(unavailableBooks / booksLength) * 100}
                     sx={{
                       color: "#1C95AF", // Color for the actual progress
                       position: "absolute", // Overlay on top of the background circle
@@ -328,7 +336,8 @@ const Dashboard = () => {
                         fontWeight: "bold",
                       }}
                     >
-                      3
+                      {/* {books?.map((book) => book.status === "available").length } */}
+                      {availableBooks}
                     </Typography>
                     <Typography
                       sx={{
@@ -458,6 +467,7 @@ const Dashboard = () => {
                   PENDING
                 </Button>
                 <Button
+                  onClick={() => navigate("/list-of-readers")}
                   variant="contained"
                   sx={{
                     backgroundColor: "#2E2E2E",
@@ -514,7 +524,8 @@ const Dashboard = () => {
                     },
                   ]}
                   sx={{
-                    color: "white",
+                    stroke: "#F4F4F4",
+                    strokeWidth: 0.5,
                   }}
                 ></LineChart>
               </Box>
