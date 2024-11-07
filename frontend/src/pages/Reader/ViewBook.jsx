@@ -18,6 +18,7 @@ import { ArrowSmallLeft, EyeCrossed, Eye } from "react-flaticons";
 import { useNavigate } from "react-router-dom";
 import { useLog } from "../../library/log";
 import "@fontsource/montserrat";
+import { useBook } from "../../library/book";
 
 const ViewBook = () => {
   const location = useLocation();
@@ -26,6 +27,7 @@ const ViewBook = () => {
   const [userLoggedIn, setUserLoggedIn] = useState(location.state?.user);
   console.log("bookData: ", bookData);
   const { fetchHistory, history } = useHistory();
+  const { updateBook } = useBook();
 
   const [showPassword, setShowPassword] = useState(false);
   const togglePasswordVisibility = () => {
@@ -46,7 +48,7 @@ const ViewBook = () => {
 
   useEffect(() => {
     fetchHistory();
-  }, [fetchHistory]);
+  }, [fetchHistory, history]);
 
   console.log("User: ", userLoggedIn);
 
@@ -98,7 +100,7 @@ const ViewBook = () => {
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
 
-  const { createHistory } = useHistory();
+  const { createHistory, updateHistory } = useHistory();
   const handleBorrowBook = async () => {
     if (userLoggedIn?.password === pass.password) {
       const newHistory = {
@@ -116,13 +118,65 @@ const ViewBook = () => {
       setOpenSnackbar(true);
     }
   };
+
+  const handleUpdateBook = async (id, book) => {
+    const { success, message } = await updateBook(id, book);
+    console.log("Success:", success);
+    console.log("Message:", message);
+  }
+  const handleupdateHistory = async (id, history) => {
+    const { success, message } = await updateHistory(id, history);
+    console.log("Success:", success);
+    console.log("Message:", message);
+  }
+
+  const handleReturnBook = async() => {
+    if (userLoggedIn?.password === pass.password) {
+      const updatedBookData = {...bookData}
+      updatedBookData.status = "available"
+      const updatedUserHistory = {...currentBookHistory}
+      updatedUserHistory.status = "returned"
+      updatedUserHistory.returndate = new Date()
+      handleupdateHistory(updatedUserHistory._id, updatedUserHistory)
+      handleUpdateBook(updatedBookData._id, updatedBookData);
+      setReturnOpen(false);
+      setSnackbarMessage("Book successfully returned!");
+      setOpenSnackbar(true);
+    }
+    else {
+      setSnackbarMessage("Incorrect password!");
+      setOpenSnackbar(true);
+    }
+  }
+
+  const handleRenewBook = async() => {
+    if (userLoggedIn?.password === pass.password) {
+      const updatedUserHistory = {...currentBookHistory}
+      updatedUserHistory.returndate = new Date(updatedUserHistory.returndate).setDate(new Date(updatedUserHistory.returndate).getDate() + 5) 
+      handleupdateHistory(updatedUserHistory._id, updatedUserHistory)
+      setRenewOpen(false);
+      setSnackbarMessage("Book successfully renewed!");
+      setOpenSnackbar(true);
+    }
+    else {
+      setSnackbarMessage("Incorrect password!");
+      setOpenSnackbar(true);
+    }
+  }
+
   const statusRef = useRef(null);
 
   const statusContent = statusRef.current?.textContent;
 
   const handleKeyPress = (event) => {
     if (event.key === "Enter") {
-      handleBorrowBook();
+      if (open){
+        handleBorrowBook();
+      }else if(returnOpen){
+        handleReturnBook();
+      }else if(renewOpen){
+        handleRenewBook();
+      }
     }
   };
 
@@ -163,7 +217,7 @@ const ViewBook = () => {
           message={snackbarMessage}
           style={{
             backgroundColor:
-              snackbarMessage === "Book borrow request sent!" ? "green" : "red",
+              snackbarMessage === "Incorrect password!" ? "red" : "green",
             justifyContent: "center",
           }}
         />
@@ -977,7 +1031,7 @@ const ViewBook = () => {
                         fontSize: "18px",
                       }}
                       tabIndex={-1}
-                      // onClick={handleBorrowBook} handleReturnBook
+                      onClick={handleReturnBook} 
                     >
                       Confirm
                     </Button>
@@ -1261,7 +1315,7 @@ const ViewBook = () => {
                         fontSize: "18px",
                       }}
                       tabIndex={-1}
-                      // onClick={handleBorrowBook} handleRenewBook
+                      onClick={handleRenewBook} 
                     >
                       Confirm
                     </Button>
