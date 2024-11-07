@@ -9,7 +9,13 @@ import {
   CircularProgress,
 } from "@mui/material";
 import { LineChart } from "@mui/x-charts";
-import { Bell, MenuBurger, BookAlt, BookOpenReader, BowArrow } from "react-flaticons";
+import {
+  Bell,
+  MenuBurger,
+  BookAlt,
+  BookOpenReader,
+  BowArrow,
+} from "react-flaticons";
 import { useBook } from "../../library/book.js";
 import { useHistory } from "../../library/history.js";
 import { useNavigate } from "react-router-dom";
@@ -56,16 +62,15 @@ const Dashboard = () => {
     return history?.filter((item) => item.status === "pending").length;
   }, [history]);
 
-  const availableBooks = useMemo(()=>{
-    return books?.filter((item) => item.status === "available").length
-  },[books])
+  const availableBooks = useMemo(() => {
+    return books?.filter((item) => item.status === "available").length;
+  }, [books]);
 
-  const unavailableBooks = useMemo(()=>{
-    return books?.filter((item) => item.status === "unavailable").length
-  },[books])
+  const unavailableBooks = useMemo(() => {
+    return books?.filter((item) => item.status === "unavailable").length;
+  }, [books]);
 
-  console.log("pendingBooks: ", pendingBooks);
-
+  // console.log("pendingBooks: ", pendingBooks);
 
   return (
     <Box
@@ -277,7 +282,9 @@ const Dashboard = () => {
                   {/* pending books */}
                   <CircularProgress
                     variant="determinate"
-                    value={((pendingBooks + unavailableBooks) / booksLength) * 100}
+                    value={
+                      ((pendingBooks + unavailableBooks) / booksLength) * 100
+                    }
                     sx={{
                       color: "#27D18A", // Color for the actual progress
                       position: "absolute", // Overlay on top of the background circle
@@ -424,7 +431,7 @@ const Dashboard = () => {
                 }}
               >
                 <Button
-                  onClick={()=> navigate("/list-of-books")}
+                  onClick={() => navigate("/list-of-books")}
                   variant="contained"
                   sx={{
                     backgroundColor: "#2E2E2E",
@@ -513,9 +520,11 @@ const Dashboard = () => {
                     marginTop: "10px",
                     marginBottom: "-50px",
                   }}
-                >Reader Sign Ins</Typography>
+                >
+                  Reader Sign Ins
+                </Typography>
                 <LineChart
-                  xAxis={[{ scaleType: "point", data: months}]}
+                  xAxis={[{ scaleType: "point", data: months }]}
                   series={[
                     {
                       name: "Reader Sign Ins",
@@ -524,8 +533,21 @@ const Dashboard = () => {
                     },
                   ]}
                   sx={{
-                    stroke: "#F4F4F4",
-                    strokeWidth: 0.5,
+                    "& .MuiChartsAxis-tickLabel": {
+                      fill: "#F4F4F4 !important",
+                    },
+                    "& .MuiChartsAxis-line": {
+                      stroke: "#F4F4F4 !important",
+                    },
+                    "& .MuiChartsAxis-tick": {
+                      stroke: "#F4F4F4 !important",
+                    },
+                    "& .css-xyaj9i-MuiMarkElement-root":{
+                      fill: "#2E2E2E !important",
+                      "&:hover": {
+                        fill: "#2E2E2E !important",
+                      }
+                    }
                   }}
                 ></LineChart>
               </Box>
