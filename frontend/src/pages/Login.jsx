@@ -28,12 +28,15 @@ const Login = ({ open, updateOpen, updateLogin, successfulLogin }) => {
 
   const { fetchAccount, account } = useAccount();
 
-  const { createLog, log } = useLog();
+  const { fetchLogs, createLog, logs } = useLog();
 
   useEffect(() => {
     fetchAccount();
   }, [fetchAccount]);
 
+  useEffect(() => {
+    fetchLogs();
+  },[fetchLogs])
   const [showPassword, setShowPassword] = useState(false);
   const [login, setLogin] = useState({
     username: "",
@@ -55,14 +58,18 @@ const Login = ({ open, updateOpen, updateLogin, successfulLogin }) => {
     for (const acc of account) {
       if (acc.username.toLowerCase() === login.username.toLowerCase() && acc.password === login.password) {
         console.log("Login successful");
-
-        await createLog({
+        const newLog = {
           acc_id: acc.acc_id,
-          logindate: new Date(),
-        });
+          logindate: new Date()
+        }
+        const {log} = await createLog(newLog);
+        // console.log("log Login: ", log);
 
+        // const userLog = logs.find((log) => log.acc_id === acc.acc_id && log.logindate === new Date());
+        
+        // console.log("userLog Login: ", logs.find((log) => log.acc_id === acc.acc_id && log.logindate === new Date()));
         updateLogin(true);
-        navigate("/reader-dashboard", { state: {userLoggedIn: acc} });
+        navigate("/reader-dashboard", { state: {userLoggedIn: acc, userLog: log } });
         
         return;
       }

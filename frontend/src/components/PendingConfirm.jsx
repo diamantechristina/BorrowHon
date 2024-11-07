@@ -19,11 +19,12 @@ const PendingConfirm = ({
   userHistory,
 }) => {
   const { updateBook } = useBook();
-  const { fetchHistory, updateHistory, deleteHistory } = useHistory();
+  const { fetchHistory, updateHistory, deleteHistory, history } = useHistory();
   useEffect(() => {
     fetchHistory();
   }, [fetchHistory]);
-  // const pendingHistories = history?.filter((item) => item.status === "pending" && item.acc_id === account?.acc_id);
+
+
 
   const handleClose = () => setOpen(false);
   const [titleHover, setTitleHover] = useState(false);
@@ -54,19 +55,21 @@ const PendingConfirm = ({
   };
 
   const handleAcceptPending = () => {
+    const pendingHistories = history.filter((item) => item.status === "pending" && item.book_id === book.book_id && item.acc_id !== account.acc_id);
+    console.log("pendingHistories: ", pendingHistories);
     const updatedBook = { ...book };
     updatedBook.status = "unavailable";
     const updatedUserHistory = { ...userHistory };
     updatedUserHistory.status = "onhand";
     updatedUserHistory.borrowdate = borrowDate;
     updatedUserHistory.returndate = returnDate;
-    handleUpdateBook(updatedBook._id, updatedBook);
-    handleUpdateHistory(updatedUserHistory._id, updatedUserHistory);
-    pendingHistories?.map(async (history) => {
+    pendingHistories.map(async (history) => {
       const { success, message } = await deleteHistory(history._id);
       console.log("Success:", success);
       console.log("Message:", message);
     });
+    handleUpdateBook(updatedBook._id, updatedBook);
+    handleUpdateHistory(updatedUserHistory._id, updatedUserHistory);
     setOpen !== null ? setOpen(false) : () => {};
   };
 

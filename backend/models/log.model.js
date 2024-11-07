@@ -15,7 +15,6 @@ const logSchema = new mongoose.Schema({
     },
     logoutdate:{
         type: Date,
-        default: Date.now,
         required: false
     }
 })

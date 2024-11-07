@@ -13,10 +13,28 @@ export const useLog = create((set) => ({
       body: JSON.stringify(newLog),
     });
     const data = await res.json();
+    
     set((state) => ({
       log: [...state.logs, data.data],
     }));
-    return { success: true, message: "Log added successfully." };
+    return { log: data.data,  success: true, message: "Log added successfully." };
+  },
+
+  updateLog: async (id, updatedLog) => {
+    const res = await fetch(`/api/log/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(updatedLog),
+    });
+    const data = await res.json();
+    set((state) => ({
+      logs: state.logs.map((log) =>
+        log._id === id ? data.data : log
+      ),
+    }));
+    return { success: true, message: "Logs updated successfully." };
   },
 
   fetchLogs: async () => {

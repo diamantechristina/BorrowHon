@@ -17,6 +17,7 @@ import { v4 as uuidv4 } from "uuid";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Navigate } from "react-router-dom";
 import Login from "../Login.jsx";
+import { set } from "mongoose";
 
 const Dashboard = ({ open, updateOpen, successfulLogin }) => {
   const location = useLocation();
@@ -25,17 +26,23 @@ const Dashboard = ({ open, updateOpen, successfulLogin }) => {
     location.state?.userLoggedIn
   );
 
+  const [userLog, setUserLog] = useState(location.state?.userLog)
+
   useMemo(() => {
     setUserLoggedIn(location.state?.userLoggedIn);
   }, [location.state]);
+
+
+  useMemo(()=>{
+    setUserLog(location.state?.userLog)
+  },[location.state])
 
   useEffect(() => {
     if (!userLoggedIn) {
       navigate("/login");
     }
   }, []);
-  console.log("User: ", userLoggedIn);
-
+  
   const { fetchBook, books } = useBook();
   useEffect(() => {
     fetchBook();
@@ -141,7 +148,7 @@ const Dashboard = ({ open, updateOpen, successfulLogin }) => {
           updateOpen={updateOpen}
           successfulLogin={successfulLogin}
         />
-        <Navbar userLoggedIn={{...userLoggedIn}} />
+        <Navbar userLoggedIn={{...userLoggedIn}} userLog={{...userLog}} />
         <Box
           sx={{
             display: "flex",

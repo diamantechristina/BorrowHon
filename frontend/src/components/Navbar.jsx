@@ -14,15 +14,16 @@ import React, { useState, useEffect, useCallback } from "react";
 import { Search, Filter, Bell, MenuBurger } from "react-flaticons";
 import { useNavigate } from "react-router-dom";
 import "@fontsource/arimo";
+import { useLog } from "../library/log";
 
-const Navbar = ({userLoggedIn}) => {
+const Navbar = ({userLoggedIn, userLog}) => {
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const [selectedFilter, setSelectedFilter] = useState("Filter");
   const [scrolled, setScrolled] = useState(false);
-  
-  console.log("userLoggedIn: ", userLoggedIn);
+  const { updateLog } = useLog();
+
   useEffect(() => {
     const handleScroll = () => {
       if (window.scrollY > 0) {
@@ -39,6 +40,16 @@ const Navbar = ({userLoggedIn}) => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
+
+  const handleLogout = async() => {
+    const updatedLog = {
+      ...userLog,
+      logoutdate: new Date(),
+    }
+    const{success, message} = await updateLog(updatedLog._id, updatedLog)
+    console.log(success, message)
+    navigate("/");
+  }
 
   const handleMenuItemClick = (event) => {
     setSelectedFilter(event.target.textContent);
@@ -348,7 +359,7 @@ const Navbar = ({userLoggedIn}) => {
               Account Settings
             </MenuItem>
             <MenuItem onClick={() => navigate("/borrow-history", { state: { userLoggedIn: userLoggedIn }})}>History</MenuItem>
-            <MenuItem onClick={() => setBurgerAnchorEl(null)}>Log Out</MenuItem>
+            <MenuItem onClick={handleLogout}>Log Out</MenuItem>
           </Menu>
         </Stack>
       </Box>

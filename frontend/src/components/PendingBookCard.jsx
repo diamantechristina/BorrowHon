@@ -106,7 +106,7 @@ const PendingBookCard = ({ book, account, history }) => {
             setOpen={setOpen}
             book={book}
             account={account}
-            history={history}
+            userHistory={history}
             pageTitle={"Accept Pending"}
           />
           <Button
