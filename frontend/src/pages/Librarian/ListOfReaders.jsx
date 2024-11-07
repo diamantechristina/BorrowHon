@@ -89,13 +89,13 @@ const History = () => {
             fontFamily: "Arimo",
           }}
         >
-          HISTORY
+          LIST OF READERS
         </Typography>
       </Box>
       <Box
         sx={{
-          marginTop: "15vh",
-          width: "100vw",
+          marginTop: "10vh",
+          width: "90vw",
           height: "85vh",
           // backgroundColor: "red",
           display: "flex",
@@ -103,15 +103,58 @@ const History = () => {
           alignItems: "center",
         }}
       >
+        <Table>
+          <TableHead
+            sx={{
+              position: "sticky",
+              top: 0,
+              zIndex: 1,
+              // backgroundColor: "blue",
+            }}
+          >
+            <TableRow>
+              <TableCell
+                sx={{
+                  fontWeight: "bold",
+                  color: "#f4f4f4",
+                  textAlign: "center",
+                  fontSize: "clamp(1vw, 2.2vw, 2.5vw)",
+                  borderWidth: "0px",
+                  width: "50vw",
+                  // backgroundColor: "pink",
+                }}
+              >
+                Name
+              </TableCell>
+              <TableCell
+                sx={{
+                  fontWeight: "bold",
+                  color: "#f4f4f4",
+                  textAlign: "center",
+                  fontSize: "clamp(1vw, 2.2vw, 2.5vw)",
+                  borderWidth: "0px",
+                  width: "50vw",
+                  // backgroundColor: "purple",
+                }}
+              >
+                Login Status
+              </TableCell>
+            </TableRow>
+          </TableHead>
+        </Table>
         <Box
           sx={{
             width: "90vw",
-            height: "70vh",
+            height: "75vh",
             backgroundColor: "#2e2e2e",
             // backgroundColor: "red",
             display: "",
             justifyContent: "",
             alignItems: "",
+            overflowY: "scroll",
+            "&::-webkit-scrollbar": {
+              display: "none",
+            },
             // display: userHistory?.length > 0 ? "" : "flex",
             // justifyContent: userHistory?.length > 0 ? "" : "center",
             // alignItems: userHistory?.length > 0 ? "" : "center",
@@ -132,33 +175,8 @@ const History = () => {
               NO HISTORY RECORD
             </Typography>
           ) : ( */}
+
           <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell
-                  sx={{
-                    fontWeight: "bold",
-                    color: "#f4f4f4",
-                    textAlign: "center",
-                    fontSize: "clamp(1vw, 2.2vw, 2.5vw)",
-                    borderWidth: "0px",
-                  }}
-                >
-                  Name
-                </TableCell>
-                <TableCell
-                  sx={{
-                    fontWeight: "bold",
-                    color: "#f4f4f4",
-                    textAlign: "center",
-                    fontSize: "clamp(1vw, 2.2vw, 2.5vw)",
-                    borderWidth: "0px",
-                  }}
-                >
-                  Login Status
-                </TableCell>
-              </TableRow>
-            </TableHead>
             <TableBody>
               {account?.map((acc, index) => {
                 const latestLog = log?.reduce((latest, current) => {
@@ -176,34 +194,77 @@ const History = () => {
                     key={acc.acc_id}
                     sx={{
                       backgroundColor:
-                        index % 2 === 0 ? "rgba(34, 85, 96, 0.15)" : "#2e2e2e",
+                        index % 2 === 0
+                          ? "rgba(34,85,96, 0.20)"
+                          : "rgba(34,85,96, 0.40)",
                     }}
                   >
                     <TableCell
                       sx={{
                         width: "20vw",
-                        color: "#f4f4f4",
+                        color: "#E8E8E8",
                         textAlign: "center",
-                        fontFamily: "Inria Serif",
+                        fontFamily: "Arimo",
                         borderWidth: "0px",
+                        // display: "flex",
+                        // justifyContent: "center",
                         fontSize: "clamp(1vw, 1.2vw, 1.5vw)",
                         borderRadius:
-                          index % 2 === 0 ? "20px 0px 0px 20px" : null,
+                          index % 2 === 0 && index === 0
+                            ? "20px 0px 0px 0px"
+                            : index === account.length - 1
+                            ? "0px 0px 0px 20px"
+                            : null,
                       }}
                     >
-                      {acc.firstName}
+                      <Box
+                        sx={{
+                          display: "flex",
+                          justifyContent: "left",
+                          alignItems: "center",
+                          paddingLeft: "10vw",
+                          gap: "1vw",
+                        }}
+                      >
+                        <Box
+                          sx={{
+                            width: "clamp(6vw, 6vw, 6vw)",
+                            height: "clamp(6vw, 6vw, 6vw)",
+                            backgroundColor: "red",
+                            borderRadius: "50%",
+
+                            // remove when there's profile na in database
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                          }}
+                        >
+                          <img src="${acc.profilepic}" alt="wala pa profile" />
+                        </Box>
+                        {/* {acc.profilepic ? acc.profilepic : "N/A"} */}
+                        {acc.firstName}
+                      </Box>
                     </TableCell>
                     <TableCell
                       sx={{
                         width: "20vw",
-                        color: "#f4f4f4",
+                        color: latestLog
+                          ? !latestLog?.logoutdate &&
+                            latestLog?.logindate != null
+                            ? "#05B049"
+                            : "#E8E8E8"
+                          : "#E8E8E8",
                         textAlign: "center",
                         textTransform: "capitalize",
-                        fontFamily: "Inria Serif",
+                        fontFamily: "Arimo",
                         borderWidth: "0px",
                         fontSize: "clamp(1vw, 1.2vw, 1.5vw)",
                         borderRadius:
-                          index % 2 === 0 ? "0px 20px 20px 0px" : null,
+                          index % 2 === 0 && index === 0
+                            ? "0px 20px 0px 0px"
+                            : index === account.length - 1
+                            ? "0px 0px 20px 0px"
+                            : null,
                       }}
                     >
                       {latestLog &&
