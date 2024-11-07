@@ -15,7 +15,7 @@ const PendingBooks = () => {
   const [pendings, setPendings] = React.useState(0);
   useEffect(() => {
     fetchHistory();
-  }, [fetchHistory]);
+  }, [fetchHistory, history]);
 
   useEffect(() => {
     fetchAccount();
@@ -24,8 +24,8 @@ const PendingBooks = () => {
   useEffect(() => {
     fetchBook();
   }, [fetchBook]);
+
   const pendingHistories = history?.filter((item) => item.status === "pending");
-    
   useEffect(() => {
     setPendings(pendingHistories?.length);
 
