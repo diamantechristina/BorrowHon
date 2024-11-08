@@ -355,7 +355,7 @@ const Navbar = ({userLoggedIn, userLog}) => {
             transformOrigin={{ horizontal: "right", vertical: "top" }}
             anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
           >
-            <MenuItem onClick={() => setBurgerAnchorEl(null)}>
+            <MenuItem onClick={() => navigate('/settings', { state: { userLoggedIn: userLoggedIn }})}>
               Account Settings
             </MenuItem>
             <MenuItem onClick={() => navigate("/borrow-history", { state: { userLoggedIn: userLoggedIn }})}>History</MenuItem>
