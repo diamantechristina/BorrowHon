@@ -10,10 +10,11 @@ import { EyeCrossed, Eye } from "react-flaticons";
 import { InputAdornment } from "@mui/material";
 import { useAccount } from "../library/account.js";
 import { useLog } from "../library/log.js";
-import SnackBar from "../components/SnackBar";
+import { useStore } from "../library/store.js";
 
-const Login = ({ open, updateOpen, updateLogin, successfulLogin }) => {
+const Login = () => {
   const navigate = useNavigate();
+  const { setCurrentUser, setLog } = useStore();
   const handleKeyPress = (event) => {
     if (event.key === "Enter") {
       handleLoginClick();
@@ -68,7 +69,8 @@ const Login = ({ open, updateOpen, updateLogin, successfulLogin }) => {
         // const userLog = logs.find((log) => log.acc_id === acc.acc_id && log.logindate === new Date());
         
         // console.log("userLog Login: ", logs.find((log) => log.acc_id === acc.acc_id && log.logindate === new Date()));
-        updateLogin(true);
+        setCurrentUser(acc);
+        setLog(log);
         navigate("/reader-dashboard", { state: {userLoggedIn: acc, userLog: log } });
         
         return;
@@ -94,11 +96,6 @@ const Login = ({ open, updateOpen, updateLogin, successfulLogin }) => {
         padding: 0,
       }}
     >
-      <SnackBar
-        open={open}
-        updateOpen={updateOpen}
-        successfulLogin={successfulLogin}
-      />
       <Box
         sx={{
           width: "50vw",

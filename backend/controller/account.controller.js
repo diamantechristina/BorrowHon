@@ -75,7 +75,7 @@ export const updateAccount = async (req, res) => {
     _id: { $ne: id },
   });
   if (existingAccount) {
-    return res.status(400).json({ message: "Username already exists" });
+    return res.status(400).json({ message: "Username already taken!" });
   }
 
   try {

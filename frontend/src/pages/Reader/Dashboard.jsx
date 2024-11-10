@@ -7,39 +7,36 @@ import {
   CardMedia,
   CardContent,
   Backdrop,
+  Snackbar,
+  SnackbarContent,
+  List,
+  ListItem,
 } from "@mui/material";
 import Navbar from "../../components/Navbar";
 import { useBook } from "../../library/book.js";
-import SnackBar from "../../components/SnackBar";
 import Carousel from "react-spring-3d-carousel";
 import { Modal } from "@mui/material";
 import { v4 as uuidv4 } from "uuid";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Navigate } from "react-router-dom";
 import Login from "../Login.jsx";
-import { set } from "mongoose";
+import { useStore } from "../../library/store.js";
+import { useSearch } from "../../library/search.js";
+import "@fontsource/montserrat/500.css"
+import "@fontsource/montserrat/700.css"
 
-const Dashboard = ({ open, updateOpen, successfulLogin }) => {
-  const location = useLocation();
-
-  const [userLoggedIn, setUserLoggedIn] = useState(
-    location.state?.userLoggedIn
-  );
-
-  const [userLog, setUserLog] = useState(location.state?.userLog)
-
-  useMemo(() => {
-    setUserLoggedIn(location.state?.userLoggedIn);
-  }, [location.state]);
-
-
-  useMemo(()=>{
-    setUserLog(location.state?.userLog)
-  },[location.state])
+const Dashboard = () => {
+  const { currentUser, setBookData, bookData, isFirstLogin, setIsFirstLogin } = useStore();
+  const { searchedBook, filterType } = useSearch();
+  const navigate = useNavigate();
 
   useEffect(() => {
-    if (!userLoggedIn) {
-      navigate("/login");
+   setBookData(null) 
+  },[])
+
+  useEffect(() => {
+    if (!currentUser) {
+      navigate("/");
     }
   }, []);
   
@@ -47,12 +44,9 @@ const Dashboard = ({ open, updateOpen, successfulLogin }) => {
   useEffect(() => {
     fetchBook();
   }, [fetchBook]);
-
-  const navigate = useNavigate();
-
+  const [fetchedBooks, setFetchedBooks] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  const [bookData, setBookData] = useState([]);
 
   const [bookCreation, setBookCreation] = useState([]);
 
@@ -79,7 +73,7 @@ const Dashboard = ({ open, updateOpen, successfulLogin }) => {
         coverImage: book.coverImage,
         createdAt: book.createdAt,
       }));
-      setBookData(combinedData);
+      setFetchedBooks(combinedData);
       // can use spread operator [...] or slice() so that it
       // doesn't mutate the original array
       const sortedBooks = [...combinedData].sort(
@@ -95,7 +89,7 @@ const Dashboard = ({ open, updateOpen, successfulLogin }) => {
 
   const [hoverRecentBook, setHoverRecentBook] = useState(false);
 
-  const slides = bookData.slice(0, 5).map((book, index) => ({
+  const slides = fetchedBooks.slice(0, 5).map((book, index) => ({
     key: uuidv4(), // Generate a unique key for each slide
     content: (
       <img
@@ -111,6 +105,7 @@ const Dashboard = ({ open, updateOpen, successfulLogin }) => {
   }));
 
   return (
+
     <Box
       sx={{
         overflowY: "scroll", // Allow vertical scrolling
@@ -119,6 +114,157 @@ const Dashboard = ({ open, updateOpen, successfulLogin }) => {
         },
       }}
     >
+      <Snackbar
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+        open={isFirstLogin}
+        autoHideDuration={3000}
+        onClose={() => setIsFirstLogin(false)}
+      >
+        <SnackbarContent
+          message='Login Successfully!'
+          style={{
+            backgroundColor:'green',
+            justifyContent: "center",
+          }}
+        />
+      </Snackbar>
+      <List
+        sx={{
+          display: searchedBook ? "auto" : "none",
+          width: '100%',
+          maxWidth: '33.9vw',
+          bgcolor: '#d9d9d9',
+          position: 'fixed',
+          overflow: 'auto',
+          "&::-webkit-scrollbar": {
+          display: "none", // Hide scrollbars for WebKit browsers
+        },
+          top: '9.25vh',
+          left: '13.75vw',
+          zIndex: 1,
+          maxHeight: "36.6vh",
+          paddingTop: '2.5vh',
+          borderBottomLeftRadius: '20px',
+          borderBottomRightRadius: '20px',
+        }}
+      >
+        {books.filter((book) => {
+        
+        if (filterType === 'title'){
+          return book.title.toLowerCase().includes(searchedBook?.toLowerCase())
+        }else if (filterType === 'author'){
+          return book.author.toLowerCase().includes(searchedBook?.toLowerCase())
+        }else if (filterType === 'isbn'){
+          return book.isbn.includes(searchedBook)
+        }else if (filterType === 'genre'){
+          return book.genre[0].toLowerCase().includes(searchedBook?.toLowerCase())
+        }
+        else{
+          return false;
+        }
+        
+      }).length === 0 ?(
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              height: "100%",
+            }}
+          >
+            <Typography
+              sx={{
+                fontSize: "1.5rem",
+                fontWeight: "bold",
+                color: "#191919",
+              }}
+            >
+              No Results Found
+            </Typography>
+          </Box>
+        ) : null}
+      {books.filter((book) => {
+        if (searchedBook === '') {
+          return false;
+        }
+        if (filterType === 'title'){
+          return book.title.toLowerCase().includes(searchedBook?.toLowerCase())
+        }else if (filterType === 'author'){
+          return book.author.toLowerCase().includes(searchedBook?.toLowerCase())
+        }else if (filterType === 'isbn'){
+          return book.isbn.includes(searchedBook)
+        }else if (filterType === 'genre'){
+          return book.genre[0].toLowerCase().includes(searchedBook?.toLowerCase())
+        }
+        
+      })
+      .map((book) => (
+        <ListItem
+          sx={{
+            "&:hover": {
+                backgroundColor: "#E8E8E8",
+              },
+          }}
+          key={book._id}
+          onClick={() => {
+            setBookData(book);
+            navigate("/view-book");
+          }}
+        >
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              cursor: "pointer",
+              width: "100%",
+              height: "10vh",
+              
+            }}
+          >
+            <Box
+              sx={{
+                width: "10%",
+                height: "10vh",
+                objectFit: "contain",
+                background: `url(${book.coverImage})`,
+                backgroundSize: "contain",
+                backgroundPosition: "center",
+                backgroundRepeat: "no-repeat",
+              }}
+            />
+            <Box
+              sx={{
+                margin: "0",
+              }}
+            >
+            <Typography
+              sx={{
+                fontFamily: "Montserrat",
+                marginLeft: "1vw",
+                fontSize: "1.2rem",
+                fontWeight: "bold",
+                color: "#191919",
+              }}
+            >
+              {book.title}
+            </Typography>
+            <Typography
+              sx={{
+                fontFamily: "Montserrat",
+                fontWeight: "500",
+                marginLeft: "1vw",
+                fontSize: "0.9rem",
+                color: "#191919",
+              }}
+            >
+              {book.author}
+            </Typography>
+            </Box>
+
+          </Box>
+        </ListItem>
+      ))}
+      </List>
       <Box
         sx={{
           height: "100vh",
@@ -143,12 +289,8 @@ const Dashboard = ({ open, updateOpen, successfulLogin }) => {
             zIndex: -1, // Add this property to ensure the image is behind the content
           }}
         />
-        <SnackBar
-          open={open}
-          updateOpen={updateOpen}
-          successfulLogin={successfulLogin}
-        />
-        <Navbar userLoggedIn={{...userLoggedIn}} userLog={{...userLog}} />
+        
+        <Navbar/>
         <Box
           sx={{
             display: "flex",
@@ -191,30 +333,26 @@ const Dashboard = ({ open, updateOpen, successfulLogin }) => {
                   fontFamily: "Montserrat",
                 }}
               >
-                {bookData[currentIndex]?.title}
+                {fetchedBooks[currentIndex]?.title}
               </Typography>
               <Typography
                 sx={{
                   color: "#F4F4F4",
                 }}
               >
-                By {bookData[currentIndex]?.author}
+                By {fetchedBooks[currentIndex]?.author}
               </Typography>
               <Typography
                 sx={{
                   color: "#F4F4F4",
                 }}
               >
-                {bookData[currentIndex]?.description}
+                {fetchedBooks[currentIndex]?.description}
               </Typography>
               <Button
                 onClick={() => {
-                  navigate("/view-book", {
-                    state: {
-                      bookData: bookData[currentIndex],
-                      user: userLoggedIn,
-                    },
-                  });
+                  setBookData(fetchedBooks[currentIndex])
+                  navigate("/view-book");
                 }}
                 variant="contained"
                 sx={{
@@ -381,14 +519,13 @@ const Dashboard = ({ open, updateOpen, successfulLogin }) => {
                 gap: "5vw",
               }}
             >
-              {bookData.slice(0, 5).map((book, index) => (
+              {fetchedBooks.slice(0, 5).map((book, index) => (
                 <Card
                   onMouseOver={() => setHoverPopularBook(book.title)}
                   onMouseOut={() => setHoverPopularBook(null)}
                   onClick={() => {
-                    navigate(`/view-book`, {
-                      state: { bookData: book, user: userLoggedIn },
-                    });
+                    setBookData(book)
+                    navigate(`/view-book`);
                   }}
                   key={index}
                   sx={{
@@ -500,19 +637,19 @@ const Dashboard = ({ open, updateOpen, successfulLogin }) => {
                 gap: "5vw",
               }}
             >
-              {bookCreation.slice(0, bookData.length).map((book, index) => (
+              {bookCreation.slice(0, fetchedBooks.length).map((book, index) => (
                 <Card
                   onMouseOver={() => setHoverRecentBook(book.title)}
                   onMouseOut={() => setHoverRecentBook(null)}
                   key={index}
                   onClick={() => {
-                    book === undefined
-                      ? navigate(`/reader-dashboard`, {
-                          state: { userLoggedIn: userLoggedIn },
-                        })
-                      : navigate(`/view-book`, {
-                          state: { bookData: book, user: userLoggedIn },
-                        });
+                    if(book===undefined){
+                      navigate(`/reader-dashboard`);
+                    }
+                    else{
+                      setBookData(book);
+                      navigate(`/view-book`);
+                    }
                   }}
                   sx={{
                     width: "12.6vw",

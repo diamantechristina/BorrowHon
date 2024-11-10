@@ -7,7 +7,6 @@ import ContinueRegister from "./pages/ContinueRegister.jsx";
 import ContinueForgotPassword from "./pages/ContinueForgotPassword.jsx";
 import { Route, Routes } from "react-router-dom";
 import LibrarianListOfBooks from "./pages/Librarian/ListOfBooks.jsx";
-import SnackBar from "./components/SnackBar.jsx";
 import PendingBooks from "./pages/Librarian/PendingBooks.jsx";
 import AccountSettings from "./pages/AccountSettings.jsx";
 import ViewBook from "./pages/Reader/ViewBook.jsx";
@@ -16,14 +15,7 @@ import Librarian_Dashboard from "./pages/Librarian/Dashboard.jsx";
 import LibrarianListOfReaders from "./pages/Librarian/ListOfReaders.jsx";
 
 function App() {
-  const [open, setOpen] = useState(false);
-  const updateOpen = (isOpen)=>{
-      setOpen(isOpen)
-  }
-  const [successfulLogin,setSuccessfulLogin] = useState(false)
-  const updateLogin = (isSuccessful) =>{
-    setSuccessfulLogin(isSuccessful)
-  }
+
   return (
     <Routes>
       <Route path="/list-of-readers" element = {<LibrarianListOfReaders/>}/>
@@ -31,7 +23,7 @@ function App() {
       <Route path="/borrow-history" element = {<History/>}/>
       <Route path="/view-book" element = {<ViewBook/>}/>
       <Route path="/settings" element = {<AccountSettings/>}/>
-      <Route path="/reader-dashboard" element={<Reader_Dashboard open = {open} updateOpen = {updateOpen} successfulLogin = {successfulLogin}/>} />
+      <Route path="/reader-dashboard" element={<Reader_Dashboard />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route
         path="/continue-forgot-password"
@@ -40,8 +32,8 @@ function App() {
       <Route path="/pending-books" element={<PendingBooks />} />
       <Route path="/register" element={<Register />} />
       <Route path="/continue-register" element={<ContinueRegister />} />
-      <Route path="/" element={<Login open = {open} updateOpen = {updateOpen} successfulLogin = {successfulLogin} updateLogin = {updateLogin}/>} />
-      <Route path="/login" element={<Login open = {open} updateOpen = {updateOpen} successfulLogin = {successfulLogin} updateLogin = {updateLogin}/>} />
+      <Route path="/" element={<Login/>} />
+      <Route path="/login" element={<Login/>} />
       <Route path="/list-of-books" element={<LibrarianListOfBooks />} />
     </Routes>
   );

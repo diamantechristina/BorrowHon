@@ -15,15 +15,20 @@ import { Search, Filter, Bell, MenuBurger } from "react-flaticons";
 import { useNavigate } from "react-router-dom";
 import "@fontsource/arimo";
 import { useLog } from "../library/log";
+import { useStore } from "../library/store"
+import { useSearch } from "../library/search"
+import { set } from "mongoose";
 
-const Navbar = ({userLoggedIn, userLog}) => {
+const Navbar = () => {
   const navigate = useNavigate();
+  const {userLog, setCurrentUser, setIsFirstLogin} = useStore();
+  const {searchedBook, setSearchedBook, setFilterType} = useSearch();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const [selectedFilter, setSelectedFilter] = useState("Filter");
   const [scrolled, setScrolled] = useState(false);
   const { updateLog } = useLog();
-
+  
   useEffect(() => {
     const handleScroll = () => {
       if (window.scrollY > 0) {
@@ -48,11 +53,14 @@ const Navbar = ({userLoggedIn, userLog}) => {
     }
     const{success, message} = await updateLog(updatedLog._id, updatedLog)
     console.log(success, message)
+    setCurrentUser(null)
     navigate("/");
+    setIsFirstLogin(true)
   }
 
   const handleMenuItemClick = (event) => {
     setSelectedFilter(event.target.textContent);
+    setFilterType(event.target.textContent.toLowerCase());
     handleClose();
   };
 
@@ -113,7 +121,7 @@ const Navbar = ({userLoggedIn, userLog}) => {
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            gap: "26px",
+            gap: "1.65vw",
           }}
         >
           <img
@@ -122,7 +130,7 @@ const Navbar = ({userLoggedIn, userLog}) => {
             style={{
               width: "9.8vw",
               marginTop: "20px",
-              marginLeft: "35px",
+              marginLeft: "2.32vw",
             }}
           />
           <TextField
@@ -130,6 +138,8 @@ const Navbar = ({userLoggedIn, userLog}) => {
             type="text"
             // id='outlined-basic'
             variant="outlined"
+            value={searchedBook}
+            onChange={(event) => setSearchedBook(event.target.value)}
             placeholder={getFilterText()}
             InputLabelProps={{ required: false }}
             sx={{
@@ -355,10 +365,10 @@ const Navbar = ({userLoggedIn, userLog}) => {
             transformOrigin={{ horizontal: "right", vertical: "top" }}
             anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
           >
-            <MenuItem onClick={() => navigate('/settings', { state: { userLoggedIn: userLoggedIn }})}>
+            <MenuItem onClick={() => navigate('/settings')}>
               Account Settings
             </MenuItem>
-            <MenuItem onClick={() => navigate("/borrow-history", { state: { userLoggedIn: userLoggedIn }})}>History</MenuItem>
+            <MenuItem onClick={() => navigate("/borrow-history")}>History</MenuItem>
             <MenuItem onClick={handleLogout}>Log Out</MenuItem>
           </Menu>
         </Stack>

@@ -19,12 +19,11 @@ import { useNavigate } from "react-router-dom";
 import { useLog } from "../../library/log";
 import "@fontsource/montserrat";
 import { useBook } from "../../library/book";
+import { useStore } from "../../library/store"
 
 const ViewBook = () => {
-  const location = useLocation();
+  const {currentUser, bookData} = useStore();
   const navigate = useNavigate();
-  const [bookData, setBookData] = useState(location.state?.bookData);
-  const [userLoggedIn, setUserLoggedIn] = useState(location.state?.user);
   console.log("bookData: ", bookData);
   const { fetchHistory, history } = useHistory();
   const { updateBook } = useBook();
@@ -50,30 +49,30 @@ const ViewBook = () => {
     fetchHistory();
   }, [fetchHistory, history]);
 
-  console.log("User: ", userLoggedIn);
+  console.log("User: ", currentUser);
 
   // Locate the specific history entry that matches the current book and user
   const currentBookHistory = useMemo(() => {
     return history?.find(
       (entry) =>
         entry?.book_id === bookData?.book_id &&
-        entry.acc_id === userLoggedIn?.acc_id
+        entry.acc_id === currentUser?.acc_id
     );
-  }, [history, bookData, userLoggedIn]);
-
-  useMemo(() => {
-    setBookData(location.state?.bookData);
-    setUserLoggedIn(location.state?.user);
-  }, [location.state]);
+  }, [history, bookData, currentUser]);
 
   console.log("bookData: ", bookData);
 
   //get book dat
   useEffect(() => {
-    if (bookData === undefined && userLoggedIn === undefined) {
-      navigate("/login");
+    if(currentUser){
+      if(bookData === null){
+        navigate("/reader-dashboard")
+      }
     }
-  }, [bookData, userLoggedIn]);
+    if (bookData === null && currentUser === null) {
+      navigate("/");
+    }
+  }, []);
 
   const [open, setOpen] = useState(false);
   const [returnOpen, setReturnOpen] = useState(false);
@@ -102,10 +101,10 @@ const ViewBook = () => {
 
   const { createHistory, updateHistory } = useHistory();
   const handleBorrowBook = async () => {
-    if (userLoggedIn?.password === pass.password) {
+    if (currentUser?.password === pass.password) {
       const newHistory = {
         book_id: bookData.book_id,
-        acc_id: userLoggedIn.acc_id,
+        acc_id: currentUser.acc_id,
       };
       const { success, message } = await createHistory(newHistory);
       console.log("Success:", success);
@@ -131,7 +130,7 @@ const ViewBook = () => {
   }
 
   const handleReturnBook = async() => {
-    if (userLoggedIn?.password === pass.password) {
+    if (currentUser?.password === pass.password) {
       const updatedBookData = {...bookData}
       updatedBookData.status = "available"
       const updatedUserHistory = {...currentBookHistory}
@@ -150,7 +149,7 @@ const ViewBook = () => {
   }
 
   const handleRenewBook = async() => {
-    if (userLoggedIn?.password === pass.password) {
+    if (currentUser?.password === pass.password) {
       const updatedUserHistory = {...currentBookHistory}
       updatedUserHistory.returndate = new Date(updatedUserHistory.returndate).setDate(new Date(updatedUserHistory.returndate).getDate() + 5) 
       handleupdateHistory(updatedUserHistory._id, updatedUserHistory)
@@ -385,7 +384,7 @@ const ViewBook = () => {
                     ? currentBookHistory?.status === "onhand"
                       ? "Borrowed"
                       : currentBookHistory?.status
-                    : bookData.status}
+                    : bookData?.status}
                 </Typography>
                 <Typography
                   sx={{

@@ -270,7 +270,7 @@ const ManageBook = ({open, setOpen, pageTitle, confirmPageTitle, handleHover, bo
                                         image = await resizeFile(event.target.files[0])
                                         setNewBook((prevBook) => ({
                                             ...prevBook,
-                                            coverImage: iamge
+                                            coverImage: image
                                         }))}
                                     }
                                     multiple

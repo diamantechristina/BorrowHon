@@ -47,7 +47,37 @@ export const useAccount = create((set) => ({
     }));
     return { success: true, message: "Registration Successful." };
   },
+  updateAccount: async (id, updatedAccount, usernameEdited) => {
+    const checkerRes = await fetch("/api/accounts");
+    const checkerData = await checkerRes.json();
 
+    const existingAccount = checkerData.data.find((account) => {
+      return (
+        account.username === updatedAccount.username
+      );
+    });
+
+    if (existingAccount && usernameEdited) {
+      return {
+        success: false,
+        message: "Username already taken!",
+      };
+    }
+    const res = await fetch(`/api/accounts/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(updatedAccount),
+    });
+    const data = await res.json();
+    set((state) => ({
+      accounts: state.accounts.map((account) =>
+        account._id === id ? data.data : account
+      ),
+    }));
+    return { success: true, message: "Account updated successfully!" };
+  },
   fetchAccount: async () => {
     const res = await fetch("/api/accounts");
     const data = await res.json();

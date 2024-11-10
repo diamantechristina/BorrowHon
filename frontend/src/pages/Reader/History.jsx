@@ -15,11 +15,11 @@ import { ArrowSmallLeft } from "react-flaticons";
 import { useHistory } from "../../library/history";
 import { useBook } from "../../library/book";
 import "@fontsource/arimo";
+import { useStore } from "../../library/store";
 
 const History = () => {
   const navigate = useNavigate();
-  const location = useLocation();
-  const userLoggedIn = location.state?.userLoggedIn;
+  const { currentUser } = useStore();
   const { fetchHistory, history } = useHistory();
   const { fetchBook, books } = useBook();
 
@@ -32,10 +32,10 @@ const History = () => {
   }, [fetchBook]);
 
   console.log("books: ", books);
-  console.log("userLoggedIn: ", userLoggedIn);
+  console.log("currentUser: ", currentUser);
 
   const userHistory = useMemo(() => {
-    return history?.filter((item) => item.acc_id === userLoggedIn.acc_id)
+    return history?.filter((item) => item.acc_id === currentUser.acc_id)
       .sort((a, b) =>{
         const statusOrder = ['pending', 'onhand', 'returned'];
         const statusA = statusOrder.indexOf(a.status);
@@ -46,7 +46,7 @@ const History = () => {
           return new Date(b.borrowdate) - new Date(a.borrowdate);
         }
       })
-  }, [history, userLoggedIn]);
+  }, [history, currentUser]);
 
   console.log("userHistory: ", userHistory);
 
