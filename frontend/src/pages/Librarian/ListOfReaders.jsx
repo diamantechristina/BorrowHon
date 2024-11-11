@@ -188,6 +188,7 @@ const History = () => {
             justifyContent: "",
             alignItems: "",
             overflowY: "scroll",
+            borderRadius: "20px",
             "&::-webkit-scrollbar": {
               display: "none",
             },
