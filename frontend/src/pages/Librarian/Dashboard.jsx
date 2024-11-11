@@ -7,6 +7,10 @@ import {
   Menu,
   MenuItem,
   CircularProgress,
+  Table,
+  TableBody,
+  TableRow,
+  TableCell,
 } from "@mui/material";
 import { LineChart } from "@mui/x-charts";
 import {
@@ -20,6 +24,7 @@ import { useBook } from "../../library/book.js";
 import { useHistory } from "../../library/history.js";
 import { useNavigate } from "react-router-dom";
 import { useLog } from "../../library/log.js";
+import { useAccount } from "../../library/account.js";
 import Navbar from "../../components/Navbar.jsx";
 
 const months = [
@@ -41,25 +46,30 @@ const Dashboard = () => {
   const navigate = useNavigate();
   const [burgerAnchorEl, setBurgerAnchorEl] = React.useState(null);
   const burgerOpen = Boolean(burgerAnchorEl);
-  const {fetchLogs, log} = useLog();
+  const { fetchLogs, log } = useLog();
+  const { fetchAccount, account } = useAccount();
+
+  useEffect(() => {
+    fetchAccount();
+  }, [fetchAccount]);
 
   useEffect(() => {
     fetchLogs();
-  }, [fetchLogs])
-  console.log("log: ", log)
+  }, [fetchLogs]);
+  console.log("log: ", log);
 
-  const userLogCountPerMonth = useMemo (()=>{
-    const logCounts = {}
+  const userLogCountPerMonth = useMemo(() => {
+    const logCounts = {};
     months.forEach((month) => {
       logCounts[month] = log?.filter((logItem) => {
         const logDate = new Date(logItem.logindate);
         return logDate.getMonth() === months.indexOf(month);
-      }).length
-    })
-    return logCounts
-  }, [log, months])
+      }).length;
+    });
+    return logCounts;
+  }, [log, months]);
 
-  console.log("userLogCountPerMonth: ", userLogCountPerMonth)
+  console.log("userLogCountPerMonth: ", userLogCountPerMonth);
 
   const handleBurgerClick = (event) => {
     setBurgerAnchorEl(event.currentTarget);
@@ -90,9 +100,15 @@ const Dashboard = () => {
   const unavailableBooks = useMemo(() => {
     return books?.filter((item) => item.status === "unavailable").length;
   }, [books]);
+  
+  const [borrowedBooks, setBorrowedBooks] = React.useState([]);
 
-  // console.log("pendingBooks: ", pendingBooks);
-
+  useEffect(() => {
+    const borrowedBooks = history?.filter((item) => item.status === "onhand" || item.status === "returned")
+    .sort((a, b) => new Date(b.borrow_date) - new Date(a.borrow_date));
+    setBorrowedBooks(borrowedBooks);
+  }, [history]);
+    
   return (
     <Box
       sx={{
@@ -112,15 +128,11 @@ const Dashboard = () => {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          //   flexDirection: "column",
-          //   height: "100%",
-          //   width: "100%",
-          //   position: "absolute",
           zIndex: 1,
         }}
       >
         {/* navbar */}
-        <Navbar/>
+        <Navbar />
         {/* body */}
         <Box
           sx={{
@@ -168,7 +180,7 @@ const Dashboard = () => {
                 <Typography
                   sx={{
                     color: "#F4F4F4",
-                    fontSize: "26px",
+                    fontSize: "3vh",
                     fontFamily: "Montserrat",
                     marginTop: "10px",
                   }}
@@ -404,13 +416,16 @@ const Dashboard = () => {
                 width: "44vw",
                 right: 0,
                 height: "inherit",
+                display: "flex",
+                flexDirection: "column",
+                gap: "2vh",
                 // backgroundColor: "pink",
               }}
             >
               <Box
                 sx={{
                   width: "44vw",
-                  height: "45vh",
+                  height: "40vh",
                   backgroundColor: "#2E2E2E",
                   borderRadius: "20px",
                   area: "false",
@@ -426,6 +441,7 @@ const Dashboard = () => {
                     fontFamily: "Montserrat",
                     marginTop: "10px",
                     marginBottom: "-50px",
+                    fontSize: "3vh",
                   }}
                 >
                   Reader Sign Ins
@@ -449,14 +465,114 @@ const Dashboard = () => {
                     "& .MuiChartsAxis-tick": {
                       stroke: "#F4F4F4 !important",
                     },
-                    "& .css-xyaj9i-MuiMarkElement-root":{
+                    "& .css-xyaj9i-MuiMarkElement-root": {
                       fill: "#2E2E2E !important",
                       "&:hover": {
                         fill: "#2E2E2E !important",
-                      }
-                    }
+                      },
+                    },
                   }}
                 ></LineChart>
+              </Box>
+              <Box
+                sx={{
+                  width: "44vw",
+                  height: "35vh",
+                  backgroundColor: "#2E2E2E",
+                  borderRadius: "20px",
+                  area: "false",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                }}
+              >
+                <Typography
+                  sx={{
+                    color: "#F4F4F4",
+                    fontFamily: "Montserrat",
+                    marginTop: "10px",
+                    // marginBottom: "-50px",
+                    fontSize: "3vh",
+                  }}
+                >
+                  Recent Books Borrowed
+                </Typography>
+                <Box
+                  sx={{
+                    overflowY: "scroll",
+                    "&::-webkit-scrollbar": {
+                      display: "none",
+                    },
+                    borderBottomRadius: "20px",
+                  }}
+                >
+                  <Table
+                    sx={{
+                      width: "44vw",
+                    }}
+                  >
+                    <TableBody>
+                      {borrowedBooks?.slice(0, 5).map((item, index) => {
+                        const book = books.find(
+                          (book) => book.book_id === item.book_id
+                        );
+                        const user = account.find(
+                          (user) => user.user_id === item.user_id
+                        );
+                        return (
+                          <TableRow
+                            key={index}
+                            sx={{
+                              backgroundColor:
+                                index % 2 === 0 ? "rgba(25,25,25,0.15)" : "",
+                              height: "0.5vh",
+                            }}
+                          >
+                            <TableCell
+                              sx={{
+                                width: "60%",
+                                borderBottom: "none",
+                                height: "0.5vh",
+                              }}
+                            >
+                              <Typography
+                                sx={{
+                                  color: "#F4F4F4",
+                                  fontFamily: "Montserrat",
+                                  // fontSize: "2vh",
+                                  // textAlign: "center",
+                                  marginLeft: "4vw",
+                                  textTransform: "uppercase",
+                                }}
+                              >
+                                {book ? book.title : ""}
+                              </Typography>
+                            </TableCell>
+                            <TableCell
+                              sx={{
+                                width: "40%",
+                                borderBottom: "none",
+                                height: "0.5vh",
+                              }}
+                            >
+                              <Typography
+                                sx={{
+                                  color: "#F4F4F4",
+                                  fontFamily: "Montserrat",
+                                  // fontSize: "2vh",
+                                  marginLeft: "5vw",
+                                  // textAlign: "center",
+                                }}
+                              >
+                                {user ? user.firstName : ""}
+                              </Typography>
+                            </TableCell>
+                          </TableRow>
+                        );
+                      })}
+                    </TableBody>
+                  </Table>
+                </Box>
               </Box>
             </Box>
           </Box>
