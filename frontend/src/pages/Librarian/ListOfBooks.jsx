@@ -11,16 +11,21 @@ import { ArrowSmallLeft, Books } from "react-flaticons";
 import { useBook } from "../../library/book.js";
 import BookCard from "../../components/BookCard.jsx";
 import AddBook from "../../components/ManageBook.jsx";
-
+import { useStore } from "../../library/store.js";
 const ListOfBooks = () => {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
-  
+  const {isAdmin, currentUser} = useStore();
 
   const { fetchBook, books } = useBook();
   useEffect(() => {
     fetchBook();
   }, [fetchBook]);
+
+  useEffect(() => {
+    if(!currentUser) navigate("/");
+    else if(!isAdmin) navigate(-1);
+  },[])
 
   const handleOpen = () => setOpen(true);
   
@@ -28,7 +33,7 @@ const ListOfBooks = () => {
   return (
     <Box
       sx={{
-        display: "flex",
+        display: isAdmin ? "flex" : "none",
         justifyContent: "center",
         backgroundColor: "#191919",
         position: "relative",

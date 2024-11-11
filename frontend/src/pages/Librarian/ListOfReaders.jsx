@@ -17,7 +17,7 @@ import { ArrowSmallLeft } from "react-flaticons";
 import { useAccount } from "../../library/account";
 import { useLog } from "../../library/log";
 import "@fontsource/arimo";
-
+import { useStore } from "../../library/store";
 function stringToColor(string) {
   let hash = 0;
   let i;
@@ -45,10 +45,19 @@ function stringAvatar(name) {
 }
 
 const History = () => {
+  const {setReaderUser, currentUser, isAdmin} = useStore();
   const navigate = useNavigate();
   const { fetchAccount, account } = useAccount();
   const { fetchLogs, log } = useLog();
 
+  useEffect(() => {
+    setReaderUser(null)
+  },[])
+  useEffect(() => {
+    if(!currentUser) navigate("/");
+    else if(!isAdmin) navigate(-1);
+  },[])
+  
   useEffect(() => {
     fetchAccount();
   }, [fetchAccount]);
@@ -218,8 +227,14 @@ const History = () => {
 
                 return (
                   <TableRow
+                    onClick={() => {
+                      setReaderUser(acc);
+                      navigate(`/reader`);
+
+                    }}
                     key={acc.acc_id}
                     sx={{
+                      cursor:"pointer",
                       backgroundColor:
                         index % 2 === 0
                           ? "rgba(34,85,96, 0.20)"
