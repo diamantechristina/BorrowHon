@@ -43,7 +43,7 @@ const months = [
 ];
 
 const Dashboard = () => {
-  const {  setReaderUser, setIsOnEdit } = useStore();
+  const { currentUser,  setReaderUser, setIsOnEdit } = useStore();
   const navigate = useNavigate();
   const [burgerAnchorEl, setBurgerAnchorEl] = React.useState(null);
   const burgerOpen = Boolean(burgerAnchorEl);
@@ -68,7 +68,7 @@ const Dashboard = () => {
     months.forEach((month) => {
       logCounts[month] = log?.filter((logItem) => {
         const logDate = new Date(logItem.logindate);
-        return logDate.getMonth() === months.indexOf(month);
+        return logDate.getMonth() === months.indexOf(month) && logItem.acc_id != currentUser.acc_id;
       }).length;
     });
     return logCounts;
