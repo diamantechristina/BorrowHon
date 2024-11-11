@@ -14,12 +14,21 @@ import { useStore } from "../library/store.js";
 
 const Login = () => {
   const navigate = useNavigate();
-  const { setCurrentUser, setLog } = useStore();
+  const { setCurrentUser, setLog, setIsAdmin, currentUser } = useStore();
   const handleKeyPress = (event) => {
     if (event.key === "Enter") {
       handleLoginClick();
     }
   }
+  useEffect(()=> {
+    setIsAdmin(false)
+  },[])
+  useEffect(() => {
+    if (currentUser) {
+      setIsAdmin(currentUser.isAdmin);
+      navigate("/dashboard");
+    }
+  }, [currentUser]);
   useEffect(() => {
     document.addEventListener('keypress', handleKeyPress);
     return () => {
@@ -45,7 +54,6 @@ const Login = () => {
   });
 
 
-  // console.log("Accounts: ",account);
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -71,13 +79,14 @@ const Login = () => {
         // console.log("userLog Login: ", logs.find((log) => log.acc_id === acc.acc_id && log.logindate === new Date()));
         setCurrentUser(acc);
         setLog(log);
-        navigate("/reader-dashboard", { state: {userLoggedIn: acc, userLog: log } });
+        setIsAdmin(acc.isAdmin)
+        navigate("/dashboard");
         
         return;
       }
-      else if (login.username.toLowerCase() === "admin" && login.password === "admin"){
-        navigate("/librarian-dashboard")
-      }
+      // else if (login.username.toLowerCase() === "admin" && login.password === "admin"){
+      //   navigate("/dashboard")
+      // }
     }
     console.log("Login failed");
   };

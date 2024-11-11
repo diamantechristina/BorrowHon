@@ -21,7 +21,7 @@ import { set } from "mongoose";
 
 const Navbar = () => {
   const navigate = useNavigate();
-  const {userLog, setCurrentUser, setIsFirstLogin} = useStore();
+  const {userLog, setCurrentUser, setIsFirstLogin, isAdmin } = useStore();
   const {searchedBook, setSearchedBook, setFilterType} = useSearch();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
@@ -53,8 +53,8 @@ const Navbar = () => {
     }
     const{success, message} = await updateLog(updatedLog._id, updatedLog)
     console.log(success, message)
+    await navigate("/");
     setCurrentUser(null)
-    navigate("/");
     setIsFirstLogin(true)
   }
 
@@ -100,6 +100,7 @@ const Navbar = () => {
         position: "fixed",
         width: "100%",
         zIndex: "100",
+        top:0,
         transition: "background-color 0.3s ease, backdrop-filter 0.3s ease", // Smooth transition when applying blur
         ...(scrolled && {
           backdropFilter: "blur(10px)", // Apply blur when scrolled
@@ -143,6 +144,7 @@ const Navbar = () => {
             placeholder={getFilterText()}
             InputLabelProps={{ required: false }}
             sx={{
+              display: isAdmin ? "none" : "auto",
               "& .MuiOutlinedInput-root": {
                 width: "clamp(20vw, 42.2vw, 42.2vw)",
                 // width: "42.2vw",
@@ -368,7 +370,7 @@ const Navbar = () => {
             <MenuItem onClick={() => navigate('/settings')}>
               Account Settings
             </MenuItem>
-            <MenuItem onClick={() => navigate("/borrow-history")}>History</MenuItem>
+            {isAdmin ? null : <MenuItem onClick={() => navigate("/borrow-history")}>History</MenuItem>}
             <MenuItem onClick={handleLogout}>Log Out</MenuItem>
           </Menu>
         </Stack>

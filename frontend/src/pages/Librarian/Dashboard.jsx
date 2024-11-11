@@ -19,6 +19,7 @@ import {
 import { useBook } from "../../library/book.js";
 import { useHistory } from "../../library/history.js";
 import { useNavigate } from "react-router-dom";
+import Navbar from "../../components/Navbar.jsx";
 
 const months = [
   "Jan",
@@ -99,121 +100,7 @@ const Dashboard = () => {
         }}
       >
         {/* navbar */}
-        <Box
-          sx={{
-            width: "100vw",
-            height: "15vh",
-            display: "flex",
-            justifyContent: "space-between",
-            // backgroundColor: "rgba(0, 0, 0, 0.5)",
-            position: "fixed",
-            top: 0,
-          }}
-        >
-          <img
-            src="src/resources/logo.png"
-            alt="BorrowHon"
-            style={{
-              height: "1.5vw",
-              marginTop: "20px",
-              marginLeft: "30px",
-              paddingTop: "20px",
-            }}
-          />
-          <Box
-            sx={{
-              height: "70vh",
-              marginTop: "30px",
-            }}
-          >
-            <Stack
-              direction="row"
-              spacing={4}
-              sx={{
-                marginRight: "120px",
-                // marginTop: "20px",
-                // backgroundColor: "red",
-              }}
-            >
-              <Button
-                sx={{
-                  // backgroundColor: "red",
-                  color: "#F4F4F4",
-                  // width:"60px",
-                  // height:"50px",
-                  borderRadius: "15px",
-                  "&:hover": {
-                    backgroundColor: "#D9D9D9",
-                    color: "#191919",
-                    backgroundSize: "50%",
-                  },
-                }}
-              >
-                <Bell
-                  size={40}
-                  style={{
-                    // backgroundColor: "green",
-                    marginLeft: "-10px",
-                    marginRight: "-10px",
-                    // paddingLeft : "-10px"
-                    // marginTop:"-5px",
-                  }}
-                />
-              </Button>
-              <Button
-                id="burger-btn"
-                aria-controls={burgerOpen ? "burger-menu" : undefined}
-                aria-haspopup="true"
-                aria-expanded={burgerOpen ? "true" : undefined}
-                onClick={handleBurgerClick}
-                sx={{
-                  backgroundColor:
-                    burgerAnchorEl === null ? "transparent" : "#D9D9D9",
-                  color: burgerAnchorEl === null ? "#F4F4F4" : "#191919",
-                  borderRadius: "15px",
-                  "&:hover": {
-                    backgroundColor: "#D9D9D9",
-                    color: "#191919",
-                  },
-                }}
-              >
-                <MenuBurger
-                  size={40}
-                  style={{
-                    // backgroundColor: "green",
-                    marginLeft: "-10px",
-                    marginRight: "-10px",
-                  }}
-                />
-              </Button>
-              <Menu
-                id="burger-menu"
-                anchorEl={burgerAnchorEl}
-                open={burgerOpen}
-                onClose={() => setBurgerAnchorEl(null)}
-                MenuListProps={{
-                  "aria-labelledby": "burger-btn",
-                }}
-                PaperProps={{
-                  style: {
-                    width: "155px",
-                    backgroundColor: "#D9D9D9",
-                  },
-                }}
-                transformOrigin={{ horizontal: "right", vertical: "top" }}
-                anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
-              >
-                <MenuItem onClick={() => setBurgerAnchorEl(null)}>
-                  Account Settings
-                </MenuItem>
-                {/* <MenuItem onClick={() => navigate("/borrow-history", { state: { userLoggedIn: userLoggedIn }})}>History</MenuItem> */}
-                <MenuItem onClick={() => setBurgerAnchorEl(null)}>
-                  Log Out
-                </MenuItem>
-              </Menu>
-            </Stack>
-          </Box>
-        </Box>
+        <Navbar/>
         {/* body */}
         <Box
           sx={{

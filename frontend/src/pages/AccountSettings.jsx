@@ -92,11 +92,13 @@ const VisuallyHiddenInput = styled("input")({
 });
 
 const AccountSettings = () => {
-  const { currentUser , setCurrentUser } = useStore();
+  const { currentUser , setCurrentUser, readerUser } = useStore();
   const navigate = useNavigate();
   useEffect(() => {
     if (!currentUser){
       navigate("/");
+    }else if(!readerUser){
+      navigate("/reader");
     }
   },[])
   const { updateAccount } = useAccount();
@@ -111,48 +113,51 @@ const AccountSettings = () => {
     phoneNumber: false,
   });
   const [userLoggedIn, setUserLoggedIn] = useState(
-    currentUser
+    readerUser !==null ? readerUser : currentUser
   );
   const [editProfileOpen, setEditProfileOpen] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
   const handleToggleUsername = () => {
     if (editProfile.username) {
-      userLoggedIn.username = currentUser.username;
+      userLoggedIn.username = readerUser !==null ? readerUser.username : currentUser.username;
     }
     dispatch({ type: "toggleUsername" });
     dispatch({ type: "resetAllExcept", payload: "username" });
   };
   const handleTogglePassword = () => {
     if (editProfile.password) {
-      userLoggedIn.password = currentUser.password;
+      userLoggedIn.password = readerUser !==null ? readerUser.password : currentUser.password;
     }
     dispatch({ type: "togglePassword" });
     dispatch({ type: "resetAllExcept", payload: "password" });
   };
   const handleToggleEmail = () => {
     if (editProfile.email) {
-      userLoggedIn.email = currentUser.email;
+      userLoggedIn.email = readerUser !==null ? readerUser.email : currentUser.email;
     }
     dispatch({ type: "toggleEmail" });
     dispatch({ type: "resetAllExcept", payload: "email" });
   };
   const handleToggleAddress = () => {
     if (editProfile.address) {
-      userLoggedIn.address = currentUser.address;
+      userLoggedIn.address = readerUser !==null ? readerUser.address : currentUser.address;
     }
     dispatch({ type: "toggleAddress" });
     dispatch({ type: "resetAllExcept", payload: "address" });
   };
   const handleTogglePhoneNumber = () => {
     if (editProfile.phoneNumber) {
-      userLoggedIn.phoneNumber = currentUser.phoneNumber;
+      userLoggedIn.phoneNumber = readerUser !==null ? readerUser.phoneNumber : currentUser.phoneNumber;
     }
     dispatch({ type: "togglePhoneNumber" });
     dispatch({ type: "resetAllExcept", payload: "phoneNumber" });
   };
   const handleCloseEditOpen = async () => {
-    if (userLoggedIn === currentUser) {
+    if(userLoggedIn === readerUser){
+      setEditProfileOpen(false);
+      return;
+    }else if (userLoggedIn === currentUser) {
       setEditProfileOpen(false);
       return;
     }
@@ -166,7 +171,7 @@ const AccountSettings = () => {
     if (success) {
       setShowPassword(false);
       dispatch({ type: "resetAllExcept", payload: "none" });
-      setCurrentUser(userLoggedIn);
+      readerUser !==null ? setReaderUser(userLoggedIn) : setCurrentUser(userLoggedIn);
     }
     setOpenSnackbar(true);
     if (success) setEditProfileOpen(false);

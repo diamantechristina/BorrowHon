@@ -17,6 +17,10 @@ export const useStore = create(
             setSearchedBook: (data) => set({ searchedBook: data }),
             filterType: 'title',
             setFilterType: (type) => set({ filterType: type }),
+            isAdmin: false,
+            setIsAdmin: (bool) => set({ isAdmin: bool}),
+            readerUser: null,
+            setReaderUser: (user) => set({ readerUser: user }),
         })
     )
 );

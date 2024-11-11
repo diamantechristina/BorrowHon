@@ -11,11 +11,38 @@ import {
   TableRow,
   TableCell,
   TableBody,
+  Avatar, 
 } from "@mui/material";
 import { ArrowSmallLeft } from "react-flaticons";
 import { useAccount } from "../../library/account";
 import { useLog } from "../../library/log";
 import "@fontsource/arimo";
+
+function stringToColor(string) {
+  let hash = 0;
+  let i;
+
+  for (i = 0; i < string.length; i += 1) {
+    hash = string.charCodeAt(i) + ((hash << 5) - hash);
+  }
+
+  let color = "#";
+
+  for (i = 0; i < 3; i += 1) {
+    const value = (hash >> (i * 8)) & 0xff;
+    color += `00${value.toString(16)}`.slice(-2);
+  }
+
+  return color;
+}
+
+function stringAvatar(name) {
+  return {
+    children: `${name.split(" ")[0][0]}${
+      name.split(" ")[name.split(" ").length - 1][0]
+    }`,
+  };
+}
 
 const History = () => {
   const navigate = useNavigate();
@@ -178,7 +205,7 @@ const History = () => {
 
           <Table>
             <TableBody>
-              {account?.map((acc, index) => {
+              {account?.filter((acc) => acc.isAdmin === false).map((acc, index) => {
                 const latestLog = log?.reduce((latest, current) => {
                   if (
                     current.acc_id === acc.acc_id &&
@@ -230,7 +257,6 @@ const History = () => {
                           sx={{
                             width: "clamp(6vw, 6vw, 6vw)",
                             height: "clamp(6vw, 6vw, 6vw)",
-                            backgroundColor: "red",
                             borderRadius: "50%",
 
                             // remove when there's profile na in database
@@ -239,10 +265,35 @@ const History = () => {
                             alignItems: "center",
                           }}
                         >
-                          <img src="${acc.profilepic}" alt="wala pa profile" />
+                          {acc.profilepic !== undefined ? (
+                            <Avatar
+                              alt={acc.firstName + " " + acc.lastName}
+                              src={acc.profilepic}
+                              sx={{
+                                width: "clamp(2rem, 5vw, 6rem)",
+                            height: "clamp(2rem, 5vw, 6rem)",
+                              }}
+                            />
+                          ) : (
+                            <Avatar
+                              {...stringAvatar(
+                                acc.firstName + " " + acc.lastName
+                              )}
+                              sx={{
+                                width: "clamp(2rem, 5vw, 6rem)",
+                            height: "clamp(2rem, 5vw, 6rem)",
+                                fontFamily: "Montserrat",
+                                fontSize: "clamp(1rem, 2vw, 4rem)",
+                                fontWeight: "bold",
+                                backgroundColor: stringToColor(
+                                  acc.firstName + " " + acc.lastName
+                                ),
+                              }}
+                            />
+                          )}
                         </Box>
                         {/* {acc.profilepic ? acc.profilepic : "N/A"} */}
-                        {acc.firstName}
+                        {acc.firstName} {acc.lastName}
                       </Box>
                     </TableCell>
                     <TableCell

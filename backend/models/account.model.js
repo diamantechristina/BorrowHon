@@ -49,6 +49,11 @@ const accountSchema = new mongoose.Schema({
     coverpic:{
         type: String,
         required: false
+    },
+    isAdmin:{
+        type: Boolean,
+        default: false,
+        required: false
     }
 },
 {
