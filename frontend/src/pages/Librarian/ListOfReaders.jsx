@@ -45,7 +45,7 @@ function stringAvatar(name) {
 }
 
 const History = () => {
-  const {setReaderUser, currentUser, isAdmin} = useStore();
+  const {setReaderUser, currentUser, isAdmin, setIsOnEdit} = useStore();
   const navigate = useNavigate();
   const { fetchAccount, account } = useAccount();
   const { fetchLogs, log } = useLog();
@@ -70,7 +70,7 @@ const History = () => {
   return (
     <Box
       sx={{
-        display: "flex",
+        display: isAdmin ? "flex" : "none",
         flexDirection: "row",
         justifyContent: "center",
         alignItems: "center",
@@ -229,6 +229,7 @@ const History = () => {
                   <TableRow
                     onClick={() => {
                       setReaderUser(acc);
+                      setIsOnEdit(true);
                       navigate(`/reader`);
 
                     }}

@@ -65,7 +65,7 @@ const History = () => {
   return (
     <Box
       sx={{
-        display: currentUser ? "flex" : "none",
+        display: currentUser ? !isAdmin ? "flex" : "none" : "none",
         flexDirection: "row",
         justifyContent: "center",
         alignItems: "center",
@@ -211,7 +211,7 @@ const History = () => {
               <TableBody>
                 {userHistory?.map((history, index) => (
                   <TableRow
-                    key={history.book_id}
+                    key={index}
                     sx={{
                       backgroundColor:
                         index % 2 === 0 ? "rgba(34, 85, 96, 0.15)" : "#2e2e2e",

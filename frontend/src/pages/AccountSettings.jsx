@@ -94,13 +94,13 @@ const VisuallyHiddenInput = styled("input")({
 
 const AccountSettings = () => {
   
-  const { currentUser , setCurrentUser, readerUser } = useStore();
+  const { currentUser , setCurrentUser, readerUser, isOnEdit } = useStore();
   const navigate = useNavigate();
   const [display, setDisplay] = useState(false);
   useLayoutEffect(() => {
     if (!currentUser){
       navigate("/");
-    }else if(!readerUser){
+    }else if(!readerUser && isOnEdit){
       navigate(-1);
     }else{
       setDisplay(true);

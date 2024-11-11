@@ -24,14 +24,16 @@ import { useStore } from "../../library/store.js";
 import { useSearch } from "../../library/search.js";
 import "@fontsource/montserrat/500.css"
 import "@fontsource/montserrat/700.css"
+import { set } from "mongoose";
 
 const Dashboard = () => {
-  const { currentUser, setBookData, bookData, isFirstLogin, setIsFirstLogin } = useStore();
+  const { currentUser, setBookData, bookData, isFirstLogin, setIsFirstLogin, setIsOnEdit } = useStore();
   const { searchedBook, filterType } = useSearch();
   const navigate = useNavigate();
   const [display, setDisplay] = useState(false)
   useEffect(() => {
    setBookData(null) 
+   setIsOnEdit(false)
   },[])
 
   useEffect(() => {

@@ -22,12 +22,12 @@ import { useBook } from "../../library/book";
 import { useStore } from "../../library/store";
 
 const ViewBook = () => {
-  const { currentUser, bookData } = useStore();
+  const { currentUser, bookData, setBookData, isAdmin } = useStore();
   const navigate = useNavigate();
   console.log("bookData: ", bookData);
   const { fetchHistory, history } = useHistory();
   const { updateBook } = useBook();
-
+  const [display,setDisplay] = useState(false)
   const [showPassword, setShowPassword] = useState(false);
   const togglePasswordVisibility = () => {
     setShowPassword((prev) => !prev);
@@ -53,24 +53,26 @@ const ViewBook = () => {
 
   // Locate the specific history entry that matches the current book and user
   const currentBookHistory = useMemo(() => {
-    return history?.find(
+    return history?.filter(
       (entry) =>
         entry?.book_id === bookData?.book_id &&
         entry.acc_id === currentUser?.acc_id
-    );
+    ).slice(-1)[0];
   }, [history, bookData, currentUser]);
 
   console.log("bookData: ", bookData);
+  console.log("currentBookHistory: ", currentBookHistory);
 
   //get book dat
   useEffect(() => {
-    if (currentUser) {
-      if (bookData === null) {
-        navigate("/reader-dashboard");
-      }
-    }
-    if (bookData === null && currentUser === null) {
+    if(!currentUser){
       navigate("/");
+    }else if(!bookData){
+      navigate(-1);
+    }else if(isAdmin){
+      navigate(-1);
+    }else{
+      setDisplay(true);
     }
   }, []);
 
@@ -122,11 +124,13 @@ const ViewBook = () => {
     const { success, message } = await updateBook(id, book);
     console.log("Success:", success);
     console.log("Message:", message);
+    setBookData(book);
   };
   const handleupdateHistory = async (id, history) => {
     const { success, message } = await updateHistory(id, history);
     console.log("Success:", success);
     console.log("Message:", message);
+    setBookData(book);
   };
 
   const handleReturnBook = async () => {
@@ -188,6 +192,7 @@ const ViewBook = () => {
   return (
     <Box
       sx={{
+        display: display ? "auto" : "none",
         position: "absolute",
         width: "100vw",
         height: "100vh",
@@ -380,10 +385,12 @@ const ViewBook = () => {
                   {/* conditioning for book status. when reader has book in their history,
                    then use current book history, if not then use book data */}
                   {currentBookHistory &&
-                  currentBookHistory.book_id === bookData.book_id
-                    ? currentBookHistory?.status === "onhand"
-                      ? "Borrowed"
-                      : currentBookHistory?.status
+                  currentBookHistory.book_id === bookData.book_id ? 
+                    currentBookHistory?.status === "onhand" ? 
+                      "Borrowed"
+                      : 
+                      currentBookHistory?.status === "returned"  ? 
+                      bookData?.status : currentBookHistory?.status
                     : bookData?.status}
                 </Typography>
                 <Typography

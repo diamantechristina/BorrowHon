@@ -21,6 +21,8 @@ export const useStore = create(
             setIsAdmin: (bool) => set({ isAdmin: bool}),
             readerUser: null,
             setReaderUser: (user) => set({ readerUser: user }),
+            isOnEdit: false,
+            setIsOnEdit: (bool) => set({ isOnEdit: bool }),
         })
     )
 );
