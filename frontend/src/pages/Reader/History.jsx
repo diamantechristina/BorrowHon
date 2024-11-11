@@ -19,7 +19,7 @@ import { useStore } from "../../library/store";
 
 const History = () => {
   const navigate = useNavigate();
-  const { currentUser, isAdmin } = useStore();
+  const { currentUser, isOnEdit, readerUser } = useStore();
   const { fetchHistory, history } = useHistory();
   const { fetchBook, books } = useBook();
 
@@ -33,13 +33,13 @@ const History = () => {
 
   useEffect(() => {
     if (!currentUser) navigate("/");
-    else if (isAdmin) navigate(-1);
+    else if (readerUser || !isOnEdit) navigate(-1);
   }, []);
   console.log("books: ", books);
   console.log("currentUser: ", currentUser);
 
   const userHistory = useMemo(() => {
-    return history?.filter((item) => item.acc_id === currentUser.acc_id)
+    return history?.filter((item) => readerUser ? item.acc_id === readerUser.acc_id : item.acc_id === currentUser.acc_id)
       .sort((a, b) =>{
         const statusOrder = ['pending', 'onhand', 'returned'];
         const statusA = statusOrder.indexOf(a.status);
@@ -50,7 +50,7 @@ const History = () => {
           return new Date(b.borrowdate) - new Date(a.borrowdate);
         }
       })
-  }, [history, currentUser]);
+  }, [history, currentUser, readerUser]);
 
   console.log("userHistory: ", userHistory);
 
@@ -61,11 +61,11 @@ const History = () => {
   console.log("booksHistory: ", booksHistory);
 
   // console.log("borrowdate: ", userHistory?.map((item) => item.borrowdate));
-
+  console.log(isOnEdit)
   return (
     <Box
       sx={{
-        display: currentUser ? !isAdmin ? "flex" : "none" : "none",
+        display: currentUser ? !isOnEdit ? "none" : "flex" : "none",
         flexDirection: "row",
         justifyContent: "center",
         alignItems: "center",
