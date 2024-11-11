@@ -26,7 +26,7 @@ import { useNavigate } from "react-router-dom";
 import { useLog } from "../../library/log.js";
 import { useAccount } from "../../library/account.js";
 import Navbar from "../../components/Navbar.jsx";
-
+import { useStore } from "../../library/store.js";
 const months = [
   "Jan",
   "Feb",
@@ -43,12 +43,17 @@ const months = [
 ];
 
 const Dashboard = () => {
+  const {  setReaderUser, setIsOnEdit } = useStore();
   const navigate = useNavigate();
   const [burgerAnchorEl, setBurgerAnchorEl] = React.useState(null);
   const burgerOpen = Boolean(burgerAnchorEl);
   const { fetchLogs, log } = useLog();
   const { fetchAccount, account } = useAccount();
 
+  useEffect(() => {
+    setReaderUser(null)
+    setIsOnEdit(false)
+  },[])
   useEffect(() => {
     fetchAccount();
   }, [fetchAccount]);
