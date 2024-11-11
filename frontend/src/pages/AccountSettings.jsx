@@ -5,6 +5,7 @@ import React, {
   useRef,
   useCallback,
   useEffect,
+  useLayoutEffect
 } from "react";
 import { styled } from '@mui/material/styles';
 import Resizer from "react-image-file-resizer";
@@ -92,13 +93,17 @@ const VisuallyHiddenInput = styled("input")({
 });
 
 const AccountSettings = () => {
+  
   const { currentUser , setCurrentUser, readerUser } = useStore();
   const navigate = useNavigate();
-  useEffect(() => {
+  const [display, setDisplay] = useState(false);
+  useLayoutEffect(() => {
     if (!currentUser){
       navigate("/");
     }else if(!readerUser){
-      navigate("/reader");
+      navigate(-1);
+    }else{
+      setDisplay(true);
     }
   },[])
   const { updateAccount } = useAccount();
@@ -228,7 +233,7 @@ const AccountSettings = () => {
         backgroundColor: "#2e2e2e",
         width: "100vw",
         height: "100vh",
-        display: "flex",
+        display: display? "flex":'none',
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",

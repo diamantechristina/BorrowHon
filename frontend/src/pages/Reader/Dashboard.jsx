@@ -29,7 +29,7 @@ const Dashboard = () => {
   const { currentUser, setBookData, bookData, isFirstLogin, setIsFirstLogin } = useStore();
   const { searchedBook, filterType } = useSearch();
   const navigate = useNavigate();
-
+  const [display, setDisplay] = useState(false)
   useEffect(() => {
    setBookData(null) 
   },[])
@@ -37,6 +37,8 @@ const Dashboard = () => {
   useEffect(() => {
     if (!currentUser) {
       navigate("/");
+    }else{
+      setDisplay(true)
     }
   }, []);
   
@@ -108,6 +110,7 @@ const Dashboard = () => {
 
     <Box
       sx={{
+        display: display ? "auto" : 'none',
         overflowY: "scroll", // Allow vertical scrolling
         "&::-webkit-scrollbar": {
           display: "none", // Hide scrollbars for WebKit browsers

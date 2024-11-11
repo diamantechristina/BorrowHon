@@ -19,7 +19,7 @@ import { useStore } from "../../library/store";
 
 const History = () => {
   const navigate = useNavigate();
-  const { currentUser } = useStore();
+  const { currentUser, isAdmin } = useStore();
   const { fetchHistory, history } = useHistory();
   const { fetchBook, books } = useBook();
 
@@ -31,6 +31,10 @@ const History = () => {
     fetchBook();
   }, [fetchBook]);
 
+  useEffect(() => {
+    if (!currentUser) navigate("/");
+    else if (isAdmin) navigate(-1);
+  }, []);
   console.log("books: ", books);
   console.log("currentUser: ", currentUser);
 
@@ -61,7 +65,7 @@ const History = () => {
   return (
     <Box
       sx={{
-        display: "flex",
+        display: currentUser ? "flex" : "none",
         flexDirection: "row",
         justifyContent: "center",
         alignItems: "center",

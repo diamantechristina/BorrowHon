@@ -40,11 +40,7 @@ function App() {
       <Route path="/" element={<Login/>} />
       <Route path="/login" element={<Login/>} />
       <Route path="/list-of-books" element={<LibrarianListOfBooks />} />
-      {/* {currentUser?.isAdmin ? 
-      <Route path="/dashboard" element={<Reader_Dashboard />} />
-      :
-      <Route path="/dashboard" element = {<Librarian_Dashboard/>}/>
-      } */}
+      <Route path="/reader" element={<AccountSettings/>} />
       {dashboardRoute}
     </Routes>
   );

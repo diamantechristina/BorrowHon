@@ -100,7 +100,7 @@ const Login = () => {
       sx={{
         width: "100vw",
         height: "100vh",
-        display: "flex",
+        display: currentUser ? "none" : "flex",
         margin: 0,
         padding: 0,
       }}

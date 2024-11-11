@@ -6,8 +6,10 @@ import { useHistory } from "../../library/history";
 import React, { useEffect, useMemo } from "react";
 import PendingBookCard from "../../components/PendingBookCard";
 import { useNavigate } from "react-router-dom";
+import { useStore } from "../../library/store";
 
 const PendingBooks = () => {
+  const { currentUser, isAdmin } = useStore();
   const navigate = useNavigate();
   const { fetchHistory, history } = useHistory();
   const { fetchAccount, account } = useAccount();
@@ -24,6 +26,11 @@ const PendingBooks = () => {
   useEffect(() => {
     fetchBook();
   }, [fetchBook]);
+
+  useEffect(() => {
+    if(!currentUser) navigate("/");
+    else if(!isAdmin) navigate(-1);
+  },[])
 
   const pendingHistories = history?.filter((item) => item.status === "pending");
   useEffect(() => {
@@ -44,6 +51,7 @@ const PendingBooks = () => {
   return (
     <Box
       sx={{
+        display: isAdmin ? "auto": "none",
         backgroundColor: "#191919",
         overflowY: "scroll",
         "&::-webkit-scrollbar": {
