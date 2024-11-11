@@ -19,10 +19,10 @@ import { useNavigate } from "react-router-dom";
 import { useLog } from "../../library/log";
 import "@fontsource/montserrat";
 import { useBook } from "../../library/book";
-import { useStore } from "../../library/store"
+import { useStore } from "../../library/store";
 
 const ViewBook = () => {
-  const {currentUser, bookData} = useStore();
+  const { currentUser, bookData } = useStore();
   const navigate = useNavigate();
   console.log("bookData: ", bookData);
   const { fetchHistory, history } = useHistory();
@@ -64,9 +64,9 @@ const ViewBook = () => {
 
   //get book dat
   useEffect(() => {
-    if(currentUser){
-      if(bookData === null){
-        navigate("/reader-dashboard")
+    if (currentUser) {
+      if (bookData === null) {
+        navigate("/reader-dashboard");
       }
     }
     if (bookData === null && currentUser === null) {
@@ -122,46 +122,46 @@ const ViewBook = () => {
     const { success, message } = await updateBook(id, book);
     console.log("Success:", success);
     console.log("Message:", message);
-  }
+  };
   const handleupdateHistory = async (id, history) => {
     const { success, message } = await updateHistory(id, history);
     console.log("Success:", success);
     console.log("Message:", message);
-  }
+  };
 
-  const handleReturnBook = async() => {
+  const handleReturnBook = async () => {
     if (currentUser?.password === pass.password) {
-      const updatedBookData = {...bookData}
-      updatedBookData.status = "available"
-      const updatedUserHistory = {...currentBookHistory}
-      updatedUserHistory.status = "returned"
-      updatedUserHistory.returndate = new Date()
-      handleupdateHistory(updatedUserHistory._id, updatedUserHistory)
+      const updatedBookData = { ...bookData };
+      updatedBookData.status = "available";
+      const updatedUserHistory = { ...currentBookHistory };
+      updatedUserHistory.status = "returned";
+      updatedUserHistory.returndate = new Date();
+      handleupdateHistory(updatedUserHistory._id, updatedUserHistory);
       handleUpdateBook(updatedBookData._id, updatedBookData);
       setReturnOpen(false);
       setSnackbarMessage("Book successfully returned!");
       setOpenSnackbar(true);
-    }
-    else {
+    } else {
       setSnackbarMessage("Incorrect password!");
       setOpenSnackbar(true);
     }
-  }
+  };
 
-  const handleRenewBook = async() => {
+  const handleRenewBook = async () => {
     if (currentUser?.password === pass.password) {
-      const updatedUserHistory = {...currentBookHistory}
-      updatedUserHistory.returndate = new Date(updatedUserHistory.returndate).setDate(new Date(updatedUserHistory.returndate).getDate() + 5) 
-      handleupdateHistory(updatedUserHistory._id, updatedUserHistory)
+      const updatedUserHistory = { ...currentBookHistory };
+      updatedUserHistory.returndate = new Date(
+        updatedUserHistory.returndate
+      ).setDate(new Date(updatedUserHistory.returndate).getDate() + 5);
+      handleupdateHistory(updatedUserHistory._id, updatedUserHistory);
       setRenewOpen(false);
       setSnackbarMessage("Book successfully renewed!");
       setOpenSnackbar(true);
-    }
-    else {
+    } else {
       setSnackbarMessage("Incorrect password!");
       setOpenSnackbar(true);
     }
-  }
+  };
 
   const statusRef = useRef(null);
 
@@ -169,11 +169,11 @@ const ViewBook = () => {
 
   const handleKeyPress = (event) => {
     if (event.key === "Enter") {
-      if (open){
+      if (open) {
         handleBorrowBook();
-      }else if(returnOpen){
+      } else if (returnOpen) {
         handleReturnBook();
-      }else if(renewOpen){
+      } else if (renewOpen) {
         handleRenewBook();
       }
     }
@@ -907,14 +907,13 @@ const ViewBook = () => {
                               fontSize: "clamp(1vw, 1vw, 1vw)",
                             }}
                           >
-                            {new Date(currentBookHistory?.borrowdate).toLocaleString(
-                              "default",
-                              {
-                                month: "long",
-                                day: "numeric",
-                                year: "numeric",
-                              }
-                            )}
+                            {new Date(
+                              currentBookHistory?.borrowdate
+                            ).toLocaleString("default", {
+                              month: "long",
+                              day: "numeric",
+                              year: "numeric",
+                            })}
                           </Typography>
                           <br />
                           <Typography
@@ -934,14 +933,13 @@ const ViewBook = () => {
                               fontSize: "clamp(1vw, 1vw, 1vw)",
                             }}
                           >
-                            {new Date(currentBookHistory?.returndate).toLocaleString(
-                              "default",
-                              {
-                                month: "long",
-                                day: "numeric",
-                                year: "numeric",
-                              }
-                            )}
+                            {new Date(
+                              currentBookHistory?.returndate
+                            ).toLocaleString("default", {
+                              month: "long",
+                              day: "numeric",
+                              year: "numeric",
+                            })}
                           </Typography>
                         </Box>
                         <TextField
@@ -1030,7 +1028,7 @@ const ViewBook = () => {
                         fontSize: "18px",
                       }}
                       tabIndex={-1}
-                      onClick={handleReturnBook} 
+                      onClick={handleReturnBook}
                     >
                       Confirm
                     </Button>
@@ -1191,14 +1189,13 @@ const ViewBook = () => {
                               fontSize: "clamp(1vw, 1vw, 1vw)",
                             }}
                           >
-                            {new Date(currentBookHistory?.borrowdate).toLocaleString(
-                              "default",
-                              {
-                                month: "long",
-                                day: "numeric",
-                                year: "numeric",
-                              }
-                            )}
+                            {new Date(
+                              currentBookHistory?.borrowdate
+                            ).toLocaleString("default", {
+                              month: "long",
+                              day: "numeric",
+                              year: "numeric",
+                            })}
                           </Typography>
                           <br />
                           <Typography
@@ -1218,14 +1215,13 @@ const ViewBook = () => {
                               fontSize: "clamp(1vw, 1vw, 1vw)",
                             }}
                           >
-                            {new Date(currentBookHistory?.returndate).toLocaleString(
-                              "default",
-                              {
-                                month: "long",
-                                day: "numeric",
-                                year: "numeric",
-                              }
-                            )}
+                            {new Date(
+                              currentBookHistory?.returndate
+                            ).toLocaleString("default", {
+                              month: "long",
+                              day: "numeric",
+                              year: "numeric",
+                            })}
                           </Typography>
                         </Box>
                         <TextField
@@ -1314,7 +1310,7 @@ const ViewBook = () => {
                         fontSize: "18px",
                       }}
                       tabIndex={-1}
-                      onClick={handleRenewBook} 
+                      onClick={handleRenewBook}
                     >
                       Confirm
                     </Button>
