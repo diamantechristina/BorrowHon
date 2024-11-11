@@ -19,6 +19,7 @@ import {
 import { useBook } from "../../library/book.js";
 import { useHistory } from "../../library/history.js";
 import { useNavigate } from "react-router-dom";
+import { useLog } from "../../library/log.js";
 import Navbar from "../../components/Navbar.jsx";
 
 const months = [
@@ -40,6 +41,25 @@ const Dashboard = () => {
   const navigate = useNavigate();
   const [burgerAnchorEl, setBurgerAnchorEl] = React.useState(null);
   const burgerOpen = Boolean(burgerAnchorEl);
+  const {fetchLogs, log} = useLog();
+
+  useEffect(() => {
+    fetchLogs();
+  }, [fetchLogs])
+  console.log("log: ", log)
+
+  const userLogCountPerMonth = useMemo (()=>{
+    const logCounts = {}
+    months.forEach((month) => {
+      logCounts[month] = log?.filter((logItem) => {
+        const logDate = new Date(logItem.logindate);
+        return logDate.getMonth() === months.indexOf(month);
+      }).length
+    })
+    return logCounts
+  }, [log, months])
+
+  console.log("userLogCountPerMonth: ", userLogCountPerMonth)
 
   const handleBurgerClick = (event) => {
     setBurgerAnchorEl(event.currentTarget);
@@ -415,7 +435,7 @@ const Dashboard = () => {
                   series={[
                     {
                       name: "Reader Sign Ins",
-                      data: [20, 5, 35, 50, 10, 40, 15, 30, 25, 45, 5, 10],
+                      data: Object.values(userLogCountPerMonth),
                       curve: "linear",
                     },
                   ]}
