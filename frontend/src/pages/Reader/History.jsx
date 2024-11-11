@@ -19,9 +19,17 @@ import { useStore } from "../../library/store";
 
 const History = () => {
   const navigate = useNavigate();
-  const { currentUser, isOnEdit, readerUser } = useStore();
+  const location = useLocation();
+  const { currentUser, isOnEdit, readerUser, setReaderUser, setIsOnEdit } = useStore();
   const { fetchHistory, history } = useHistory();
   const { fetchBook, books } = useBook();
+
+  useEffect(() => {
+    if (location.pathname === '/settings'){
+      setIsOnEdit(false);
+    setReaderUser(null);
+    }
+  }, []);
 
   useEffect(() => {
     fetchHistory();
