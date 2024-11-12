@@ -45,14 +45,15 @@ function stringAvatar(name) {
 }
 
 const History = () => {
-  const {setReaderUser, currentUser, isAdmin, setIsOnEdit} = useStore();
+  const {setReaderUser, currentUser, isAdmin, setIsOnEdit, readerUser, isOnEdit} = useStore();
   const navigate = useNavigate();
   const { fetchAccount, account } = useAccount();
   const { fetchLogs, log } = useLog();
 
   useEffect(() => {
     setReaderUser(null)
-  },[])
+    setIsOnEdit(false)
+  },[readerUser,isOnEdit])
   useEffect(() => {
     if(!currentUser) navigate("/");
     else if(!isAdmin) navigate(-1);
@@ -232,7 +233,6 @@ const History = () => {
                       setReaderUser(acc);
                       setIsOnEdit(true);
                       navigate(`/reader`);
-
                     }}
                     key={acc.acc_id}
                     sx={{

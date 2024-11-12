@@ -100,7 +100,7 @@ const AccountSettings = () => {
   useLayoutEffect(() => {
     if (!currentUser){
       navigate("/");
-    }else if(!readerUser && isOnEdit){
+    }else if(readerUser && !isOnEdit){
       navigate(-1);
     }else{
       setDisplay(true);
@@ -122,7 +122,8 @@ const AccountSettings = () => {
   );
   const [editProfileOpen, setEditProfileOpen] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-
+  console.log("reader: ",readerUser)
+  console.log("isOnEdit: ",isOnEdit)
   const handleToggleUsername = () => {
     if (editProfile.username) {
       userLoggedIn.username = readerUser !==null ? readerUser.username : currentUser.username;
@@ -253,6 +254,25 @@ const AccountSettings = () => {
           }}
         />
       </Snackbar>
+      <Button
+      variant="outlined"
+      // onClick={}
+      sx={{
+        display: readerUser && isOnEdit ? "auto": "none",
+        borderColor: "#f4f4f4",
+        color: "#f4f4f4",
+        position: 'fixed',
+        top: '7.5vh',
+        right: '5vw',
+        width: "12vw",
+        height: "7.5vh",
+        fontSize: "0.75rem",
+        borderRadius: "10px",
+        fontFamily: "Montserrat",
+      }}
+      >
+        Suspend
+      </Button>
       <Box
         sx={{
           display: "flex",
@@ -465,8 +485,10 @@ const AccountSettings = () => {
             </Box>
           </Box>
           <Button
+            onClick={() => navigate("/borrow-history")}
             variant="outlined"
             sx={{
+              display: isOnEdit ? "flex" : "none",
               borderColor: "#f4f4f4",
               color: "#f4f4f4",
               width: "12vw",
@@ -478,6 +500,15 @@ const AccountSettings = () => {
           >
             History
           </Button>
+          <Box
+            sx={{
+              display: isOnEdit ? "none" : "flex",
+              width: "12vw",
+              height: "7.5vh",
+              borderRadius: "10px",
+              marginRight: "1vw",
+            }}
+          ></Box>
           <Button
             variant="outlined"
             onClick={editProfileOpen ? handleCloseEditOpen : handleOpenEditOpen}
