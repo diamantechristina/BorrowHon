@@ -5,6 +5,7 @@ import bookRoutes from "./routes/book.route.js";
 import accountRoutes from "./routes/account.route.js";
 import historyRoutes from "./routes/history.route.js";
 import logRoutes from "./routes/log.route.js";
+import notificationRoutes from "./routes/notification.route.js";
 import bodyParser from 'body-parser';
 dotenv.config();
 
@@ -23,6 +24,7 @@ app.use("/api/accounts", accountRoutes)
 
 app.use("/api/history", historyRoutes)
 app.use("/api/log", logRoutes)
+app.use("/api/notification", notificationRoutes)
 
 app.listen(PORT, () => {
     connectDB();

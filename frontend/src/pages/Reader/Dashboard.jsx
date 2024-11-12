@@ -22,6 +22,7 @@ import { Navigate } from "react-router-dom";
 import Login from "../Login.jsx";
 import { useStore } from "../../library/store.js";
 import { useSearch } from "../../library/search.js";
+import { useNotification } from "../../library/notification.js";
 import "@fontsource/montserrat/500.css"
 import "@fontsource/montserrat/700.css"
 import { set } from "mongoose";
@@ -29,6 +30,17 @@ import { set } from "mongoose";
 const Dashboard = () => {
   const { currentUser, setBookData, bookData, isFirstLogin, setIsFirstLogin, setIsOnEdit } = useStore();
   const { searchedBook, filterType } = useSearch();
+  const { fetchNotifications, notification } = useNotification();
+
+  useEffect(() => {
+    fetchNotifications();
+  }, [fetchNotifications]);
+
+  useEffect(() => {
+    console.log("notifications: ", notification);
+    
+  }, [notification]);
+
   const navigate = useNavigate();
   const [display, setDisplay] = useState(false)
   useEffect(() => {
