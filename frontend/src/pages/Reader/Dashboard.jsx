@@ -37,8 +37,9 @@ const Dashboard = () => {
   }, [fetchNotifications]);
 
   useEffect(() => {
-    console.log("notifications: ", notification);
-    
+  notification?.map((item) => {
+    console.log("message: ", item.message)
+  })    
   }, [notification]);
 
   const navigate = useNavigate();
