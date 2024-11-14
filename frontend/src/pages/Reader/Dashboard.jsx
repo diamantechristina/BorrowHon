@@ -37,15 +37,8 @@ const Dashboard = () => {
   }, [fetchNotifications]);
 
   useEffect(() => {
-<<<<<<< HEAD
-  notification?.map((item) => {
-    console.log("message: ", item.message)
-  })    
-  }, [notification]);
-=======
     setCurrentPage(location.pathname)
   },[])
->>>>>>> cc6d317 (update)
 
   const navigate = useNavigate();
   const [display, setDisplay] = useState(false)
