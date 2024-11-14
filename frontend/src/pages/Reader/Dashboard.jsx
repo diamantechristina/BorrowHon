@@ -28,7 +28,7 @@ import "@fontsource/montserrat/700.css"
 import { set } from "mongoose";
 
 const Dashboard = () => {
-  const { currentUser, setBookData, bookData, isFirstLogin, setIsFirstLogin, setIsOnEdit } = useStore();
+  const { currentUser, setBookData, bookData, isFirstLogin, setIsFirstLogin, setIsOnEdit, setCurrentPage } = useStore();
   const { searchedBook, filterType } = useSearch();
   const { fetchNotifications, notification } = useNotification();
 
@@ -37,17 +37,18 @@ const Dashboard = () => {
   }, [fetchNotifications]);
 
   useEffect(() => {
+<<<<<<< HEAD
   notification?.map((item) => {
     console.log("message: ", item.message)
   })    
   }, [notification]);
+=======
+    setCurrentPage(location.pathname)
+  },[])
+>>>>>>> cc6d317 (update)
 
   const navigate = useNavigate();
   const [display, setDisplay] = useState(false)
-  useEffect(() => {
-   setBookData(null) 
-   setIsOnEdit(false)
-  },[])
 
   useEffect(() => {
     if (!currentUser) {
@@ -135,7 +136,7 @@ const Dashboard = () => {
       <Snackbar
         anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
         open={isFirstLogin}
-        autoHideDuration={3000}
+        autoHideDuration={2500}
         onClose={() => setIsFirstLogin(false)}
       >
         <SnackbarContent

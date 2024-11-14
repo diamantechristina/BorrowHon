@@ -22,7 +22,7 @@ import { useBook } from "../../library/book";
 import { useStore } from "../../library/store";
 
 const ViewBook = () => {
-  const { currentUser, bookData, setBookData, isAdmin } = useStore();
+  const { currentUser, bookData, setBookData, isAdmin, setCurrentPage } = useStore();
   const navigate = useNavigate();
   console.log("bookData: ", bookData);
   const { fetchHistory, history } = useHistory();
@@ -36,6 +36,11 @@ const ViewBook = () => {
   const [pass, setPass] = useState({
     password: "",
   });
+
+  useEffect(() => {
+    setCurrentPage(location.pathname)
+  },[])
+
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -120,6 +125,7 @@ const ViewBook = () => {
     }
   };
 
+  
   const handleUpdateBook = async (id, book) => {
     const { success, message } = await updateBook(id, book);
     console.log("Success:", success);
@@ -386,11 +392,11 @@ const ViewBook = () => {
                    then use current book history, if not then use book data */}
                   {currentBookHistory &&
                   currentBookHistory.book_id === bookData.book_id ? 
-                    currentBookHistory?.status === "onhand" ? 
+                    (currentBookHistory?.status === "onhand" ? 
                       "Borrowed"
                       : 
-                      currentBookHistory?.status === "returned"  ? 
-                      bookData?.status : currentBookHistory?.status
+                      (currentBookHistory?.status === "returned"  ? 
+                      bookData?.status : currentBookHistory?.status))
                     : bookData?.status}
                 </Typography>
                 <Typography

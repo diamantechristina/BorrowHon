@@ -20,12 +20,12 @@ import {
   SnackbarContent,
 } from "@mui/material";
 import { ArrowSmallLeft, Eye, EyeCrossed } from "react-flaticons";
-import { useAccount } from "../library/account";
+import { useAccount } from "../../library/account";
 import "@flaticon/flaticon-uicons/css/all/all.rounded.css";
 import { useNavigate, useLocation } from "react-router-dom";
 import "@fontsource/arimo/600.css";
 import "@fontsource/montserrat/600.css";
-import { useStore } from "../library/store";
+import { useStore } from "../../library/store";
 
 const editProfileReducer = (state, action) => {
   switch (action.type) {
@@ -92,14 +92,16 @@ const VisuallyHiddenInput = styled("input")({
   width: 1,
 });
 
-const AccountSettings = () => {
+const ReaderSettings = () => {
   
-  const { currentUser , setCurrentUser, setCurrentPage } = useStore();
+  const { currentUser , setCurrentUser, readerUser, setReaderUser, setCurrentPage, currentPage } = useStore();
   const navigate = useNavigate();
   const [display, setDisplay] = useState(false);
   useLayoutEffect(() => {
     if (!currentUser){
       navigate("/");
+    }else if(currentPage !== '/list-of-readers'){
+      navigate(-1);
     }else{
       setDisplay(true);
     }
@@ -122,47 +124,51 @@ const AccountSettings = () => {
     phoneNumber: false,
   });
   const [userLoggedIn, setUserLoggedIn] = useState(
-    currentUser
+    readerUser !==null ? readerUser : currentUser
   );
   const [editProfileOpen, setEditProfileOpen] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  console.log("reader: ",readerUser)
   const handleToggleUsername = () => {
     if (editProfile.username) {
-      userLoggedIn.username = currentUser.username;
+      userLoggedIn.username = readerUser !==null ? readerUser.username : currentUser.username;
     }
     dispatch({ type: "toggleUsername" });
     dispatch({ type: "resetAllExcept", payload: "username" });
   };
   const handleTogglePassword = () => {
     if (editProfile.password) {
-      userLoggedIn.password = currentUser.password;
+      userLoggedIn.password = readerUser !==null ? readerUser.password : currentUser.password;
     }
     dispatch({ type: "togglePassword" });
     dispatch({ type: "resetAllExcept", payload: "password" });
   };
   const handleToggleEmail = () => {
     if (editProfile.email) {
-      userLoggedIn.email = currentUser.email;
+      userLoggedIn.email = readerUser !==null ? readerUser.email : currentUser.email;
     }
     dispatch({ type: "toggleEmail" });
     dispatch({ type: "resetAllExcept", payload: "email" });
   };
   const handleToggleAddress = () => {
     if (editProfile.address) {
-      userLoggedIn.address = currentUser.address;
+      userLoggedIn.address = readerUser !==null ? readerUser.address : currentUser.address;
     }
     dispatch({ type: "toggleAddress" });
     dispatch({ type: "resetAllExcept", payload: "address" });
   };
   const handleTogglePhoneNumber = () => {
     if (editProfile.phoneNumber) {
-      userLoggedIn.phoneNumber = currentUser.phoneNumber;
+      userLoggedIn.phoneNumber = readerUser !==null ? readerUser.phoneNumber : currentUser.phoneNumber;
     }
     dispatch({ type: "togglePhoneNumber" });
     dispatch({ type: "resetAllExcept", payload: "phoneNumber" });
   };
   const handleCloseEditOpen = async () => {
-    if (userLoggedIn === currentUser) {
+    if(userLoggedIn === readerUser){
+      setEditProfileOpen(false);
+      return;
+    }else if (userLoggedIn === currentUser) {
       setEditProfileOpen(false);
       return;
     }
@@ -176,7 +182,7 @@ const AccountSettings = () => {
     if (success) {
       setShowPassword(false);
       dispatch({ type: "resetAllExcept", payload: "none" });
-      setCurrentUser(userLoggedIn);
+      readerUser !==null ? setReaderUser(userLoggedIn) : setCurrentUser(userLoggedIn);
     }
     setOpenSnackbar(true);
     if (success) setEditProfileOpen(false);
@@ -253,6 +259,25 @@ const AccountSettings = () => {
           }}
         />
       </Snackbar>
+      <Button
+      variant="outlined"
+      // onClick={}
+      sx={{
+        display: readerUser ? "auto": "none",
+        borderColor: "#f4f4f4",
+        color: "#f4f4f4",
+        position: 'fixed',
+        top: '7.5vh',
+        right: '5vw',
+        width: "12vw",
+        height: "7.5vh",
+        fontSize: "0.75rem",
+        borderRadius: "10px",
+        fontFamily: "Montserrat",
+      }}
+      >
+        Suspend
+      </Button>
       <Box
         sx={{
           display: "flex",
@@ -464,9 +489,29 @@ const AccountSettings = () => {
               </Button>
             </Box>
           </Box>
+          <Button
+            onClick={() => {
+              console.log('adsad ', location.pathname)
+              
+              navigate("/borrow-history")
+            }}
+            variant="outlined"
+            sx={{
+              display: readerUser ? "flex" : "none",
+              borderColor: "#f4f4f4",
+              color: "#f4f4f4",
+              width: "12vw",
+              height: "7.5vh",
+              borderRadius: "10px",
+              marginRight: "1vw",
+              fontFamily: "Montserrat",
+            }}
+          >
+            History
+          </Button>
           <Box
             sx={{
-              display: currentUser ? "none" : "flex",
+              display: readerUser ? "none" : "flex",
               width: "12vw",
               height: "7.5vh",
               borderRadius: "10px",
@@ -1041,4 +1086,4 @@ const AccountSettings = () => {
   );
 };
 
-export default AccountSettings;
+export default ReaderSettings;

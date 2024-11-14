@@ -9,6 +9,7 @@ import "@fontsource/montserrat/300.css";
 import "@fontsource/montserrat/200.css";
 import { useBook } from "../library/book.js";
 import { useHistory } from "../library/history.js";
+import { useNotification } from "../library/notification.js";
 
 const PendingConfirm = ({
   open,
@@ -20,6 +21,7 @@ const PendingConfirm = ({
 }) => {
   const { updateBook } = useBook();
   const { fetchHistory, updateHistory, deleteHistory, history } = useHistory();
+  const { createNotification } = useNotification();
   useEffect(() => {
     fetchHistory();
   }, [fetchHistory]);
@@ -47,12 +49,22 @@ const PendingConfirm = ({
     console.log("Message:", message);
   };
 
-  const handleDeleteHistory = async () => {
-    const { success, message } = await deleteHistory(userHistory._id);
+  const handleDeleteHistory = async (acc_id, history) => {
+    const { success, message } = await deleteHistory(history._id);
     console.log("Success:", success);
     console.log("Message:", message);
+    handleNotification(acc_id,"Book Request Declined", `Your book request for ${book.title} has been declined!`);
     setOpen !== null ? setOpen(false) : () => {};
   };
+
+  const handleNotification = async (acc_id,title, messages) => {
+    const { success, message } = await createNotification({
+      acc_id: acc_id,
+      title: title,
+      message: messages,
+      date: new Date(),
+    })
+  }
 
   const handleAcceptPending = () => {
     const pendingHistories = history.filter((item) => item.status === "pending" && item.book_id === book.book_id && item.acc_id !== account.acc_id);
@@ -64,14 +76,17 @@ const PendingConfirm = ({
     updatedUserHistory.borrowdate = borrowDate;
     updatedUserHistory.returndate = returnDate;
     pendingHistories.map(async (history) => {
-      const { success, message } = await deleteHistory(history._id);
-      console.log("Success:", success);
-      console.log("Message:", message);
+      handleDeleteHistory(history.acc_id, history);
     });
     handleUpdateBook(updatedBook._id, updatedBook);
     handleUpdateHistory(updatedUserHistory._id, updatedUserHistory);
+    handleNotification(updatedUserHistory.acc_id,"Book Request Accepted", `Your book request for ${book.title} has been accepted!`);
     setOpen !== null ? setOpen(false) : () => {};
   };
+
+  const handleDeclinePending = () => {
+    handleDeleteHistory(userHistory.acc_id,userHistory)
+  }
 
   const months = [
     "January",
@@ -348,7 +363,7 @@ const PendingConfirm = ({
             onClick={
               pageTitle === "Accept Pending"
                 ? handleAcceptPending
-                : handleDeleteHistory
+                : handleDeclinePending
             }
             sx={{
               backgroundColor: "#1FAA70",

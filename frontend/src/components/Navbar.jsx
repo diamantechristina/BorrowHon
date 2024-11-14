@@ -21,7 +21,7 @@ import { set } from "mongoose";
 
 const Navbar = () => {
   const navigate = useNavigate();
-  const {userLog, setCurrentUser, setIsFirstLogin, isAdmin } = useStore();
+  const {userLog, isAdmin, setNull } = useStore();
   const {searchedBook, setSearchedBook, setFilterType} = useSearch();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
@@ -54,8 +54,7 @@ const Navbar = () => {
     const{success, message} = await updateLog(updatedLog._id, updatedLog)
     console.log(success, message)
     await navigate("/");
-    setCurrentUser(null)
-    setIsFirstLogin(true)
+    setNull()
   }
 
   const handleMenuItemClick = (event) => {
@@ -370,7 +369,9 @@ const Navbar = () => {
             <MenuItem onClick={() => navigate('/settings')}>
               Account Settings
             </MenuItem>
-            {isAdmin ? null : <MenuItem onClick={() => navigate("/borrow-history")}>History</MenuItem>}
+            {isAdmin ? null : <MenuItem onClick={() => {
+              navigate("/borrow-history")
+              }}>History</MenuItem>}
             <MenuItem onClick={handleLogout}>Log Out</MenuItem>
           </Menu>
         </Stack>

@@ -45,10 +45,14 @@ function stringAvatar(name) {
 }
 
 const History = () => {
-  const {setReaderUser, currentUser, isAdmin, setIsOnEdit, readerUser, isOnEdit} = useStore();
+  const {setReaderUser, currentUser, isAdmin, setIsOnEdit, readerUser, isOnEdit, setCurrentPage} = useStore();
   const navigate = useNavigate();
   const { fetchAccount, account } = useAccount();
   const { fetchLogs, log } = useLog();
+  
+  useEffect(() => {
+    setCurrentPage(location.pathname)
+  },[])
 
   useEffect(() => {
     setReaderUser(null)

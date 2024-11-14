@@ -43,16 +43,20 @@ const months = [
 ];
 
 const Dashboard = () => {
-  const { currentUser,  setReaderUser, setIsOnEdit } = useStore();
+  const { currentUser,  setReaderUser, setCurrentPage } = useStore();
   const navigate = useNavigate();
   const [burgerAnchorEl, setBurgerAnchorEl] = React.useState(null);
   const burgerOpen = Boolean(burgerAnchorEl);
   const { fetchLogs, log } = useLog();
   const { fetchAccount, account } = useAccount();
 
+  
+  useEffect(() => {
+    setCurrentPage(location.pathname)
+  },[])
+
   useEffect(() => {
     setReaderUser(null)
-    setIsOnEdit(false)
   },[])
   useEffect(() => {
     fetchAccount();
@@ -61,7 +65,6 @@ const Dashboard = () => {
   useEffect(() => {
     fetchLogs();
   }, [fetchLogs]);
-  console.log("log: ", log);
 
   const userLogCountPerMonth = useMemo(() => {
     const logCounts = {};
@@ -74,7 +77,6 @@ const Dashboard = () => {
     return logCounts;
   }, [log, months]);
 
-  console.log("userLogCountPerMonth: ", userLogCountPerMonth);
 
   const handleBurgerClick = (event) => {
     setBurgerAnchorEl(event.currentTarget);
@@ -110,10 +112,11 @@ const Dashboard = () => {
 
   useEffect(() => {
     const borrowedBooks = history?.filter((item) => item.status === "onhand" || item.status === "returned")
-    .sort((a, b) => new Date(b.borrow_date) - new Date(a.borrow_date));
+    .sort((a, b) => new Date(b.borrow_date) - new Date(a.borrow_date)).reverse();
     setBorrowedBooks(borrowedBooks);
+    console.log(borrowedBooks)
   }, [history]);
-    
+  
   return (
     <Box
       sx={{

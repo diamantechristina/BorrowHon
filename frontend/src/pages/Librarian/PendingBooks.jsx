@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 import { useStore } from "../../library/store";
 
 const PendingBooks = () => {
-  const { currentUser, isAdmin } = useStore();
+  const { currentUser, isAdmin, setCurrentPage } = useStore();
   const navigate = useNavigate();
   const { fetchHistory, history } = useHistory();
   const { fetchAccount, account } = useAccount();
@@ -18,6 +18,11 @@ const PendingBooks = () => {
   useEffect(() => {
     fetchHistory();
   }, [fetchHistory, history]);
+
+  
+  useEffect(() => {
+    setCurrentPage(location.pathname)
+  },[])
 
   useEffect(() => {
     fetchAccount();
@@ -36,7 +41,7 @@ const PendingBooks = () => {
   useEffect(() => {
     setPendings(pendingHistories?.length);
 
-  },[pendingHistories])    
+  },[history])    
 
   const pendingBooks = books?.filter((book) => {
       return pendingHistories

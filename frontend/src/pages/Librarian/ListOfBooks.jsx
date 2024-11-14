@@ -15,9 +15,14 @@ import { useStore } from "../../library/store.js";
 const ListOfBooks = () => {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
-  const {isAdmin, currentUser} = useStore();
+  const {isAdmin, currentUser, setCurrentPage} = useStore();
 
   const { fetchBook, books } = useBook();
+  
+  useEffect(() => {
+    setCurrentPage(location.pathname)
+  },[])
+
   useEffect(() => {
     fetchBook();
   }, [fetchBook]);

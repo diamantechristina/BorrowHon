@@ -17,10 +17,10 @@ import { useBook } from "../../library/book";
 import "@fontsource/arimo";
 import { useStore } from "../../library/store";
 
-const History = () => {
+const ReaderHistory = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { currentUser, setCurrentPage, currentPage } = useStore();
+  const { currentUser, isOnEdit, readerUser, setReaderUser, setIsOnEdit, setCurrentPage, currentPage } = useStore();
   const { fetchHistory, history } = useHistory();
   const { fetchBook, books } = useBook();
 
@@ -36,6 +36,7 @@ const History = () => {
   useEffect(() => {
     
     if (!currentUser) navigate("/");
+    else if(currentPage !== '/reader') navigate(-1)
     }, []);
   console.log("books: ", books);
   
@@ -44,9 +45,7 @@ const History = () => {
   },[])
   const userHistory = useMemo(() => {
     
-  
-    console.log("currentUser: ", currentUser);
-    return history?.filter((item) => item.acc_id === currentUser.acc_id)
+      return history?.filter((item) => item.acc_id === readerUser.acc_id)
       .sort((a, b) =>{
         const statusOrder = ['pending', 'onhand', 'returned'];
         const statusA = statusOrder.indexOf(a.status);
@@ -57,7 +56,7 @@ const History = () => {
           return new Date(b.borrowdate) - new Date(a.borrowdate);
         }
       })
-  }, [history, currentUser]);
+  }, [history, readerUser]);
 
   console.log("userHistory: ", userHistory);
 
@@ -66,11 +65,12 @@ const History = () => {
   });
 
   console.log("booksHistory: ", booksHistory);
+
   // console.log("borrowdate: ", userHistory?.map((item) => item.borrowdate));
   return (
     <Box
       sx={{
-        display: currentUser ? "flex" : "none",
+        display: currentUser && readerUser ? "flex" : "none",
         flexDirection: "row",
         justifyContent: "center",
         alignItems: "center",
@@ -334,4 +334,4 @@ const History = () => {
   );
 };
 
-export default History;
+export default ReaderHistory;
