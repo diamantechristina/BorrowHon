@@ -499,7 +499,8 @@ const Navbar = () => {
           <List
           sx={{
             width: '100%',
-            maxWidth: '10vw',
+            maxWidth: '12vw',
+
             bgcolor: '#d9d9d9',
             position: 'absolute',
             overflow: 'auto',
@@ -507,7 +508,7 @@ const Navbar = () => {
             display: "none", // Hide scrollbars for WebKit browsers
           },
             top: '10.88vh',
-            left: '82.2vw',
+            left: '80.2vw',
             zIndex: -2,
             maxHeight: "36.6vh",
             borderBottomLeftRadius: '20px',
@@ -520,6 +521,7 @@ const Navbar = () => {
               sx={{
                 cursor: "pointer",
                 height: "6.5vh",
+                fontFamily: "Inria Serif",
                 "&:hover": {
                   backgroundColor: "#E8E8E8", 
                 }}}
@@ -532,6 +534,7 @@ const Navbar = () => {
               sx={{
                 cursor: "pointer",
                 height: "6.5vh",
+                fontFamily: "Inria Serif",
                 "&:hover": {
                   backgroundColor: "#E8E8E8", 
                 }}}
@@ -546,6 +549,7 @@ const Navbar = () => {
             sx={{
               cursor: "pointer",
               height: "6.5vh",
+              fontFamily: "Inria Serif",
               "&:hover": {
                 backgroundColor: "#E8E8E8", 
               }}}
@@ -589,7 +593,6 @@ const Navbar = () => {
                   sx={{
                     fontFamily: "Montserrat",
                     fontSize: "1.5rem",
-                    fontWeight: "800",
                     color: "#191919",
                   }}
                 >
