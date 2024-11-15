@@ -2,10 +2,39 @@ import { Box, Typography, TextField, Button } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowSmallLeft } from "react-flaticons";
-
+import { useAccount } from "../library/account";
+import { useResetPassword } from "../library/resetpassword";
+import {useStore} from "../library/store";
 const ForgotPassword = () => {
   const navigate = useNavigate();
+  const {fetchAccount, account} = useAccount();
+  const {setAccountReset} = useResetPassword();
+  const {setCurrentPage} = useStore();
 
+  useEffect(() => {
+    setCurrentPage(location.pathname);
+  }, []);
+  useEffect(() => {
+    fetchAccount();
+  }, [fetchAccount]);
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+
+  const handleUsernameChange = (event) => {
+    setUsername(event.target.value);
+  };
+  const handleEmailChange = (event) => {
+    setEmail(event.target.value);
+  };
+
+  const handleCheckAccount = () => {
+    for (let i = 0; i < account.length; i++) {
+      if (account[i].username === username && account[i].email === email) {
+        setAccountReset(account[i]);
+        navigate("/resetpassword");
+      }
+    }
+  }
   return (
     <Box
       sx={{
@@ -94,6 +123,8 @@ const ForgotPassword = () => {
             variant="outlined"
             label="Username"
             name="username"
+            value={username}
+            onChange={handleUsernameChange}
             InputLabelProps={{ required: false }}
             sx={{
               "& .MuiInputLabel-root": {
@@ -135,6 +166,8 @@ const ForgotPassword = () => {
             variant="outlined"
             label="Email"
             name="email"
+            value={email}
+            onChange={handleEmailChange}
             InputLabelProps={{ required: false }}
             sx={{
               "& .MuiInputLabel-root": {
@@ -188,9 +221,7 @@ const ForgotPassword = () => {
               boxShadow: "none",
               textTransform: "none",
             }}
-            onClick={() => {
-              navigate("/continue-forgot-password");
-            }}
+            onClick={handleCheckAccount}
           >
             Continue
           </Button>

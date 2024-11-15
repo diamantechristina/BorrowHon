@@ -27,12 +27,12 @@ import "@fontsource/montserrat/700.css";
 
 const Navbar = () => {
   const navigate = useNavigate();
-  const { userLog, currentUser, isAdmin, setNull } = useStore();
+  const { userLog, currentUser, isAdmin, setNull, setBookData } = useStore();
   const { fetchNotifications, notification } = useNotification();
   const { searchedBook, setSearchedBook, filterType, setFilterType } = useSearch();
   const [filterOpen, setFilterOpen] = useState(false);
-  const [anchorEl, setAnchorEl] = useState(null);
   const [selectedFilter, setSelectedFilter] = useState("Filter");
+  const [isBookSearch, setIsBookSearch] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const { updateLog } = useLog();
   const [searchOpen,setSearchOpen] = useState(false);
@@ -355,7 +355,7 @@ const Navbar = () => {
               },
             }}
           />
-          <Collapse in={searchOpen && searchedBook && isTextFieldFocus} timeout="auto" unmountOnExit>
+          <Collapse in={(searchOpen && searchedBook && isTextFieldFocus) || isBookSearch } timeout="auto" unmountOnExit={false}>
       <List
         sx={{
           width: '100%',
@@ -428,6 +428,8 @@ const Navbar = () => {
       })
       .map((book) => (
         <ListItem
+          onMouseOver={() => setIsBookSearch(true)}
+          onMouseLeave={() => setIsBookSearch(false)}
           sx={{
             "&:hover": {
                 backgroundColor: "#E8E8E8",

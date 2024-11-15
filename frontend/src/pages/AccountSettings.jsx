@@ -162,6 +162,7 @@ const AccountSettings = () => {
     dispatch({ type: "resetAllExcept", payload: "phoneNumber" });
   };
   const handleCloseEditOpen = async () => {
+    setShowPassword(false);
     if (userLoggedIn === currentUser) {
       setEditProfileOpen(false);
       return;
@@ -174,12 +175,11 @@ const AccountSettings = () => {
     setSnackbarMessage(message);
     setSnackbarSuccess(success);
     if (success) {
-      setShowPassword(false);
       dispatch({ type: "resetAllExcept", payload: "none" });
       setCurrentUser(userLoggedIn);
+      setEditProfileOpen(false);
     }
     setOpenSnackbar(true);
-    if (success) setEditProfileOpen(false);
   };
   const handleOpenEditOpen = () => setEditProfileOpen(true);
   const togglePasswordVisibility = () => {
@@ -466,7 +466,7 @@ const AccountSettings = () => {
           </Box>
           <Box
             sx={{
-              display: currentUser ? "none" : "flex",
+              display: "flex",
               width: "12vw",
               height: "7.5vh",
               borderRadius: "10px",

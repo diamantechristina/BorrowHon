@@ -1,12 +1,25 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Box, Typography, TextField, Button, InputAdornment } from "@mui/material";
 import { ArrowSmallLeft, EyeCrossed, Eye } from "react-flaticons";
-
+import { useAccount } from "../library/account.js";
+import { useResetPassword } from "../library/resetpassword.js";
+import { useStore } from "../library/store.js";
+import { set } from "mongoose";
 const ContinueForgotPassword = () => {
   const navigate = useNavigate();
+  const {updateAccount} = useAccount();
+  const { accountReset, setAccountReset } = useResetPassword();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [password, setPassword] = useState("");
+  const [resetAccount, setResetAccount] = useState(accountReset);
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const {setCurrentPage, currentPage} = useStore();
+
+  useEffect(() => {
+    setCurrentPage(location.pathname);
+  }, []);
   const togglePasswordVisibility = () => {
     setShowPassword((prev) => !prev);
   };
@@ -14,7 +27,35 @@ const ContinueForgotPassword = () => {
     setShowConfirmPassword((prev) => !prev);
   };
 
-  
+  const handlePasswordChange = (event) => {
+    setPassword(event.target.value);
+  };
+
+  const handleConfirmPasswordChange = (event) => {
+    setConfirmPassword(event.target.value);
+    setResetAccount((prev) => ({ ...prev, password: event.target.value }));
+
+    
+  };
+  console.log("accountReset: ", resetAccount);
+  useEffect(() => {
+    if (!accountReset) {
+      navigate(currentPage);
+
+    }
+  }, []);
+
+  const handleContinueClick = async() => {
+    if (password === confirmPassword && password.trim() !== "" && confirmPassword.trim() !== "") {
+      const {success, message} = await updateAccount(resetAccount._id, resetAccount, false);
+      console.log("Success:", success);
+      console.log("Message:", message);
+      navigate("/");
+    } else {
+      alert("Passwords do not match. Please try again.");
+    }
+  };
+
   return (
     <Box
       sx={{
@@ -44,6 +85,7 @@ const ContinueForgotPassword = () => {
           variant="text"
           onClick={() => navigate(-1)}
           sx={{
+            tabIndex: -1,
             margin: 0,
             borderRadius: "20px",
             color: "#E8E8E8",
@@ -75,6 +117,7 @@ const ContinueForgotPassword = () => {
           src="src/resources/logo.png"
           alt="BorrowHon"
           style={{
+            
             maxWidth: "36vw",
             marginTop: "-15vh",
             marginBottom: "14vh",
@@ -108,6 +151,8 @@ const ContinueForgotPassword = () => {
             type={showPassword ? "text" : "password"}
             // id='outlined-basic'
             variant="outlined"
+            value={password}
+            onChange={handlePasswordChange}
             label="New Password"
             InputLabelProps={{ required: false }}
             sx={{
@@ -149,22 +194,25 @@ const ContinueForgotPassword = () => {
                     onClick={togglePasswordVisibility}
                     edge="end"
                     sx={{
+                      tabIndex: -1,
                       color: "#F4F4F4",
                       minWidth:0,
                       marginRight: "15px",
                     }}
-                  >
+                    >
                     {showPassword ? <Eye /> : <EyeCrossed />}
                   </Button>
                 </InputAdornment>
               ),
             }}
-          />
+            />
           <TextField
             required
             type={showConfirmPassword ? "text" : "password"}
             // id='outlined-basic'
             variant="outlined"
+            value={confirmPassword}
+            onChange={handleConfirmPasswordChange}
             label="Confirm Password"
             InputLabelProps={{ required: false }}
             sx={{
@@ -187,13 +235,13 @@ const ContinueForgotPassword = () => {
                 borderWidth: "2px", // border width
               },
               "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline":
-                {
-                  borderColor: "#F4F4F4", // focus border color
-                },
+              {
+                borderColor: "#F4F4F4", // focus border color
+              },
               "& .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline":
-                {
-                  borderColor: "#F4F4F4", // hover border color
-                },
+              {
+                borderColor: "#F4F4F4", // hover border color
+              },
             }}
             InputProps={{
               style: {
@@ -206,6 +254,7 @@ const ContinueForgotPassword = () => {
                     onClick={toggleConfirmPasswordVisibility}
                     edge="end"
                     sx={{
+                      tabIndex: -1,
                       color: "#F4F4F4",
                       minWidth:0,
                       marginRight: "15px",
@@ -236,9 +285,7 @@ const ContinueForgotPassword = () => {
               textTransform: "none",
             }}
             tabIndex={-1}
-            onClick={() => {
-              navigate("/continue-forgot-password");
-            }}
+            onClick={handleContinueClick}
           >
             Confirm
           </Button>

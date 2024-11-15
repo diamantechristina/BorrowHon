@@ -93,7 +93,7 @@ function App() {
       <Route path="/settings" element = {<AccountSettings/>}/>
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route
-        path="/continue-forgot-password"
+        path="/resetpassword"
         element={<ContinueForgotPassword />}
       />
       <Route path="/pending-books" element={<PendingBooks />} />
