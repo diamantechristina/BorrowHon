@@ -5,9 +5,9 @@ import React, {
   useRef,
   useCallback,
   useEffect,
-  useLayoutEffect
+  useLayoutEffect,
 } from "react";
-import { styled } from '@mui/material/styles';
+import { styled } from "@mui/material/styles";
 import Resizer from "react-image-file-resizer";
 import {
   Avatar,
@@ -18,6 +18,8 @@ import {
   InputAdornment,
   Snackbar,
   SnackbarContent,
+  Modal,
+  Backdrop,
 } from "@mui/material";
 import { ArrowSmallLeft, Eye, EyeCrossed } from "react-flaticons";
 import { useAccount } from "../../library/account";
@@ -93,24 +95,38 @@ const VisuallyHiddenInput = styled("input")({
 });
 
 const ReaderSettings = () => {
-  
-  const { currentUser , setCurrentUser, readerUser, setReaderUser, setCurrentPage, currentPage } = useStore();
+  const {
+    currentUser,
+    setCurrentUser,
+    readerUser,
+    setReaderUser,
+    setCurrentPage,
+    currentPage,
+  } = useStore();
   const navigate = useNavigate();
   const [display, setDisplay] = useState(false);
+  const [open, setOpen] = useState(false);
+
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
   useLayoutEffect(() => {
-    if (!currentUser){
+    if (!currentUser) {
       navigate("/");
-    }else if(currentPage !== '/list-of-readers'){
+    } else if (currentPage !== "/list-of-readers") {
       navigate(-1);
-    }else{
+    } else {
       setDisplay(true);
     }
-  },[])
+  }, []);
 
-  
   useEffect(() => {
-    setCurrentPage(location.pathname)
-  },[])
+    setCurrentPage(location.pathname);
+  }, []);
 
   const { updateAccount } = useAccount();
   const [openSnackbar, setOpenSnackbar] = useState(false);
@@ -124,51 +140,56 @@ const ReaderSettings = () => {
     phoneNumber: false,
   });
   const [userLoggedIn, setUserLoggedIn] = useState(
-    readerUser !==null ? readerUser : currentUser
+    readerUser !== null ? readerUser : currentUser
   );
   const [editProfileOpen, setEditProfileOpen] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  console.log("reader: ",readerUser)
+  console.log("reader: ", readerUser);
   const handleToggleUsername = () => {
     if (editProfile.username) {
-      userLoggedIn.username = readerUser !==null ? readerUser.username : currentUser.username;
+      userLoggedIn.username =
+        readerUser !== null ? readerUser.username : currentUser.username;
     }
     dispatch({ type: "toggleUsername" });
     dispatch({ type: "resetAllExcept", payload: "username" });
   };
   const handleTogglePassword = () => {
     if (editProfile.password) {
-      userLoggedIn.password = readerUser !==null ? readerUser.password : currentUser.password;
+      userLoggedIn.password =
+        readerUser !== null ? readerUser.password : currentUser.password;
     }
     dispatch({ type: "togglePassword" });
     dispatch({ type: "resetAllExcept", payload: "password" });
   };
   const handleToggleEmail = () => {
     if (editProfile.email) {
-      userLoggedIn.email = readerUser !==null ? readerUser.email : currentUser.email;
+      userLoggedIn.email =
+        readerUser !== null ? readerUser.email : currentUser.email;
     }
     dispatch({ type: "toggleEmail" });
     dispatch({ type: "resetAllExcept", payload: "email" });
   };
   const handleToggleAddress = () => {
     if (editProfile.address) {
-      userLoggedIn.address = readerUser !==null ? readerUser.address : currentUser.address;
+      userLoggedIn.address =
+        readerUser !== null ? readerUser.address : currentUser.address;
     }
     dispatch({ type: "toggleAddress" });
     dispatch({ type: "resetAllExcept", payload: "address" });
   };
   const handleTogglePhoneNumber = () => {
     if (editProfile.phoneNumber) {
-      userLoggedIn.phoneNumber = readerUser !==null ? readerUser.phoneNumber : currentUser.phoneNumber;
+      userLoggedIn.phoneNumber =
+        readerUser !== null ? readerUser.phoneNumber : currentUser.phoneNumber;
     }
     dispatch({ type: "togglePhoneNumber" });
     dispatch({ type: "resetAllExcept", payload: "phoneNumber" });
   };
   const handleCloseEditOpen = async () => {
-    if(userLoggedIn === readerUser){
+    if (userLoggedIn === readerUser) {
       setEditProfileOpen(false);
       return;
-    }else if (userLoggedIn === currentUser) {
+    } else if (userLoggedIn === currentUser) {
       setEditProfileOpen(false);
       return;
     }
@@ -182,7 +203,9 @@ const ReaderSettings = () => {
     if (success) {
       setShowPassword(false);
       dispatch({ type: "resetAllExcept", payload: "none" });
-      readerUser !==null ? setReaderUser(userLoggedIn) : setCurrentUser(userLoggedIn);
+      readerUser !== null
+        ? setReaderUser(userLoggedIn)
+        : setCurrentUser(userLoggedIn);
     }
     setOpenSnackbar(true);
     if (success) setEditProfileOpen(false);
@@ -218,28 +241,28 @@ const ReaderSettings = () => {
     });
   const onChangeCoverPhoto = async (event) => {
     const file = event.target.files[0];
-    const image = await resizeFile(file,1000,500);
+    const image = await resizeFile(file, 1000, 500);
     setUserLoggedIn((prevUser) => ({
       ...prevUser,
       coverpic: image,
-    }))
+    }));
   };
 
   const onChangeProfilePic = async (event) => {
     const file = event.target.files[0];
-    const image = await resizeFile(file,500,500);
+    const image = await resizeFile(file, 500, 500);
     setUserLoggedIn((prevUser) => ({
       ...prevUser,
       profilepic: image,
-    }))
-  }
+    }));
+  };
   return (
     <Box
       sx={{
         backgroundColor: "#2e2e2e",
         width: "100vw",
         height: "100vh",
-        display: display? "flex":'none',
+        display: display ? "flex" : "none",
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
@@ -260,24 +283,214 @@ const ReaderSettings = () => {
         />
       </Snackbar>
       <Button
-      variant="outlined"
-      // onClick={}
-      sx={{
-        display: readerUser ? "auto": "none",
-        borderColor: "#f4f4f4",
-        color: "#f4f4f4",
-        position: 'fixed',
-        top: '7.5vh',
-        right: '5vw',
-        width: "12vw",
-        height: "7.5vh",
-        fontSize: "0.75rem",
-        borderRadius: "10px",
-        fontFamily: "Montserrat",
-      }}
+        variant="outlined"
+        onClick={handleOpen}
+        sx={{
+          display: readerUser ? "auto" : "none",
+          borderColor: "#f4f4f4",
+          color: "#f4f4f4",
+          position: "fixed",
+          top: "7.5vh",
+          right: "5vw",
+          width: "12vw",
+          height: "7.5vh",
+          fontSize: "0.75rem",
+          borderRadius: "10px",
+          fontFamily: "Montserrat",
+        }}
       >
         Suspend
       </Button>
+      <Modal
+        aria-labelledby="unstyled-modal-title"
+        aria-describedby="unstyled-modal-description"
+        open={open}
+        onClose={handleClose}
+        // slots={{ backdrop: StyledBackdrop }}
+        BackdropComponent={Backdrop}
+        BackdropProps={{
+          timeout: 500,
+        }}
+      >
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: "60vw",
+            height: "80vh",
+            p: 4,
+            backgroundColor: "#225560",
+            borderRadius: "20px",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            color: "#F4F4F4",
+            flexDirection: "column",
+            gap: "20px",
+          }}
+        >
+          <Typography
+            sx={{
+              fontSize: "4vw",
+              fontWeight: "bold",
+              fontFamily: "montserrat",
+              //   marginTop: "-5vh",
+            }}
+          >
+            SUSPEND ACCOUNT
+          </Typography>
+          <Box
+            sx={{
+              width: "60vw",
+              height: "20vh",
+              backgroundColor: "yellow",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              flexDirection: "row",
+              // overflow: "auto",
+            }}
+          >
+            <Box
+              sx={{
+                width: "7vw",
+                height: "15vh",
+                backgroundColor: "blue",
+                borderRadius: "50%",
+              }}
+            ></Box>
+            <Box
+              sx={{
+                width: "50vw",
+                height: "inherit",
+                // backgroundColor: "red",
+                color: "#F4F4F4",
+                marginRight: "2vw",
+              }}
+            >
+              <Typography
+                sx={{
+                  fontSize: "2.5vw",
+                  fontWeight: "bold",
+                  fontFamily: "montserrat",
+                  textTransform: "uppercase",
+                }}
+              >
+                {/* {bookData?.title} */}title
+              </Typography>
+              <Typography
+                sx={{
+                  fontSize: "20px",
+                  // fontWeight: "bold",
+                  fontFamily: "montserrat",
+                }}
+              >
+                {/* {bookData?.genre} */}genre
+              </Typography>
+              <Typography
+                sx={{
+                  fontSize: "1.5vw",
+                  fontWeight: "bold",
+                  fontFamily: "montserrat",
+                }}
+              >
+                {/* {bookData?.author} */}author
+              </Typography>
+
+              <Box
+                sx={{
+                  width: "100%",
+                  height: "1px",
+                  backgroundColor: "#F4F4F4",
+                  my: "2vh",
+                }}
+              ></Box>
+              <Box
+                sx={{
+                  height: "20vh",
+                  overflowY: "scroll",
+                  // backgroundColor: "#F4F4F4",
+                  "&::-webkit-scrollbar": {
+                    display: "none", // Hide scrollbars for WebKit browsers
+                  },
+                  // backgroundImage:
+                  //   "linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0), rgba(0, 0, 0, 0), rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.5))",
+                }}
+              >
+                <Typography
+                  sx={{
+                    textAlign: "justify",
+                    fontFamily: "montserrat",
+                  }}
+                >
+                  {/* {bookData?.description} */}desc
+                </Typography>
+              </Box>
+            </Box>
+          </Box>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "center",
+              width: "60vw",
+              gap: "10px",
+            }}
+          >
+            <Button
+              variant="contained"
+              sx={{
+                width: "clamp(10rem, 12vw, 40rem)",
+                height: "70px",
+                borderRadius: "20px", // border radius
+                bgcolor: "#1FAA70",
+                color: "#F4F4F4",
+                "&:hover": {
+                  bgcolor: "#4dc995",
+                  color: "#F4F4F4",
+                  boxShadow: "none",
+                },
+                fontFamily: "Montserrat",
+                fontWeight: "bold",
+                boxShadow: "none",
+                textTransform: "none",
+                fontSize: "18px",
+              }}
+              tabIndex={-1}
+              // onClick={handleBorrowBook}
+            >
+              Confirm
+            </Button>
+            <Button
+              variant="contained"
+              sx={{
+                width: "clamp(10rem, 12vw, 40rem)",
+                height: "70px",
+                borderRadius: "20px",
+                bgcolor: "transparent",
+                border: "2px solid #f4f4f4",
+                color: "#F4F4F4",
+                "&:hover": {
+                  bgcolor: "#4dc995",
+                  color: "#F4F4F4",
+                  boxShadow: "none",
+                },
+                fontFamily: "Montserrat",
+                fontWeight: "bold",
+                boxShadow: "none",
+                textTransform: "none",
+                fontSize: "18px",
+              }}
+              tabIndex={-1}
+              // onClick={handleBorrowBook}
+            >
+              Cancel
+            </Button>
+          </Box>
+        </Box>
+      </Modal>
       <Box
         sx={{
           display: "flex",
@@ -363,7 +576,7 @@ const ReaderSettings = () => {
           }}
         >
           <Button
-            component='label'
+            component="label"
             variant="text"
             role="undefined"
             onChange={onChangeCoverPhoto}
@@ -462,7 +675,7 @@ const ReaderSettings = () => {
                 {userLoggedIn?.firstName} {userLoggedIn?.lastName}
               </Typography>
               <Button
-                component='label'
+                component="label"
                 role="undefined"
                 onChange={onChangeProfilePic}
                 variant="text"
@@ -482,18 +695,18 @@ const ReaderSettings = () => {
               >
                 Change Profile Picture
                 <VisuallyHiddenInput
-              type="file"
-              accept="image/*"
-              onChange={onChangeProfilePic}
-            />
+                  type="file"
+                  accept="image/*"
+                  onChange={onChangeProfilePic}
+                />
               </Button>
             </Box>
           </Box>
           <Button
             onClick={() => {
-              console.log('adsad ', location.pathname)
-              
-              navigate("/borrow-history")
+              console.log("adsad ", location.pathname);
+
+              navigate("/borrow-history");
             }}
             variant="outlined"
             sx={{
@@ -520,7 +733,7 @@ const ReaderSettings = () => {
           ></Box>
           <Button
             variant="outlined"
-            onClick={editProfileOpen ? handleCloseEditOpen : handleOpenEditOpen}
+            // onClick={editProfileOpen ? handleCloseEditOpen : handleOpenEditOpen}
             sx={{
               borderColor: "#f4f4f4",
               color: "#f4f4f4",

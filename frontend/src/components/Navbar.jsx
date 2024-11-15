@@ -310,6 +310,7 @@ const Navbar = () => {
                             "&:hover": {
                               backgroundColor: "#E8E8E8",
                             },
+                            color: "#191919"
                           }}
                         >{text}</ListItem>
                       ))}
