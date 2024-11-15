@@ -45,8 +45,6 @@ const months = [
 const Dashboard = () => {
   const { currentUser,  setReaderUser, setCurrentPage } = useStore();
   const navigate = useNavigate();
-  const [burgerAnchorEl, setBurgerAnchorEl] = React.useState(null);
-  const burgerOpen = Boolean(burgerAnchorEl);
   const { fetchLogs, log } = useLog();
   const { fetchAccount, account } = useAccount();
 
@@ -76,11 +74,6 @@ const Dashboard = () => {
     });
     return logCounts;
   }, [log, months]);
-
-
-  const handleBurgerClick = (event) => {
-    setBurgerAnchorEl(event.currentTarget);
-  };
 
   const { fetchBook, books } = useBook();
 
