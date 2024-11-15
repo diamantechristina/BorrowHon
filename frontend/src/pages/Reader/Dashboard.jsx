@@ -11,6 +11,7 @@ import {
   SnackbarContent,
   List,
   ListItem,
+  ClickAwayListener
 } from "@mui/material";
 import Navbar from "../../components/Navbar";
 import { useBook } from "../../library/book.js";
@@ -32,6 +33,7 @@ const Dashboard = () => {
   const { searchedBook, filterType } = useSearch();
   const { fetchNotifications, notification } = useNotification();
 
+  console.log("currentUser: ", currentUser);
   useEffect(() => {
     fetchNotifications();
   }, [fetchNotifications]);
@@ -133,31 +135,33 @@ const Dashboard = () => {
         onClose={() => setIsFirstLogin(false)}
       >
         <SnackbarContent
-          message='Login Successfully!'
+          message='Logged In Successfully!'
           style={{
             backgroundColor:'green',
             justifyContent: "center",
           }}
         />
       </Snackbar>
+      {/* <ClickAwayListener onClickAway={() => setSearchOpen(!searchOpen)}>
       <List
         sx={{
           display: searchedBook ? "auto" : "none",
           width: '100%',
-          maxWidth: '33.9vw',
+          maxWidth: '33.73vw',
           bgcolor: '#d9d9d9',
           position: 'fixed',
           overflow: 'auto',
           "&::-webkit-scrollbar": {
           display: "none", // Hide scrollbars for WebKit browsers
         },
-          top: '9.25vh',
+          top: '9vh',
           left: '13.75vw',
           zIndex: 1,
           maxHeight: "36.6vh",
           paddingTop: '2.5vh',
           borderBottomLeftRadius: '20px',
           borderBottomRightRadius: '20px',
+          filter: "drop-shadow(0.15rem 0.15rem 0.2rem rgba(0, 0, 0, 0.5))"
         }}
       >
         {books.filter((book) => {
@@ -277,6 +281,7 @@ const Dashboard = () => {
         </ListItem>
       ))}
       </List>
+      </ClickAwayListener> */}
       <Box
         sx={{
           height: "100vh",

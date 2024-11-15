@@ -5,30 +5,39 @@ import {
   Menu,
   MenuItem,
   Button,
+  List,
+  ListItem,
   Stack,
   Typography,
   Slide,
   Fade,
+  Collapse,
+  ClickAwayListener
 } from "@mui/material";
 import React, { useState, useEffect, useCallback } from "react";
 import { Search, Filter, Bell, MenuBurger } from "react-flaticons";
 import { useNavigate } from "react-router-dom";
 import "@fontsource/arimo";
 import { useLog } from "../library/log";
-import { useStore } from "../library/store"
-import { useSearch } from "../library/search"
-import { set } from "mongoose";
+import { useStore } from "../library/store";
+import { useSearch } from "../library/search";
+import {useBook} from "../library/book";
+import { useNotification } from "../library/notification";
+import "@fontsource/montserrat/700.css";
 
 const Navbar = () => {
   const navigate = useNavigate();
-  const {userLog, isAdmin, setNull } = useStore();
-  const {searchedBook, setSearchedBook, setFilterType} = useSearch();
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const open = Boolean(anchorEl);
+  const { userLog, currentUser, isAdmin, setNull } = useStore();
+  const { fetchNotifications, notification } = useNotification();
+  const { searchedBook, setSearchedBook, filterType, setFilterType } = useSearch();
+  const [filterOpen, setFilterOpen] = useState(false);
+  const [anchorEl, setAnchorEl] = useState(null);
   const [selectedFilter, setSelectedFilter] = useState("Filter");
   const [scrolled, setScrolled] = useState(false);
   const { updateLog } = useLog();
-  
+  const [searchOpen,setSearchOpen] = useState(false);
+  const [isTextFieldFocus, setIsTextFieldFocus] = useState(false);
+  const [notificationOpen, setNotificationOpen] = useState(false);
   useEffect(() => {
     const handleScroll = () => {
       if (window.scrollY > 0) {
@@ -46,16 +55,26 @@ const Navbar = () => {
     };
   }, []);
 
-  const handleLogout = async() => {
+  const { fetchBook, books } = useBook();
+  useEffect(() => {
+    fetchBook();
+  }, [fetchBook]);
+
+  useEffect(() => {
+    fetchNotifications();
+  }, [fetchNotifications]);
+
+
+  const handleLogout = async () => {
     const updatedLog = {
       ...userLog,
       logoutdate: new Date(),
-    }
-    const{success, message} = await updateLog(updatedLog._id, updatedLog)
-    console.log(success, message)
+    };
+    const { success, message } = await updateLog(updatedLog._id, updatedLog);
+    console.log(success, message);
     await navigate("/");
-    setNull()
-  }
+    setNull();
+  };
 
   const handleMenuItemClick = (event) => {
     setSelectedFilter(event.target.textContent);
@@ -63,14 +82,19 @@ const Navbar = () => {
     handleClose();
   };
 
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
+  const handleClick = () => {
+    setFilterOpen(!filterOpen)
   };
   const handleClose = () => {
-    setAnchorEl(null);
-    setBurgerAnchorEl(null);
+    setFilterOpen(false);
+    setBurgerOpen(false);
   };
-
+  const handleNotificationClick = () => {
+    setNotificationOpen(!notificationOpen);
+  }
+  const handleBurgerClick = () => {
+    setBurgerOpen(!burgerOpen);
+  }
   const getFilterText = () => {
     switch (selectedFilter) {
       case "Title":
@@ -86,20 +110,15 @@ const Navbar = () => {
     }
   };
 
-  const [burgerAnchorEl, setBurgerAnchorEl] = React.useState(null);
-  const burgerOpen = Boolean(burgerAnchorEl);
 
-  const handleBurgerClick = (event) => {
-    setBurgerAnchorEl(event.currentTarget);
-  };
-
+  const [burgerOpen, setBurgerOpen] = useState(false);
   return (
     <Box
       sx={{
         position: "fixed",
         width: "100%",
         zIndex: "100",
-        top:0,
+        top: 0,
         transition: "background-color 0.3s ease, backdrop-filter 0.3s ease", // Smooth transition when applying blur
         ...(scrolled && {
           backdropFilter: "blur(10px)", // Apply blur when scrolled
@@ -139,6 +158,9 @@ const Navbar = () => {
             // id='outlined-basic'
             variant="outlined"
             value={searchedBook}
+            onClick={() => setSearchOpen(true)}
+            onFocus={() => setIsTextFieldFocus(true)}
+            onBlur={() => setIsTextFieldFocus(false)}
             onChange={(event) => setSearchedBook(event.target.value)}
             placeholder={getFilterText()}
             InputLabelProps={{ required: false }}
@@ -220,9 +242,9 @@ const Navbar = () => {
                     />
                     <Button
                       id="filter-btn"
-                      aria-controls={open ? "filter-menu" : undefined}
+                      aria-controls={filterOpen ? "filter-menu" : undefined}
                       aria-haspopup="true"
-                      aria-expanded={open ? "true" : undefined}
+                      aria-expanded={filterOpen ? "true" : undefined}
                       onClick={handleClick}
                       sx={{
                         opacity: 0.75,
@@ -230,19 +252,19 @@ const Navbar = () => {
                         gap: "6.5px",
                         marginTop: "2px",
                         marginRight: "14px",
-
+                        
                         // paddingTop: "30px",
                         // backgroundColor: "red",
                         // minWidth: 0
                       }}
-                    >
+                      >
                       <Filter
                         size={"28px"}
                         style={{
                           color: "#191919",
                           // paddingLeft: "3px",
                         }}
-                      />
+                        />
                       <Typography
                         sx={{
                           textTransform: "none",
@@ -256,7 +278,45 @@ const Navbar = () => {
                         Filter
                       </Typography>
                     </Button>
-                    <Menu
+                    <Collapse in={filterOpen} timeout="auto" unmountOnExit>
+                    <ClickAwayListener onClickAway={() => setFilterOpen(false)}>
+                    <List
+                      sx={{
+                        width: "100%",
+                        maxWidth: "8.5vw",
+                        bgcolor: "#d9d9d9",
+                        position: "absolute",
+                        overflow: "auto",
+                        "&::-webkit-scrollbar": {
+                          display: "none", // Hide scrollbars for WebKit browsers
+                        },
+                        top: "5.15vh",
+                        left: "33.74vw",
+                        zIndex: -1,
+                        maxHeight: "36.6vh",
+                        paddingTop: "2.5vh",
+                        borderBottomLeftRadius: "20px",
+                        borderBottomRightRadius: "20px",
+                        filter:
+                          "drop-shadow(0.15rem 0.15rem 0.2rem rgba(0, 0, 0, 0.5))",
+                      }}
+                    >
+                      {['Title', 'Author', 'Genre', 'ISBN'].map((text,index) => (
+                        <ListItem
+                          key={index}
+                          onClick={handleMenuItemClick}
+                          sx={{
+                            cursor: "pointer",
+                            "&:hover": {
+                              backgroundColor: "#E8E8E8",
+                            },
+                          }}
+                        >{text}</ListItem>
+                      ))}
+                    </List>
+                    </ClickAwayListener>
+                    </Collapse>
+                    {/* <Menu
                       id="filter-menu"
                       anchorEl={anchorEl}
                       TransitionComponent={Fade}
@@ -267,7 +327,11 @@ const Navbar = () => {
                       }}
                       PaperProps={{
                         style: {
-                          width: "123px",
+                          width: "8.55vw",
+                          marginLeft: "-0.5vw",
+                          marginTop: "-1vw",
+                          zIndex: -1000,
+                          paddingTop: "2vh",
                           backgroundColor: "#D9D9D9",
                         },
                       }}
@@ -284,13 +348,334 @@ const Navbar = () => {
                       <MenuItem id="isbn" onClick={handleMenuItemClick}>
                         ISBN
                       </MenuItem>
-                    </Menu>
+                    </Menu> */}
                   </InputAdornment>
                 ),
               },
             }}
           />
+          <Collapse in={searchOpen && searchedBook && isTextFieldFocus} timeout="auto" unmountOnExit>
+      <List
+        sx={{
+          width: '100%',
+          maxWidth: '33.73vw',
+          bgcolor: '#d9d9d9',
+          position: 'fixed',
+          overflow: 'auto',
+          "&::-webkit-scrollbar": {
+          display: "none", // Hide scrollbars for WebKit browsers
+        },
+          top: '9vh',
+          left: '13.75vw',
+          zIndex: -2,
+          maxHeight: "36.6vh",
+          paddingTop: '2.5vh',
+          borderBottomLeftRadius: '20px',
+          borderBottomRightRadius: '20px',
+          filter: "drop-shadow(0.15rem 0.15rem 0.2rem rgba(0, 0, 0, 0.5))"
+        }}
+      >
+        {books.filter((book) => {
+        
+        if (filterType === 'title'){
+          return book.title.toLowerCase().includes(searchedBook?.toLowerCase())
+        }else if (filterType === 'author'){
+          return book.author.toLowerCase().includes(searchedBook?.toLowerCase())
+        }else if (filterType === 'isbn'){
+          return book.isbn.includes(searchedBook)
+        }else if (filterType === 'genre'){
+          return book.genre[0].toLowerCase().includes(searchedBook?.toLowerCase())
+        }
+        else{
+          return false;
+        }
+        
+      }).length === 0 ?(
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              height: "100%",
+            }}
+          >
+            <Typography
+              sx={{
+                fontSize: "1.5rem",
+                fontWeight: "bold",
+                color: "#191919",
+              }}
+            >
+              No Results Found
+            </Typography>
+          </Box>
+        ) : null}
+      {books.filter((book) => {
+        if (searchedBook === '') {
+          return false;
+        }
+        if (filterType === 'title'){
+          return book.title.toLowerCase().includes(searchedBook?.toLowerCase())
+        }else if (filterType === 'author'){
+          return book.author.toLowerCase().includes(searchedBook?.toLowerCase())
+        }else if (filterType === 'isbn'){
+          return book.isbn.includes(searchedBook)
+        }else if (filterType === 'genre'){
+          return book.genre[0].toLowerCase().includes(searchedBook?.toLowerCase())
+        }
+        
+      })
+      .map((book) => (
+        <ListItem
+          sx={{
+            "&:hover": {
+                backgroundColor: "#E8E8E8",
+              },
+          }}
+          key={book._id}
+          onClick={() => {
+            setBookData(book);
+            navigate("/view-book");
+          }}
+        >
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              cursor: "pointer",
+              width: "100%",
+              height: "10vh",
+              
+            }}
+          >
+            <Box
+              sx={{
+                width: "10%",
+                height: "10vh",
+                objectFit: "contain",
+                background: `url(${book.coverImage})`,
+                backgroundSize: "contain",
+                backgroundPosition: "center",
+                backgroundRepeat: "no-repeat",
+              }}
+            />
+            <Box
+              sx={{
+                margin: "0",
+              }}
+            >
+            <Typography
+              sx={{
+                fontFamily: "Montserrat",
+                marginLeft: "1vw",
+                fontSize: "1.2rem",
+                fontWeight: "bold",
+                color: "#191919",
+              }}
+            >
+              {book.title}
+            </Typography>
+            <Typography
+              sx={{
+                fontFamily: "Montserrat",
+                fontWeight: "500",
+                marginLeft: "1vw",
+                fontSize: "0.9rem",
+                color: "#191919",
+              }}
+            >
+              {book.author}
+            </Typography>
+            </Box>
+
+          </Box>
+        </ListItem>
+      ))}
+      </List>
+          </Collapse>
         </Box>
+        <Collapse in={burgerOpen} timeout="auto" unmountOnExit>
+          <ClickAwayListener onClickAway={() => setBurgerOpen(false)}>
+          <List
+          sx={{
+            width: '100%',
+            maxWidth: '10vw',
+            bgcolor: '#d9d9d9',
+            position: 'absolute',
+            overflow: 'auto',
+            "&::-webkit-scrollbar": {
+            display: "none", // Hide scrollbars for WebKit browsers
+          },
+            top: '10.88vh',
+            left: '82.2vw',
+            zIndex: -2,
+            maxHeight: "36.6vh",
+            borderBottomLeftRadius: '20px',
+            borderBottomRightRadius: '20px',
+            borderTopLeftRadius: '20px',
+            filter: "drop-shadow(0.15rem 0.15rem 0.2rem rgba(0, 0, 0, 0.5))"
+          }}
+          >
+            <ListItem 
+              sx={{
+                cursor: "pointer",
+                height: "6.5vh",
+                "&:hover": {
+                  backgroundColor: "#E8E8E8", 
+                }}}
+                onClick={() => navigate("/settings")}
+                >
+              Account Settings
+            </ListItem>
+            {isAdmin ? null : (
+              <ListItem
+              sx={{
+                cursor: "pointer",
+                height: "6.5vh",
+                "&:hover": {
+                  backgroundColor: "#E8E8E8", 
+                }}}
+                onClick={() => {
+                  navigate("/borrow-history");
+                }}
+                >
+                History
+              </ListItem>
+            )}
+            <ListItem 
+            sx={{
+              cursor: "pointer",
+              height: "6.5vh",
+              "&:hover": {
+                backgroundColor: "#E8E8E8", 
+              }}}
+              onClick={handleLogout}
+              >
+              Log Out
+            </ListItem>
+          </List>
+          </ClickAwayListener>
+          </Collapse>
+          <Collapse in={notificationOpen} timeout="auto" unmountOnExit>
+          <ClickAwayListener onClickAway={() => setNotificationOpen(false)}>
+          <List
+          sx={{
+            width: '100%',
+            maxWidth: '20vw',
+            bgcolor: '#d9d9d9',
+            position: 'absolute',
+            overflow: 'auto',
+            "&::-webkit-scrollbar": {
+            display: "none", // Hide scrollbars for WebKit browsers
+          },
+            top: '10.88vh',
+            left: '73.5vw',
+            zIndex: -2,
+            maxHeight: "45vh",
+            height: "45vh",
+            borderRadius: '20px',
+            filter: "drop-shadow(0.15rem 0.15rem 0.2rem rgba(0, 0, 0, 0.5))"
+          }}
+          >
+            {notification?.filter((item)=> item.acc_id === currentUser.acc_id).length === 0 ? 
+            (<ListItem 
+              sx={{
+                  height: "45vh", 
+                  display: "flex", 
+                  justifyContent: "center", 
+                  alignItems: "center"}}
+              >
+                <Typography
+                  sx={{
+                    fontFamily: "Montserrat",
+                    fontSize: "1.5rem",
+                    fontWeight: "800",
+                    color: "#191919",
+                  }}
+                >
+                No Notification
+                </Typography>
+            </ListItem> )
+            :
+            (notification?.filter((item)=> item.acc_id === currentUser.acc_id).map((item)=>(
+              <ListItem
+              key={item._id}
+                sx={{
+                  "&:hover": {
+                backgroundColor: "#E8E8E8", 
+
+              },
+              borderBottom: "1px solid #2e2e2e"
+                }}
+              
+              >
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",   
+                    height: "10vh",
+                    width: "100%",
+                  }}
+                >
+                  <Typography
+                    sx={{
+                      fontFamily: "Montserrat",
+                      fontSize: "0.9rem",
+                      fontWeight: "bold",
+                      color: "#191919",
+                    }}
+                  >
+                    {item.title.toUpperCase()}
+                  </Typography>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      flexDirection: "row",
+                      justifyContent: "flex-start",
+                      height: "6vh",
+                      width: "100%",
+                    }}
+                  >
+                  <Typography
+                    sx={{
+                      fontFamily: "Montserrat",
+                      fontSize: "0.75rem",
+                      fontWeight: "500",
+                      color: "#191919",
+                    }}
+                  >
+                    {item.message}
+                  </Typography>
+                  </Box>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      flexDirection: "row",
+                      justifyContent: "flex-end",
+                    }}
+                  >
+                    <Typography
+                      sx={{
+                        fontFamily: "Montserrat",
+                        fontSize: "0.5rem",
+                        fontWeight: "500",
+                        color: "#191919",
+                      }}
+                    >
+                      {new Date(item.date).toLocaleString("default", {
+                          month: "long",
+                          day: "numeric",
+                          year: "numeric",
+                        })}
+                    </Typography>
+                  </Box>
+                </Box>
+              </ListItem>
+            ))
+            )}
+          </List>
+          </ClickAwayListener>
+          </Collapse>
         <Stack
           direction="row"
           spacing={4}
@@ -301,12 +686,14 @@ const Navbar = () => {
           }}
         >
           <Button
+            onClick={handleNotificationClick}
             sx={{
-              // backgroundColor: "red",
-              color: "#F4F4F4",
-              // width:"60px",
-              // height:"50px",
+              backgroundColor:
+                notificationOpen ? "#D9D9D9" : "transparent",
+              color: notificationOpen ? "#191919" : "#F4F4F4",
               borderRadius: "15px",
+              borderBottomLeftRadius: notificationOpen ? "0px" : "15px",
+              borderBottomRightRadius: notificationOpen ? "0px" : "15px",
               "&:hover": {
                 backgroundColor: "#D9D9D9",
                 color: "#191919",
@@ -325,15 +712,14 @@ const Navbar = () => {
             />
           </Button>
           <Button
-            id="burger-btn"
-            aria-controls={burgerOpen ? "burger-menu" : undefined}
-            aria-haspopup="true"
-            aria-expanded={burgerOpen ? "true" : undefined}
             onClick={handleBurgerClick}
             sx={{
-              backgroundColor: burgerAnchorEl===null ? "transparent" : "#D9D9D9",
-              color: burgerAnchorEl===null ? "#F4F4F4" : "#191919",
+              backgroundColor:
+                burgerOpen ? "#D9D9D9" : "transparent",
+              color: burgerOpen ? "#191919" : "#F4F4F4",
               borderRadius: "15px",
+              borderBottomLeftRadius: burgerOpen ? "0px" : "15px",
+              borderBottomRightRadius: burgerOpen ? "0px" : "15px",
               "&:hover": {
                 backgroundColor: "#D9D9D9",
                 color: "#191919",
@@ -349,31 +735,6 @@ const Navbar = () => {
               }}
             />
           </Button>
-          <Menu
-            id="burger-menu"
-            anchorEl={burgerAnchorEl}
-            open={burgerOpen}
-            onClose={() => setBurgerAnchorEl(null)}
-            MenuListProps={{
-              "aria-labelledby": "burger-btn",
-            }}
-            PaperProps={{
-              style: {
-                width: "155px",
-                backgroundColor: "#D9D9D9",
-              },
-            }}
-            transformOrigin={{ horizontal: "right", vertical: "top" }}
-            anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
-          >
-            <MenuItem onClick={() => navigate('/settings')}>
-              Account Settings
-            </MenuItem>
-            {isAdmin ? null : <MenuItem onClick={() => {
-              navigate("/borrow-history")
-              }}>History</MenuItem>}
-            <MenuItem onClick={handleLogout}>Log Out</MenuItem>
-          </Menu>
         </Stack>
       </Box>
     </Box>

@@ -45,7 +45,7 @@ function stringAvatar(name) {
 }
 
 const History = () => {
-  const {setReaderUser, currentUser, isAdmin, setIsOnEdit, readerUser, isOnEdit, setCurrentPage} = useStore();
+  const {setReaderUser, currentUser, isAdmin, readerUser, isOnEdit, setCurrentPage} = useStore();
   const navigate = useNavigate();
   const { fetchAccount, account } = useAccount();
   const { fetchLogs, log } = useLog();
@@ -56,7 +56,6 @@ const History = () => {
 
   useEffect(() => {
     setReaderUser(null)
-    setIsOnEdit(false)
   },[readerUser,isOnEdit])
   useEffect(() => {
     if(!currentUser) navigate("/");
@@ -235,7 +234,6 @@ const History = () => {
                   <TableRow
                     onClick={() => {
                       setReaderUser(acc);
-                      setIsOnEdit(true);
                       navigate(`/reader`);
                     }}
                     key={acc.acc_id}
