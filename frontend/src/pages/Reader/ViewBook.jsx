@@ -1437,7 +1437,7 @@ const ViewBook = () => {
                   >
                     <Card
                       onClick={() => {
-                        navigate('/view-book');
+                        // navigate('/view-book');
                         setBookData(book);
                       }}
                       sx={{
@@ -1465,7 +1465,7 @@ const ViewBook = () => {
                     </Card>
                     <Typography
                     onClick={() => {
-                      navigate('/view-book');
+                      // navigate('/view-book');
                       setBookData(book);
                     }}
                       sx={{
