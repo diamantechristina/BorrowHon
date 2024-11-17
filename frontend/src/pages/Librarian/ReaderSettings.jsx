@@ -644,47 +644,13 @@ const ReaderSettings = () => {
                 >
                   {userLoggedIn?.phoneNumber}
                 </Typography>
-<<<<<<< HEAD
-                <FormControl focused={false} variant="standard">
-                  <Select
-                    value={suspendReason}
-                    onChange={(e) => setSuspendReason(e.target.value)}
-                    sx={{
-                      color: "#F4F4F4",
-                      fontSize: "1.5vw",
-                      fontFamily: "Arimo",
-                      width: "25vw",
-                      marginTop: "-1vh",
-                      "&.MuiInputBase-root": {
-                        "&:before": {
-                          borderBottom: "2px solid #FFFFFF", // Normal state border color
-                          marginBottom: "1vh",
-                        },
-                        "&:hover:before": {
-                          borderBottom: "2px solid #FFFFFF", // Hover state border color
-                        },
-                        "&:after": {
-                          borderBottom: "2px solid #00FF00", // Focus state border color
-                        },
-                      },
-                      ".MuiSelect-iconStandard": {
-                        color: "#F4F4F4",
-                      },
-                    }}
-                  >
-                    <MenuItem value="1">1</MenuItem>
-                    <MenuItem value="2">2</MenuItem>
-                    <MenuItem value="3">3</MenuItem>
-                    <MenuItem value="4">4</MenuItem>
-                    <MenuItem value="5">5</MenuItem>
-                  </Select>
-=======
+                
                 {suspendReason ? "" : <Typography
                   sx={{
                     position: "absolute",
                     fontSize: "1.5vw",
                     fontFamily: "Arimo",
-                    bottom: "17.5vh",
+                    bottom: "22vh",
                   }}
                 >Select a Suspend Reason</Typography>}
                 <FormControl 
@@ -697,16 +663,22 @@ const ReaderSettings = () => {
 
                   sx={{
                     color: "#F4F4F4",
-                    width: "25vw",
-                    textTransform: "none",
                     fontSize: "1.5vw",
                     fontFamily: "Arimo",
-                    ".MuiInputBase-root-MuiInput-root-MuiSelect-root": {
-                      borderColor: "1px solid #f4f4f4 !important",
-                    "&:before": {
-                      borderColor: "1px solid #f4f4f4 !important",
+                    width: "25vw",
+                    marginTop: "-1vh",
+                    "&.MuiInputBase-root": {
+                      "&:before": {
+                        borderBottom: "2px solid #FFFFFF", // Normal state border color
+                        marginBottom: "1vh",
+                      },
+                      "&:hover:before": {
+                        borderBottom: "2px solid #FFFFFF", // Hover state border color
+                      },
+                      "&:after": {
+                        borderBottom: "2px solid #00FF00", // Focus state border color
+                      },
                     },
-                  },
                     ".MuiSelect-iconStandard": {
                       color: "#F4F4F4",
                     },
@@ -719,7 +691,6 @@ const ReaderSettings = () => {
                     </MenuItem>
                   ))}
                 </Select>
->>>>>>> f274954 (update)
                 </FormControl>
               </Box>
             </Box>
@@ -911,11 +882,7 @@ const ReaderSettings = () => {
                   fontFamily: "Arimo",
                   marginLeft: "1vw",
                   width: "25vw",
-<<<<<<< HEAD
-                  backgroundColor: "red",
-=======
                   textWrap: "nowrap",
->>>>>>> f274954 (update)
                 }}
               >
                 {readerUser.suspendReason}
