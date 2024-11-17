@@ -112,7 +112,7 @@ const ViewBook = () => {
   };
 
   const relatedBooks = useMemo(() => {
-    return books.filter((book) => book._id !== bookData._id || (book.genre[0].includes(bookData.genre[0]) || bookData.genre[0].includes(book.genre[0]) ))
+    return books.filter((book) => book._id !== bookData._id && (book.genre[0].includes(bookData.genre[0]) || bookData.genre[0].includes(book.genre[0]) ))
   }, [books, bookData]);
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");

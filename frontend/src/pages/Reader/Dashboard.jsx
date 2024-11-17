@@ -514,7 +514,7 @@ const Dashboard = () => {
           </Typography>
           <Box
             sx={{
-              overflowX: "scroll",
+              overflowX: "overlay",
               "&::-webkit-scrollbar": {
                 display: "none",
               },

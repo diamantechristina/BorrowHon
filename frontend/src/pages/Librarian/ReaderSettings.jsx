@@ -21,13 +21,15 @@ import {
   Modal,
   Backdrop,
 } from "@mui/material";
-import { ArrowSmallLeft, Eye, EyeCrossed } from "react-flaticons";
+import { ArrowSmallLeft, Marker, Envelope } from "react-flaticons";
 import { useAccount } from "../../library/account";
 import "@flaticon/flaticon-uicons/css/all/all.rounded.css";
+import "@flaticon/flaticon-uicons/css/all/all.css";
 import { useNavigate, useLocation } from "react-router-dom";
 import "@fontsource/arimo/600.css";
 import "@fontsource/montserrat/600.css";
 import { useStore } from "../../library/store";
+import { set } from "mongoose";
 
 const editProfileReducer = (state, action) => {
   switch (action.type) {
@@ -117,15 +119,20 @@ const ReaderSettings = () => {
   useEffect(() => {
     if (!currentUser) {
       navigate("/");
-    } else if (currentPage !== "/list-of-readers" && currentPage !== "/borrow-history" && currentPage !== "/reader") {
+    } else if (
+      currentPage !== "/list-of-readers" &&
+      currentPage !== "/borrow-history" &&
+      currentPage !== "/reader"
+    ) {
       navigate(currentPage);
-    } else if(!readerUser || readerUser === null) currentPage==='/reader' ? navigate(-1) : navigate(currentPage);
+    } else if (!readerUser || readerUser === null)
+      currentPage === "/reader" ? navigate(-1) : navigate(currentPage);
     else {
       setDisplay(true);
     }
   }, [readerUser]);
 
-  console.log(display)
+  console.log(display);
 
   useEffect(() => {
     setCurrentPage(location.pathname);
@@ -193,7 +200,7 @@ const ReaderSettings = () => {
     setEditProfileOpen(false);
     if (userLoggedIn === readerUser) {
       return;
-    } 
+    }
     const { success, message } = await updateAccount(
       userLoggedIn._id,
       userLoggedIn,
@@ -202,7 +209,7 @@ const ReaderSettings = () => {
     setSnackbarMessage(message);
     setSnackbarSuccess(success);
     if (success) {
-      setReaderUser(userLoggedIn)
+      setReaderUser(userLoggedIn);
     }
     setOpenSnackbar(true);
   };
@@ -314,7 +321,7 @@ const ReaderSettings = () => {
             top: "50%",
             left: "50%",
             transform: "translate(-50%, -50%)",
-            width: "60vw",
+            width: "50vw",
             height: "80vh",
             p: 4,
             backgroundColor: "#225560",
@@ -324,105 +331,264 @@ const ReaderSettings = () => {
             alignItems: "center",
             color: "#F4F4F4",
             flexDirection: "column",
-            gap: "20px",
+            // gap: "20px",
           }}
         >
           <Typography
             sx={{
-              fontSize: "4vw",
+              fontSize: "3.5vw",
               fontWeight: "bold",
               fontFamily: "montserrat",
-              //   marginTop: "-5vh",
+              // marginTop: "-3vh",
             }}
           >
             SUSPEND ACCOUNT
           </Typography>
           <Box
             sx={{
-              width: "60vw",
-              height: "20vh",
-              backgroundColor: "yellow",
+              width: "50vw",
+              height: "100vh",
+              // backgroundColor: "yellow",
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
-              flexDirection: "row",
+              flexDirection: "column",
               // overflow: "auto",
             }}
           >
             <Box
               sx={{
-                width: "7vw",
-                height: "15vh",
-                backgroundColor: "blue",
-                borderRadius: "50%",
-              }}
-            ></Box>
-            <Box
-              sx={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "left",
+                // backgroundColor: "blue",
                 width: "50vw",
-                height: "inherit",
-                // backgroundColor: "red",
-                color: "#F4F4F4",
-                marginRight: "2vw",
+                gap: "30px",
               }}
             >
-              <Typography
-                sx={{
-                  fontSize: "2.5vw",
-                  fontWeight: "bold",
-                  fontFamily: "montserrat",
-                  textTransform: "uppercase",
-                }}
-              >
-                {/* {bookData?.title} */}title
-              </Typography>
-              <Typography
-                sx={{
-                  fontSize: "20px",
-                  // fontWeight: "bold",
-                  fontFamily: "montserrat",
-                }}
-              >
-                {/* {bookData?.genre} */}genre
-              </Typography>
-              <Typography
-                sx={{
-                  fontSize: "1.5vw",
-                  fontWeight: "bold",
-                  fontFamily: "montserrat",
-                }}
-              >
-                {/* {bookData?.author} */}author
-              </Typography>
-
+              {userLoggedIn?.profilepic !== undefined ? (
+                <Avatar
+                  alt={userLoggedIn?.firstName + " " + userLoggedIn?.lastName}
+                  src={userLoggedIn?.profilepic}
+                  sx={{
+                    width: "9rem",
+                    height: "9rem",
+                    marginLeft: "4rem",
+                  }}
+                />
+              ) : (
+                <Avatar
+                  {...stringAvatar(
+                    userLoggedIn?.firstName + " " + userLoggedIn?.lastName
+                  )}
+                  sx={{
+                    width: "9rem",
+                    height: "9rem",
+                    marginLeft: "4rem",
+                    fontFamily: "Montserrat",
+                    fontSize: "clamp(2.5rem, 5vw, 10rem)",
+                    fontWeight: "bold",
+                    backgroundColor: stringToColor(
+                      userLoggedIn?.firstName + " " + userLoggedIn?.lastName
+                    ),
+                  }}
+                />
+              )}
               <Box
                 sx={{
-                  width: "100%",
-                  height: "1px",
-                  backgroundColor: "#F4F4F4",
-                  my: "2vh",
-                }}
-              ></Box>
-              <Box
-                sx={{
-                  height: "20vh",
-                  overflowY: "scroll",
-                  // backgroundColor: "#F4F4F4",
-                  "&::-webkit-scrollbar": {
-                    display: "none", // Hide scrollbars for WebKit browsers
-                  },
-                  // backgroundImage:
-                  //   "linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0), rgba(0, 0, 0, 0), rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.5))",
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  // alignItems: "ce",
+                  // marginTop: "-6rem",
                 }}
               >
                 <Typography
                   sx={{
-                    textAlign: "justify",
+                    fontSize: "2.3vw",
+                    fontWeight: "bold",
                     fontFamily: "montserrat",
+                    //   marginTop: "-5vh",
                   }}
                 >
-                  {/* {bookData?.description} */}desc
+                  {userLoggedIn?.firstName + " " + userLoggedIn?.lastName}
                 </Typography>
+                <Typography
+                  sx={{
+                    fontFamily: "Arimo",
+                    fontSize: "1.5vw",
+                  }}
+                >{userLoggedIn?.username}</Typography>
+              </Box>
+            </Box>
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "center",
+                width: "50vw",
+                gap: "30px",
+                marginTop: "-3vh",
+              }}
+            >
+              <Box
+                sx={{
+                  width: "20vw",
+                  height: "45vh",
+                  // backgroundColor: "red",
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  gap: "40px",
+                  textAlign: "right",
+                }}
+              >
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "flex-end",
+                    // alignContent: "right",
+                    gap: "10px",
+                    height: "5vh",
+                    // backgroundColor: "green",
+                  }}
+                >
+                  <Marker size={30} />
+                  <Typography
+                    sx={{
+                      fontSize: "1.5vw",
+                      fontWeight: "bold",
+                      fontFamily: "Arimo",
+                    }}
+                  >
+                    Address
+                  </Typography>
+                </Box>
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "flex-end",
+                    // alignContent: "right",
+                    gap: "10px",
+                    height: "5vh",
+                    // backgroundColor: "green",
+                  }}
+                >
+                  <Envelope size={30} />
+                  <Typography
+                    sx={{
+                      fontSize: "1.5vw",
+                      fontWeight: "bold",
+                      fontFamily: "Arimo",
+                    }}
+                  >
+                    Email
+                  </Typography>
+                </Box>
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "flex-end",
+                    // alignContent: "right",
+                    gap: "10px",
+                    height: "5vh",
+                    // backgroundColor: "green",
+                  }}
+                >
+                  <Box
+                    sx={{
+                      objectFit: "contain",
+                      aspectRatio: "1/1",
+                      transform: "scaleX(-1)",
+                    }}
+                  >
+                    <i
+                      className="fi fi-rr-phone-flip"
+                      style={{
+                        color: "#f4f4f4",
+                        fontSize: "2vw",
+                      }}
+                    />
+                  </Box>
+                  <Typography
+                    sx={{
+                      fontSize: "1.5vw",
+                      fontWeight: "bold",
+                      fontFamily: "Arimo",
+                    }}
+                  >
+                    Phone Number
+                  </Typography>
+                </Box>
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "flex-end",
+                    // alignContent: "right",
+                    gap: "10px",
+                    height: "5vh",
+                    // backgroundColor: "green",
+                  }}
+                >
+                  <i
+                    className="fi fi-rr-ban"
+                    style={{
+                      color: "#f4f4f4",
+                      fontSize: "2vw",
+                    }}
+                  />
+                  <Typography
+                    sx={{
+                      fontSize: "1.5vw",
+                      fontWeight: "bold",
+                      fontFamily: "Arimo",
+                    }}
+                  >
+                    Suspend Reason
+                  </Typography>
+                </Box>
+              </Box>
+              <Box
+                sx={{
+                  width: "30vw",
+                  height: "45vh",
+                  // backgroundColor: "black",
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  // alignItems: "center",
+                  gap: "42px",
+                }}
+              >
+                <Typography
+                  sx={{
+                    fontSize: "1.5vw",
+                    fontFamily: "Arimo",
+                  }}
+                >{userLoggedIn?.address}</Typography>
+                <Typography
+                  sx={{
+                    fontSize: "1.5vw",
+                    fontFamily: "Arimo",
+                  }}
+                >{userLoggedIn?.email}</Typography>
+                <Typography
+                  sx={{
+                    fontSize: "1.5vw",
+                    fontFamily: "Arimo",
+                  }}
+                >{userLoggedIn?.phoneNumber}</Typography>
+                <Typography
+                  sx={{
+                    fontSize: "1.5vw",
+                    fontFamily: "Arimo",
+                    backgroundColor: "red"
+                  }}
+                >change to dropdown, as well as icon</Typography>
               </Box>
             </Box>
           </Box>
@@ -430,8 +596,8 @@ const ReaderSettings = () => {
             sx={{
               display: "flex",
               flexDirection: "row",
-              justifyContent: "center",
-              width: "60vw",
+              justifyContent: "space-between",
+              width: "30vw",
               gap: "10px",
             }}
           >
@@ -457,7 +623,7 @@ const ReaderSettings = () => {
               tabIndex={-1}
               // onClick={handleBorrowBook}
             >
-              Confirm
+              Suspend
             </Button>
             <Button
               variant="contained"
@@ -469,8 +635,8 @@ const ReaderSettings = () => {
                 border: "2px solid #f4f4f4",
                 color: "#F4F4F4",
                 "&:hover": {
-                  bgcolor: "#4dc995",
-                  color: "#F4F4F4",
+                  // bgcolor: "#4dc995",
+                  // color: "#F4F4F4",
                   boxShadow: "none",
                 },
                 fontFamily: "Montserrat",
@@ -480,7 +646,7 @@ const ReaderSettings = () => {
                 fontSize: "18px",
               }}
               tabIndex={-1}
-              // onClick={handleBorrowBook}
+              onClick={handleClose}
             >
               Cancel
             </Button>
@@ -500,7 +666,8 @@ const ReaderSettings = () => {
       >
         <Button
           variant="text"
-          onClick={() => {navigate(-1)
+          onClick={() => {
+            navigate(-1);
           }}
           sx={{
             margin: 0,
