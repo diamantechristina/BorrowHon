@@ -1,15 +1,17 @@
-import { Box, Typography, TextField, Button } from "@mui/material";
+import { Box, Typography, TextField, Button, Snackbar, SnackbarContent } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowSmallLeft } from "react-flaticons";
 import { useAccount } from "../library/account";
 import { useResetPassword } from "../library/resetpassword";
 import {useStore} from "../library/store";
+import { useSnackbar } from "../library/snackbar";
 const ForgotPassword = () => {
   const navigate = useNavigate();
   const {fetchAccount, account} = useAccount();
-  const {setAccountReset} = useResetPassword();
+  const {setAccountReset, accountReset} = useResetPassword();
   const {setCurrentPage} = useStore();
+  const {setOpenSnackbar, setSnackbarSuccess, setSnackbarMessage, openSnackbar, snackbarMessage, snackbarSuccess} = useSnackbar();
 
   useEffect(() => {
     setCurrentPage(location.pathname);
@@ -28,11 +30,31 @@ const ForgotPassword = () => {
   };
 
   const handleCheckAccount = () => {
+    if (username.trim() === "" || email.trim() === "") {
+      setSnackbarMessage("Please fill in all fields!");
+      setOpenSnackbar(true);
+      setSnackbarSuccess(false);
+      return
+    }
     for (let i = 0; i < account.length; i++) {
-      if (account[i].username === username && account[i].email === email) {
-        setAccountReset(account[i]);
-        navigate("/resetpassword");
+      if (account[i].username === username.trim()) {
+        if( account[i].email === email.trim()) {
+          setAccountReset(account[i]);
+          navigate("/resetpassword");
+          return
       }
+      else{
+        setSnackbarMessage("Username and email do not match!");
+        setOpenSnackbar(true);
+        setSnackbarSuccess(false);
+        return
+      }
+    }
+  }
+  if(!accountReset){
+    setSnackbarMessage("Account does not exist!");
+    setOpenSnackbar(true);
+    setSnackbarSuccess(false);
     }
   }
   return (
@@ -48,6 +70,21 @@ const ForgotPassword = () => {
         backgroundRepeat: "no-repeat",
       }}
     >
+      <Snackbar
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+        open={openSnackbar}
+        autoHideDuration={2000}
+        onClose={() => setOpenSnackbar(false)}
+      >
+        <SnackbarContent
+          message={snackbarMessage}
+          style={{
+            backgroundColor:
+              snackbarSuccess ? "green" : "red",
+            justifyContent: "center",
+          }}
+        />
+      </Snackbar>
       <Box
         sx={{
           width: "43vw",

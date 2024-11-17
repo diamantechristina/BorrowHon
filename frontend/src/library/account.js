@@ -6,31 +6,56 @@ export const useAccount = create((set) => ({
 
   createAccount: async (newAccount) => {
     if (
-      !newAccount.firstName ||
-      !newAccount.lastName ||
-      !newAccount.address ||
-      !newAccount.phoneNumber ||
-      !newAccount.username ||
-      !newAccount.email ||
-      !newAccount.password
+      !newAccount.firstName.trim() ||
+      !newAccount.lastName.trim() ||
+      !newAccount.address.trim() ||
+      !newAccount.phoneNumber.trim() ||
+      !newAccount.username.trim() ||
+      !newAccount.email.trim() ||
+      !newAccount.password.trim()
     ) {
-      return { success: false, message: "Please fill in all fields." };
+      return { success: false, message: "Please fill in all fields!" };
     }
     const checkerRes = await fetch("/api/accounts");
     const checkerData = await checkerRes.json();
 
     const existingAccount = checkerData.data.find((account) => {
       return (
-        account.email === newAccount.email ||
-        account.username === newAccount.username ||
-        account.phoneNumber === newAccount.phoneNumber
+        account.username === newAccount.username && 
+        account.email === newAccount.email
       );
     });
 
     if (existingAccount) {
       return {
         success: false,
-        message: "Email or username or phone number already exists.",
+        message: "Username and email already taken!",
+      };
+    }
+
+    const checkUsername = checkerData.data.find((account) => {
+      return (
+        account.username === newAccount.username
+      );
+    });
+
+    if (checkUsername) {
+      return {
+        success: false,
+        message: "Username already taken!",
+      };
+    }
+
+    const checkEmail = checkerData.data.find((account) => {
+      return (
+        account.email === newAccount.email
+      );
+    });
+
+    if (checkEmail) {
+      return {
+        success: false,
+        message: "Email already taken!",
       };
     }
 
@@ -45,7 +70,7 @@ export const useAccount = create((set) => ({
     set((state) => ({
       accounts: [...state.accounts, data.data],
     }));
-    return { success: true, message: "Registration Successful." };
+    return { success: true, message: "Registration Successful!" };
   },
   updateAccount: async (id, updatedAccount, usernameEdited) => {
     const checkerRes = await fetch("/api/accounts");

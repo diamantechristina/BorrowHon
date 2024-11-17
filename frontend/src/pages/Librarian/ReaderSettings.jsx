@@ -117,7 +117,7 @@ const ReaderSettings = () => {
   useLayoutEffect(() => {
     if (!currentUser) {
       navigate("/");
-    } else if (currentPage !== "/list-of-readers") {
+    } else if (currentPage !== "/list-of-readers" && currentPage !== "/borrow-history") {
       navigate(-1);
     } else {
       setDisplay(true);

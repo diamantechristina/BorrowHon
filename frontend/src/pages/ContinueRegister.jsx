@@ -1,15 +1,16 @@
 import React, { useState } from 'react'
 import { useNavigate, useLocation } from "react-router-dom";
-import { Box, Typography, TextField, Button, InputAdornment } from "@mui/material";
+import { Box, Typography, TextField, Button, InputAdornment, Snackbar, SnackbarContent } from "@mui/material";
 import { Link } from "react-router-dom";
 import { ArrowSmallLeft, EyeCrossed, Eye } from "react-flaticons";
 import { useAccount } from "../library/account.js";
-// import { use } from 'express/lib/router';
- 
+import { useSnackbar } from '../library/snackbar.js'; 
 
 const ContinueRegister = () => {
     const navigate = useNavigate();
     const location = useLocation();
+  const {setOpenSnackbar, setSnackbarSuccess, setSnackbarMessage, openSnackbar, snackbarMessage, snackbarSuccess} = useSnackbar();
+
     const newAccount = location.state;
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -22,12 +23,16 @@ const ContinueRegister = () => {
     })
     
 
-    const { createAccount } = useAccount();
+    const { createAccount} = useAccount();
     
     const handleAddAccount = async () => {
       const { success, message } = await createAccount(newAccountState);
-      console.log("Success:", success);
-      console.log("Message:", message);
+      setOpenSnackbar(true);
+      setSnackbarMessage(message);
+      setSnackbarSuccess(success);
+      if (success) {
+        navigate("/");
+      }
     };
 
     const handleInputChange = (event) => {
@@ -58,7 +63,21 @@ const ContinueRegister = () => {
         padding: 0,
       }}
     >
-      
+      <Snackbar
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+        open={openSnackbar}
+        autoHideDuration={2000}
+        onClose={() => setOpenSnackbar(false)}
+      >
+        <SnackbarContent
+          message={snackbarMessage}
+          style={{
+            backgroundColor:
+              snackbarSuccess ? "green" : "red",
+            justifyContent: "center",
+          }}
+        />
+      </Snackbar>
       <Box
         sx={{
           backgroundColor: "#225560",
@@ -353,10 +372,7 @@ const ContinueRegister = () => {
               textTransform: "none",
               
             }}
-            onClick={() => {
-              handleAddAccount();
-              console.log(newAccountState);
-            }}
+            onClick={handleAddAccount}
           >
             Continue
           </Button>

@@ -14,8 +14,10 @@ import {
   Collapse,
   ClickAwayListener
 } from "@mui/material";
+import "@flaticon/flaticon-uicons/css/all/all.css";
+
 import React, { useState, useEffect, useCallback } from "react";
-import { Search, Filter, Bell, MenuBurger } from "react-flaticons";
+import { Search, Filter, Bell, MenuBurger, Circle } from "react-flaticons";
 import { useNavigate } from "react-router-dom";
 import "@fontsource/arimo";
 import { useLog } from "../library/log";
@@ -28,7 +30,7 @@ import "@fontsource/montserrat/700.css";
 const Navbar = () => {
   const navigate = useNavigate();
   const { userLog, currentUser, isAdmin, setNull, setBookData } = useStore();
-  const { fetchNotifications, notification } = useNotification();
+  const { fetchNotifications, notification, updateNotification } = useNotification();
   const { searchedBook, setSearchedBook, filterType, setFilterType } = useSearch();
   const [filterOpen, setFilterOpen] = useState(false);
   const [selectedFilter, setSelectedFilter] = useState("Filter");
@@ -72,7 +74,7 @@ const Navbar = () => {
     };
     const { success, message } = await updateLog(updatedLog._id, updatedLog);
     console.log(success, message);
-    await navigate("/");
+    navigate("/");
     setNull();
   };
 
@@ -90,7 +92,10 @@ const Navbar = () => {
     setBurgerOpen(false);
   };
   const handleNotificationClick = () => {
+    notification.map(async (notification) => await updateNotification(notification._id, {...notification,status:"read"}))
+
     setNotificationOpen(!notificationOpen);
+
   }
   const handleBurgerClick = () => {
     setBurgerOpen(!burgerOpen);
@@ -692,6 +697,7 @@ const Navbar = () => {
           }}
         >
           <Button
+          
             onClick={handleNotificationClick}
             sx={{
               backgroundColor:
@@ -706,6 +712,19 @@ const Navbar = () => {
               },
             }}
           >
+              {notification?.filter((item)=> item.status === "unread").length > 0 ?
+              <i
+              className="fi fi-ss-circle"
+              style={{
+                color: "#FF4444",
+                fontSize: ".75vw",
+                position: "absolute",
+                top: ".3vh",
+                right: "1.1vw",
+              }}
+            />
+            :""  
+            }
             <Bell
               size={40}
               style={{
