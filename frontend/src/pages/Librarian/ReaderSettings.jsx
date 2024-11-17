@@ -930,13 +930,38 @@ const ReaderSettings = () => {
                 // backgroundColor: "red",
               }}
             >
-              <i
-                className="fi fi-rr-ban"
-                style={{
-                  color: "#f4f4f4",
-                  fontSize: "2vw",
-                }}
-              />
+              <Box
+                    sx={{
+                      display: "flex",
+                      flexDirection: "row",
+                      justifyContent: "flex-end",
+                      // alignContent: "right",
+                      height: "5vh",
+                    }}
+                  >
+                    
+                  <i
+                    className="fi fi-rr-user"
+                    style={{
+                      color: "#f4f4f4",
+                      fontSize: "1.75vw",
+                    }}
+                  >
+                    
+                    <i
+                    className="fi fi-br-ban"
+                    style={{
+                      color: "#f4f4f4",
+                      fontSize: "1vw",
+                      marginTop: "1.75vh",
+                      marginLeft: "-.75vw",
+                      backgroundColor: "#225560",
+                      borderRadius: "50%",
+                    }}
+                  />
+                  </i>
+                  
+                  </Box>
 
               <Typography
                 sx={{

@@ -716,7 +716,7 @@ const Navbar = () => {
               },
             }}
           >
-              {notification?.filter((item)=> item.acc_id === currentUser.acc_id && item.status === "unread").length > 0 && !unreadOpen ?
+              {notification?.filter((item)=> item.acc_id === currentUser?.acc_id && item.status === "unread").length > 0 && !unreadOpen ?
               <i
               className="fi fi-ss-circle"
               style={{

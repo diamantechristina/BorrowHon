@@ -1,5 +1,5 @@
 import _, { toInteger } from "lodash";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useRef, useEffect, useMemo, useState } from "react";
 import {
   Box,
   Button,
@@ -24,33 +24,41 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { Navigate } from "react-router-dom";
 import Login from "../Login.jsx";
 import { useStore } from "../../library/store.js";
-import { useSearch } from "../../library/search.js";
-import { useNotification } from "../../library/notification.js";
+import { useAccount } from "../../library/account.js";
 import "@fontsource/montserrat/500.css";
 import "@fontsource/montserrat/700.css";
 import { useHistory } from "../../library/history.js";
-import { set } from "mongoose";
+import { useSnackbar } from "../../library/snackbar.js";
 
 const Dashboard = () => {
   const {
     currentUser,
     setBookData,
     bookData,
+    setCurrentUser,
     isFirstLogin,
     setIsFirstLogin,
     setIsOnEdit,
     setCurrentPage,
   } = useStore();
-  const { fetchNotifications, notification } = useNotification();
   const { fetchHistory, history } = useHistory();
-  console.log("currentUser: ", currentUser);
-  useEffect(() => {
-    fetchNotifications();
-  }, [fetchNotifications, currentUser]);
+  const { fetchAccount,fetchAccounts, account } = useAccount();
 
+  const { openSnackbar, setOpenSnackbar, snackbarMessage, snackbarSuccess } = useSnackbar();
+  
   useEffect(() => {
     fetchHistory();
-  }, [fetchHistory, currentUser]);
+  }, [fetchHistory]);
+
+  useEffect(() => {
+    fetchAccounts();
+  }, [fetchAccounts]);
+
+  useEffect(() => {
+    if(account) setCurrentUser(account.find((acc) => acc.acc_id === currentUser.acc_id));
+  },[account]);
+
+  console.log("current user: ", currentUser);
 
   useEffect(() => {
     setCurrentPage(location.pathname);
@@ -67,7 +75,6 @@ const Dashboard = () => {
     }
   }, []);
 
-  console.log("currentUser: ", currentUser);
   const { fetchBook, books } = useBook();
   useEffect(() => {
     fetchBook();
@@ -83,6 +90,7 @@ const Dashboard = () => {
     setOpenModal(true);
   };
   const handleCloseModal = () => {
+    setIsFirstLogin(false);
     setOpenModal(false);
   };
 
@@ -159,9 +167,9 @@ const Dashboard = () => {
     >
       <Snackbar
         anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-        open={isFirstLogin}
+        open={openSnackbar}
         autoHideDuration={1000}
-        onClose={() => setIsFirstLogin(false)}
+        onClose={() => setOpenSnackbar(false)}
       >
         <SnackbarContent
           message="Logged In Successfully!"
@@ -176,7 +184,7 @@ const Dashboard = () => {
         <Modal
           aria-labelledby="unstyled-modal-title"
           aria-describedby="unstyled-modal-description"
-          open={openModal}
+          open={isFirstLogin}
           onClose={handleCloseModal}
           // slots={{ backdrop: StyledBackdrop }}
           BackdropComponent={Backdrop}

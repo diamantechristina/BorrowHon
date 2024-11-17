@@ -96,6 +96,7 @@ const Login = () => {
         setCurrentUser(acc);
         setLog(log);
         setIsAdmin(acc.isAdmin)
+        setOpenSnackbar(true);
         navigate("/dashboard");
         
         return;
