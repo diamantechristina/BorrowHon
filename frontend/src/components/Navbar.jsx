@@ -92,7 +92,7 @@ const Navbar = () => {
     setBurgerOpen(false);
   };
   const handleNotificationClick = () => {
-    notification.map(async (notification) => await updateNotification(notification._id, {...notification,status:"read"}))
+    notification?.filter((item)=> item.acc_id === currentUser.acc_id).map(async (notification) => await updateNotification(notification._id, {...notification,status:"read"}))
 
     setNotificationOpen(!notificationOpen);
 
@@ -712,7 +712,7 @@ const Navbar = () => {
               },
             }}
           >
-              {notification?.filter((item)=> item.status === "unread").length > 0 ?
+              {notification?.filter((item)=> item.acc_id === currentUser.acc_id && item.status === "unread").length > 0 ?
               <i
               className="fi fi-ss-circle"
               style={{
