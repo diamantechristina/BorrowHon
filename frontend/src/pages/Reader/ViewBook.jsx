@@ -1,5 +1,11 @@
 import { set } from "mongoose";
-import React, { useState, useEffect, useMemo, useRef, useCallback } from "react";
+import React, {
+  useState,
+  useEffect,
+  useMemo,
+  useRef,
+  useCallback,
+} from "react";
 import {
   Modal,
   Backdrop,
@@ -38,7 +44,6 @@ const ViewBook = () => {
     fetchBook();
   }, [fetchBook]);
 
-
   const togglePasswordVisibility = () => {
     setShowPassword((prev) => !prev);
   };
@@ -63,7 +68,6 @@ const ViewBook = () => {
     fetchHistory();
   }, [fetchHistory, history]);
 
-
   // Locate the specific history entry that matches the current book and user
   const currentBookHistory = useMemo(() => {
     return history
@@ -74,7 +78,6 @@ const ViewBook = () => {
       )
       .slice(-1)[0];
   }, [history, bookData, currentUser]);
-
 
   //get book dat
   useEffect(() => {
@@ -112,7 +115,12 @@ const ViewBook = () => {
   };
 
   const relatedBooks = useMemo(() => {
-    return books.filter((book) => book._id !== bookData._id && (book.genre[0].includes(bookData.genre[0]) || bookData.genre[0].includes(book.genre[0]) ))
+    return books.filter(
+      (book) =>
+        book._id !== bookData._id &&
+        (book.genre[0].includes(bookData.genre[0]) ||
+          bookData.genre[0].includes(book.genre[0]))
+    );
   }, [books, bookData]);
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
@@ -192,7 +200,6 @@ const ViewBook = () => {
       }
     }
   };
-  
 
   useEffect(() => {
     document.addEventListener("keypress", handleKeyPress);
@@ -562,6 +569,23 @@ const ViewBook = () => {
                       gap: "20px",
                     }}
                   >
+                    <Box
+                      sx={{
+                        display: "flex",
+                        justifyContent: "flex-end",
+                        width: "100%",
+                        height: "0vh",
+                        marginTop: "-3.5vh",
+                        marginRight: "-3.5vw",
+                        // backgroundColor: "red",
+                      }}
+                    >
+                      <i
+                        class="fi fi-bs-cross-small"
+                        style={{ fontSize: "2vw", cursor: "pointer" }}
+                        onClick={handleClose}
+                      ></i>
+                    </Box>
                     <Typography
                       sx={{
                         fontSize: "4vw",
@@ -801,6 +825,23 @@ const ViewBook = () => {
                       gap: "20px",
                     }}
                   >
+                    <Box
+                      sx={{
+                        display: "flex",
+                        justifyContent: "flex-end",
+                        width: "100%",
+                        height: "0vh",
+                        marginTop: "-3.5vh",
+                        marginRight: "-3.5vw",
+                        // backgroundColor: "red",
+                      }}
+                    >
+                      <i
+                        class="fi fi-bs-cross-small"
+                        style={{ fontSize: "2vw", cursor: "pointer" }}
+                        onClick={handleClose}
+                      ></i>
+                    </Box>
                     <Typography
                       sx={{
                         fontSize: "4vw",
@@ -1083,6 +1124,23 @@ const ViewBook = () => {
                       gap: "20px",
                     }}
                   >
+                    <Box
+                      sx={{
+                        display: "flex",
+                        justifyContent: "flex-end",
+                        width: "100%",
+                        height: "0vh",
+                        marginTop: "-3.5vh",
+                        marginRight: "-3.5vw",
+                        // backgroundColor: "red",
+                      }}
+                    >
+                      <i
+                        class="fi fi-bs-cross-small"
+                        style={{ fontSize: "2vw", cursor: "pointer" }}
+                        onClick={handleClose}
+                      ></i>
+                    </Box>
                     <Typography
                       sx={{
                         fontSize: "4vw",
@@ -1389,9 +1447,9 @@ const ViewBook = () => {
                       flexDirection: "column",
                       marginY: "1.5vh",
                     }}
-                  > 
+                  >
                     <Card
-                      sx={{ 
+                      sx={{
                         width: "90%",
                         height: "20vh",
                         borderRadius: "20px",
@@ -1399,11 +1457,11 @@ const ViewBook = () => {
                         justifyContent: "center",
                         alignItems: "center",
                         flexDirection: "column",
-                      }}    
+                      }}
                     >
-                      <CardMedia  
+                      <CardMedia
                         component="img"
-                        image={book.coverImage}  
+                        image={book.coverImage}
                         alt={book.title}
                         sx={{
                           borderRadius: "20px",
@@ -1426,7 +1484,6 @@ const ViewBook = () => {
                     >
                       {book.title}
                     </Typography>
-                    
                   </Box>
                 ))}
               </Box>

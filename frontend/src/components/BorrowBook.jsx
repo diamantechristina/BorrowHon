@@ -62,6 +62,19 @@ const BorrowBook = ({pageTitle, open, setOpen, backgroundImageUrl, handleHover, 
                     // overflow: "auto",
                 }}
             >
+                <Box
+                    sx={{
+                        display: "flex",
+                        justifyContent: "flex-end",
+                        width: "100%",
+                        height: "0vh",
+                        marginTop: "-3.5vh",
+                        marginRight: "-3.5vw",
+                        // backgroundColor: "red",
+                    }}
+                >
+                    <i class="fi fi-bs-cross-small" style={{ fontSize: "2vw", cursor: "pointer" }} onClick={handleClose}></i>
+                </Box>
                 <Typography
                     sx={{
                         fontSize: "4vw",
