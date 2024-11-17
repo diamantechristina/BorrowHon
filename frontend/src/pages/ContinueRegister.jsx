@@ -286,6 +286,7 @@ const ContinueRegister = () => {
                       marginRight: "15px",
                       minWidth: 0,
                     }}
+                    tabIndex={-1}
                   >
                     {showPassword ? <Eye size={17} /> : <EyeCrossed size={17} />}
                   </Button>
@@ -342,6 +343,7 @@ const ContinueRegister = () => {
                       marginRight: "15px",
                       minWidth: 0,
                     }}
+                    tabIndex={-1}
                   >
                     {showConfirmPassword ? (
                       <Eye size={17} />

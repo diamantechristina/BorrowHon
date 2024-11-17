@@ -260,8 +260,8 @@ const AccountSettings = () => {
           top: 0,
           left: 0,
           width: "100vw",
-          height: "5vh",
-          backgroundColor: "red",
+          height: "15vh",
+          // backgroundColor: "red",
         }}
       >
         <Button
@@ -296,12 +296,12 @@ const AccountSettings = () => {
           sx={{
             margin: 0,
             position: "absolute",
-            left: 75,
-            top: 10,
+            left: 110,
+            top: 23,
             color: "#E8E8E8",
             fontFamily: "Montserrat",
-            fontWeight: "bold",
-            fontSize: "clamp(1.25rem, 3vw, 2rem)",
+            fontWeight: "700",
+            fontSize: "clamp(2vw, 2.5vw, 2.5vw)",
           }}
         >
           ACCOUNT SETTINGS

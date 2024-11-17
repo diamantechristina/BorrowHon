@@ -172,12 +172,14 @@ const History = () => {
         </Button>
         <Typography
           sx={{
-            marginTop: "5px",
-            marginLeft: "110px",
-            fontSize: "35px",
+            margin: 0,
+            position: "absolute",
+            left: 110,
+            top: 23,
+            color: "#E8E8E8",
+            fontFamily: "Montserrat",
             fontWeight: "bold",
-            color: "#f4f4f4",
-            fontFamily: "Arimo",
+            fontSize: "clamp(2vw, 2.5vw, 2.5vw)",
           }}
         >
           LIST OF READERS
@@ -188,7 +190,7 @@ const History = () => {
           placeholder="Search"
           InputLabelProps={{ required: false }}
           sx={{
-            marginRight: "100px",
+            marginLeft: "63vw",
             "& .MuiOutlinedInput-root": {
               width: "clamp(20vw, 30vw, 30vw)",
               // width: "42.2vw",

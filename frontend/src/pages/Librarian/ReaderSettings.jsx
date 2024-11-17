@@ -516,12 +516,12 @@ const ReaderSettings = () => {
               color: "#FFFFFF",
             },
             position: "absolute",
-            left: 10,
+            left: 30,
             top: 15,
           }}
         >
           <ArrowSmallLeft
-            size={"3rem"}
+            size={"5vw"}
             style={{
               marginTop: "-10px",
               marginLeft: "-15px",
@@ -534,12 +534,12 @@ const ReaderSettings = () => {
           sx={{
             margin: 0,
             position: "absolute",
-            left: 75,
-            top: 10,
+            left: 110,
+            top: 23,
             color: "#E8E8E8",
             fontFamily: "Montserrat",
-            fontWeight: "bold",
-            fontSize: "clamp(1.25rem, 3vw, 2rem)",
+            fontWeight: "700",
+            fontSize: "clamp(2vw, 2.5vw, 2.5vw)",
           }}
         >
           ACCOUNT SETTINGS
