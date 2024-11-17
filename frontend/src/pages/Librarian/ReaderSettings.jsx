@@ -142,7 +142,6 @@ const ReaderSettings = () => {
     }
   }, [readerUser]);
 
-
   useEffect(() => {
     setCurrentPage(location.pathname);
   }, []);
@@ -345,10 +344,16 @@ const ReaderSettings = () => {
           }}
         >
           <i
-          class="fi fi-bs-cross-small"
-          style={{ fontSize: "2vw", cursor: "pointer", position: "absolute", top: "1vh", right: "1vh" }}
-          onClick={handleClose}
-        ></i>
+            class="fi fi-bs-cross-small"
+            style={{
+              fontSize: "2vw",
+              cursor: "pointer",
+              position: "absolute",
+              top: "1vh",
+              right: "1vh",
+            }}
+            onClick={handleClose}
+          ></i>
           <Typography
             sx={{
               fontSize: "3.5vw",
@@ -423,6 +428,7 @@ const ReaderSettings = () => {
                     fontSize: "2.3vw",
                     fontWeight: "bold",
                     fontFamily: "montserrat",
+                    fontColor: "#ECECEC",
                     //   marginTop: "-5vh",
                   }}
                 >
@@ -456,7 +462,7 @@ const ReaderSettings = () => {
                   display: "flex",
                   flexDirection: "column",
                   justifyContent: "center",
-                  gap: "40px",
+                  gap: "20px",
                   textAlign: "right",
                 }}
               >
@@ -477,6 +483,7 @@ const ReaderSettings = () => {
                       fontSize: "1.5vw",
                       fontWeight: "bold",
                       fontFamily: "Arimo",
+                      fontColor: "#ECECEC",
                     }}
                   >
                     Address
@@ -499,6 +506,7 @@ const ReaderSettings = () => {
                       fontSize: "1.5vw",
                       fontWeight: "bold",
                       fontFamily: "Arimo",
+                      fontColor: "#ECECEC",
                     }}
                   >
                     Email
@@ -535,6 +543,7 @@ const ReaderSettings = () => {
                       fontSize: "1.5vw",
                       fontWeight: "bold",
                       fontFamily: "Arimo",
+                      fontColor: "#ECECEC",
                     }}
                   >
                     Phone Number
@@ -563,6 +572,7 @@ const ReaderSettings = () => {
                       fontSize: "1.5vw",
                       fontWeight: "bold",
                       fontFamily: "Arimo",
+                      fontColor: "#ECECEC",
                     }}
                   >
                     Suspend Reason
@@ -578,7 +588,7 @@ const ReaderSettings = () => {
                   flexDirection: "column",
                   justifyContent: "center",
                   // alignItems: "center",
-                  gap: "42px",
+                  gap: "22px",
                 }}
               >
                 <Typography
@@ -602,51 +612,42 @@ const ReaderSettings = () => {
                     fontSize: "1.5vw",
                     fontFamily: "Arimo",
                   }}
-                  >
+                >
                   {userLoggedIn?.phoneNumber}
                 </Typography>
-                <FormControl 
-                  focused= {false}
-                variant="standard">
-                {/* <InputLabel
-                  sx={{
-                    color: "#F4F4F4",
-                    ffontSize: "1.5vw",
-                    fontFamily: "Arimo",
-                    textTransform: "none",
-                    fontSize: "18px",
-                  }}
-                >Suspend Reason</InputLabel> */}
-                <Select
-                  value={suspendReason}
-                  label="Suspend Reason"
-                  onChange={(e) => setSuspendReason(e.target.value)}
-
-                  sx={{
-                    color: "#F4F4F4",
-                    fontFamily: "Montserrat",
-                    fontWeight: "bold",
-                    boxShadow: "none",
-                    textTransform: "none",
-                    fontSize: "18px",
-                    ".MuiInput-root": {
-                      borderColor: "1px solid #f4f4f4 !important",
-                    ":before": {
-                      borderColor: "1px solid #f4f4f4 !important",
-                    },
-                  },
-                    ".MuiSelect-iconStandard": {
+                <FormControl focused={false} variant="standard">
+                  <Select
+                    value={suspendReason}
+                    onChange={(e) => setSuspendReason(e.target.value)}
+                    sx={{
                       color: "#F4F4F4",
-                    },
-                  }}
-
-                >
-                  <MenuItem value="1">1</MenuItem>
-                  <MenuItem value="2">2</MenuItem>
-                  <MenuItem value="3">3</MenuItem>
-                  <MenuItem value="4">4</MenuItem>
-                  <MenuItem value="5">5</MenuItem>
-                </Select>
+                      fontSize: "1.5vw",
+                      fontFamily: "Arimo",
+                      width: "25vw",
+                      marginTop: "-1vh",
+                      "&.MuiInputBase-root": {
+                        "&:before": {
+                          borderBottom: "2px solid #FFFFFF", // Normal state border color
+                          marginBottom: "1vh",
+                        },
+                        "&:hover:before": {
+                          borderBottom: "2px solid #FFFFFF", // Hover state border color
+                        },
+                        "&:after": {
+                          borderBottom: "2px solid #00FF00", // Focus state border color
+                        },
+                      },
+                      ".MuiSelect-iconStandard": {
+                        color: "#F4F4F4",
+                      },
+                    }}
+                  >
+                    <MenuItem value="1">1</MenuItem>
+                    <MenuItem value="2">2</MenuItem>
+                    <MenuItem value="3">3</MenuItem>
+                    <MenuItem value="4">4</MenuItem>
+                    <MenuItem value="5">5</MenuItem>
+                  </Select>
                 </FormControl>
               </Box>
             </Box>
@@ -744,11 +745,17 @@ const ReaderSettings = () => {
           }}
         >
           <i
-          class="fi fi-bs-cross-small"
-          style={{ fontSize: "2vw", cursor: "pointer", position: "absolute", top: "1vh", right: "1vh" }}
-          onClick={handleClose}
-        ></i>
-          
+            class="fi fi-bs-cross-small"
+            style={{
+              fontSize: "2vw",
+              cursor: "pointer",
+              position: "absolute",
+              top: "1vh",
+              right: "1vh",
+            }}
+            onClick={handleClose}
+          ></i>
+
           <Typography
             sx={{
               fontSize: "3vw",
@@ -795,7 +802,9 @@ const ReaderSettings = () => {
                   fontFamily: "Arimo",
                   marginLeft: "20px",
                 }}
-              >{userLoggedIn?.username}</Typography>
+              >
+                {userLoggedIn?.username}
+              </Typography>
             </Box>
             <Box
               sx={{
@@ -829,7 +838,7 @@ const ReaderSettings = () => {
                   fontFamily: "Arimo",
                   marginLeft: "20px",
                   width: "25vw",
-                  backgroundColor: "red"
+                  backgroundColor: "red",
                 }}
               >
                 get suspend reason from account collection
