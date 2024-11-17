@@ -1,3 +1,4 @@
+import _, { toInteger } from 'lodash';
 import React, { useEffect, useMemo, useState } from "react";
 import {
   Box,
@@ -26,17 +27,22 @@ import { useSearch } from "../../library/search.js";
 import { useNotification } from "../../library/notification.js";
 import "@fontsource/montserrat/500.css"
 import "@fontsource/montserrat/700.css"
+import { useHistory } from "../../library/history.js";
 import { set } from "mongoose";
 
 const Dashboard = () => {
   const { currentUser, setBookData, bookData, isFirstLogin, setIsFirstLogin, setIsOnEdit, setCurrentPage } = useStore();
-  const { searchedBook, filterType } = useSearch();
   const { fetchNotifications, notification } = useNotification();
-
+  const { fetchHistory, history } = useHistory();
   console.log("currentUser: ", currentUser);
   useEffect(() => {
     fetchNotifications();
   }, [fetchNotifications]);
+
+  useEffect(() => {
+    fetchHistory();
+  }, [fetchHistory]);
+
 
   useEffect(() => {
     setCurrentPage(location.pathname)
@@ -72,6 +78,13 @@ const Dashboard = () => {
     setOpenModal(false);
   };
 
+
+
+ const mostPopularBooks = _.take(_.orderBy(Object.keys(_.countBy(history, 'book_id')), (key) => _.countBy(history, 'book_id')[key], 'desc'), 5)
+   .map((bookId) => {
+     return books.find((book) => book.book_id === toInteger(bookId));
+   });
+
   useEffect(() => {
     if (books.length > 0) {
       const combinedData = books.map((book) => ({
@@ -102,7 +115,7 @@ const Dashboard = () => {
 
   const [hoverRecentBook, setHoverRecentBook] = useState(false);
 
-  const slides = fetchedBooks.slice(0, 5).map((book, index) => ({
+  const slides = mostPopularBooks.slice(0, 5).map((book, index) => ({
     key: uuidv4(), // Generate a unique key for each slide
     content: (
       <img
@@ -110,7 +123,7 @@ const Dashboard = () => {
           setGoToSlide(index); // Set the active slide index
           setCurrentIndex(index); // Update the current book index
         }}
-        src={book.coverImage}
+        src={book?.coverImage}
         alt={`Slide ${index}`} // Use index for alt text
         style={{ borderRadius: "10px" }} // Add style if needed
       />
@@ -527,7 +540,6 @@ const Dashboard = () => {
               sx={{
                 width: "100vw",
                 height: "58vh",
-                // backgroundColor:"yellow",
                 display: "flex",
                 justifyContent: "center",
                 // marginLeft: "17vw",
@@ -536,7 +548,7 @@ const Dashboard = () => {
                 gap: "5vw",
               }}
             >
-              {fetchedBooks.slice(0, 5).map((book, index) => (
+              {mostPopularBooks.slice(0, 5).map((book, index) => (
                 <Card
                   onMouseOver={() => setHoverPopularBook(book.title)}
                   onMouseOut={() => setHoverPopularBook(null)}
@@ -628,7 +640,7 @@ const Dashboard = () => {
           </Typography>
           <Box
             sx={{
-              overflowX: "scroll",
+              overflowX: "auto",
               "&::-webkit-scrollbar": {
                 display: "none",
               },
@@ -636,25 +648,21 @@ const Dashboard = () => {
               flexDirection: "column",
               justifyContent: "center",
               alignItems: "center",
-              width: "87vw",
-              marginLeft: "6.5vw",
               // borderRadius: "50px",
             }}
           >
             <Box
               sx={{
-                // width: "100vw",
+                width: "100vw",
                 height: "58vh",
-                // backgroundColor:"yellow",
                 display: "flex",
                 justifyContent: "center",
-                marginLeft: "35vw",
                 alignItems: "center",
                 flexDirection: "row",
                 gap: "5vw",
               }}
             >
-              {bookCreation.slice(0, fetchedBooks.length).map((book, index) => (
+              {bookCreation.slice(0, 5).map((book, index) => (
                 <Card
                   onMouseOver={() => setHoverRecentBook(book.title)}
                   onMouseOut={() => setHoverRecentBook(null)}
