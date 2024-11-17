@@ -4,6 +4,7 @@ import { Modal, Backdrop, Box, Typography, Button } from "@mui/material";
 import Resizer from "react-image-file-resizer";
 import { TextField, styled } from "@mui/material";
 import ConfirmAddBook from "./ConfirmBook.jsx";
+import { useSnackbar } from "../library/snackbar.js";
 
 const ManageBook = ({open, setOpen, pageTitle, confirmPageTitle, handleHover, book}) => {
 
@@ -15,6 +16,7 @@ const ManageBook = ({open, setOpen, pageTitle, confirmPageTitle, handleHover, bo
     description: "",
     coverImage: "",
   });
+  const {setOpenSnackbar, setSnackbarSuccess, setSnackbarMessage} = useSnackbar();
   const [confirmOpen, setConfirmOpen] = useState(false);
 
     const handleClose = () => {
@@ -24,6 +26,18 @@ const ManageBook = ({open, setOpen, pageTitle, confirmPageTitle, handleHover, bo
     };
 
   const handleConfirmOpen = () => {
+    if(book === undefined && (newBook.title === "" || newBook.author === "" || newBook.genre === "" || newBook.isbn === "" || newBook.description === "") ){
+        setOpenSnackbar(true)
+        setSnackbarSuccess(false)
+        setSnackbarMessage("Please fill in all fields!")
+        return
+    }
+    if(book?.title === "" || book?.author === "" || book?.genre === "" || book?.isbn === "" || book?.description === "" ){
+        setOpenSnackbar(true)
+        setSnackbarSuccess(false)
+        setSnackbarMessage("Please fill in all fields!")
+        return
+    }
     setConfirmOpen(true);
   };
 
@@ -103,6 +117,7 @@ const ManageBook = ({open, setOpen, pageTitle, confirmPageTitle, handleHover, bo
             }}
             sx={{ tabindex: "-1" }}
         >
+            
             <Box
                 sx={{
                     position: "fixed",
@@ -196,7 +211,7 @@ const ManageBook = ({open, setOpen, pageTitle, confirmPageTitle, handleHover, bo
                                     justifyContent: "center",
                                     alignItems: "center",
                                     flexDirection: "column",
-                                    borderRadius: "20px",
+                                    borderRadius: book?.coverImage || newBook?.coverImage ? '0px' : "20px",
                                     backgroundColor: "transparent",
                                     textTransform: "none",
                                     fontSize: "18px",
@@ -209,11 +224,11 @@ const ManageBook = ({open, setOpen, pageTitle, confirmPageTitle, handleHover, bo
                                     },
                                     boxShadow: "none",
                                 }}
-                                style={{
-                                    filter: (book!==undefined ? book.coverImage : newBook.coverImage)
-                                        ? "drop-shadow(0 0 5px black)"
-                                        : "",
-                                }}
+                                // style={{
+                                //     filter: (book!==undefined ? book.coverImage : newBook.coverImage)
+                                //         ? "drop-shadow(0 0 5px black)"
+                                //         : "",
+                                // }}
                             // startIcon={<CloudUploadIcon />}
                             >
                                 {(book!==undefined ? book.coverImage : newBook.coverImage) ? (

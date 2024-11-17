@@ -6,13 +6,20 @@ import {
   Card,
   CardActions,
   Typography,
+  Snackbar,
+  SnackbarContent
 } from "@mui/material";
 import { ArrowSmallLeft, Books } from "react-flaticons";
 import { useBook } from "../../library/book.js";
 import BookCard from "../../components/BookCard.jsx";
 import AddBook from "../../components/ManageBook.jsx";
 import { useStore } from "../../library/store.js";
+import { useSnackbar } from "../../library/snackbar.js";
+import "@flaticon/flaticon-uicons/css/all/all.rounded.css";
+
+
 const ListOfBooks = () => {
+  const {setOpenSnackbar, openSnackbar, snackbarMessage, snackbarSuccess} = useSnackbar();
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const {isAdmin, currentUser, setCurrentPage} = useStore();
@@ -38,10 +45,40 @@ const ListOfBooks = () => {
   return (
     <Box
       sx={{
+        height: "100vh",
+        overflowY: "scroll",
+        "&::-webkit-scrollbar": {
+          display: "none", // Hide scrollbars for WebKit browsers
+        },
+      }}
+    >
+      <Snackbar
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+        open={openSnackbar}
+        autoHideDuration={2000}
+        onClose={() => setOpenSnackbar(false)}
+      >
+        <SnackbarContent
+          message={snackbarMessage}
+          style={{
+            backgroundColor:
+              snackbarSuccess ? "green" : "red",
+            justifyContent: "center",
+          }}
+        />
+      </Snackbar>
+    <Box
+      sx={{
         display: isAdmin ? "flex" : "none",
         justifyContent: "center",
         backgroundColor: "#191919",
         position: "relative",
+        height: "100vh",
+        overflow: "hidden",
+        overflowY: "scroll",
+        "&::-webkit-scrollbar": {
+          display: "none", // Hide scrollbars for WebKit browsers
+        },
       }}
     >
       <Button
@@ -88,18 +125,19 @@ const ListOfBooks = () => {
       </Typography>
       <Box
         sx={{
-          display: "flex",
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fill, minmax(20vw, 1fr))",
           flexDirection: "row",
           alignItems: "center",
           justifyContent: "flex-start",
-          flexWrap: "wrap",
           backgroundColor: "#191919",
           width: "100vw",
+          height: `${65 * Math.ceil((books.length + 1) / 4) }vh`,
           marginTop: "10vh",
+          marginX: "1.5vw",
           gap: "3.5vw",
           paddingY: "5vh",
-          marginX: "3vw",
-          rowGap: "3vh",
+          paddingLeft: "1vw",
         }}
       >
         <Card
@@ -115,7 +153,9 @@ const ListOfBooks = () => {
             transition: "300ms",
             "&:hover": {
               transform: "scale(1.025)",
-            }
+            },
+            boxShadow: "0px 0px 20px 3px rgba(34,85,96,0.9)",
+
           }}
         >
           <CardActions>
@@ -125,15 +165,23 @@ const ListOfBooks = () => {
               sx={{
                 width: "22.5vw",
                 height: "67.5vh",
-                backgroundColor: "#2e2e2e",
+                backgroundColor: "#225560",
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
                 border: "none",
                 transition: "300ms",
+                
               }}
             >
-              Add Book
+              <i
+                  className="fi fi-br-plus"
+                  style={{
+                    marginTop: "2.5vh",
+                    color: "#f4f4f4",
+                    fontSize: "7.5rem",
+                  }}
+                />
             </Button>
             <AddBook open={open} setOpen={setOpen} pageTitle={"Add Book"} confirmPageTitle={"Confirm Add Book"} />
           </CardActions>
@@ -141,6 +189,7 @@ const ListOfBooks = () => {
         {books.map((book) => (
           <BookCard key={book._id} book={book} open={open} setOpen={setOpen}/>
         ))}
+      </Box>
       </Box>
     </Box>
   );

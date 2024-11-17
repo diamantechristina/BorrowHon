@@ -1,19 +1,21 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Box, Typography, TextField, Button, InputAdornment } from "@mui/material";
+import { Box, Typography, TextField, Button, InputAdornment, Snackbar, SnackbarContent } from "@mui/material";
 import { ArrowSmallLeft, EyeCrossed, Eye } from "react-flaticons";
 import { useAccount } from "../library/account.js";
 import { useResetPassword } from "../library/resetpassword.js";
 import { useStore } from "../library/store.js";
-import { set } from "mongoose";
+import { useSnackbar } from "../library/snackbar.js";
+
 const ContinueForgotPassword = () => {
   const navigate = useNavigate();
+  const {setOpenSnackbar, setSnackbarSuccess, setSnackbarMessage, openSnackbar, snackbarMessage, snackbarSuccess} = useSnackbar();
+
   const {updateAccount} = useAccount();
   const { accountReset, setAccountReset } = useResetPassword();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [password, setPassword] = useState("");
-  const [resetAccount, setResetAccount] = useState(accountReset);
   const [confirmPassword, setConfirmPassword] = useState("");
   const {setCurrentPage, currentPage} = useStore();
 
@@ -33,11 +35,10 @@ const ContinueForgotPassword = () => {
 
   const handleConfirmPasswordChange = (event) => {
     setConfirmPassword(event.target.value);
-    setResetAccount((prev) => ({ ...prev, password: event.target.value }));
+    setAccountReset({...accountReset, password: event.target.value});
 
     
   };
-  console.log("accountReset: ", resetAccount);
   useEffect(() => {
     if (!accountReset) {
       navigate(currentPage);
@@ -45,14 +46,26 @@ const ContinueForgotPassword = () => {
     }
   }, []);
 
+  console.log(accountReset)
   const handleContinueClick = async() => {
-    if (password === confirmPassword && password.trim() !== "" && confirmPassword.trim() !== "") {
-      const {success, message} = await updateAccount(resetAccount._id, resetAccount, false);
-      console.log("Success:", success);
-      console.log("Message:", message);
+    if(password.trim() === "" && confirmPassword.trim() === ""){
+      setOpenSnackbar(true);
+      setSnackbarMessage("Please fill in all fields!");
+      setSnackbarSuccess(false);
+      return
+    }
+    else if (password.trim() === confirmPassword.trim()) {
+      const {success, message} = await updateAccount(accountReset._id, accountReset, false);
+      setOpenSnackbar(true);
+      setSnackbarMessage("Password updated Successfully!");
+      setSnackbarSuccess(success);
       navigate("/");
+      setAccountReset(null);
+      return
     } else {
-      alert("Passwords do not match. Please try again.");
+      setOpenSnackbar(true);
+      setSnackbarMessage("Passwords do not match!");
+      setSnackbarSuccess(false);
     }
   };
 
@@ -69,6 +82,21 @@ const ContinueForgotPassword = () => {
         backgroundRepeat: "no-repeat",
       }}
     >
+      <Snackbar
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+        open={openSnackbar}
+        autoHideDuration={2000}
+        onClose={() => setOpenSnackbar(false)}
+      >
+        <SnackbarContent
+          message={snackbarMessage}
+          style={{
+            backgroundColor:
+              snackbarSuccess ? "green" : "red",
+            justifyContent: "center",
+          }}
+        />
+      </Snackbar>
       <Box
         sx={{
           width: "43vw",

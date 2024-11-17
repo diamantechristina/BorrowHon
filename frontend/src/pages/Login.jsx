@@ -1,4 +1,4 @@
-import { Snackbar, Typography } from "@mui/material";
+import { Snackbar, SnackbarContent, Typography } from "@mui/material";
 import React, { useEffect, useMemo, useState, } from "react";
 import { Box } from "@mui/material";
 import { TextField, Button } from "@mui/material";
@@ -11,8 +11,11 @@ import { InputAdornment } from "@mui/material";
 import { useAccount } from "../library/account.js";
 import { useLog } from "../library/log.js";
 import { useStore } from "../library/store.js";
+import { useSnackbar } from "../library/snackbar.js";
 
 const Login = () => {
+  const {setOpenSnackbar, setSnackbarSuccess, setSnackbarMessage, openSnackbar, snackbarMessage, snackbarSuccess} = useSnackbar();
+
   const navigate = useNavigate();
   const { setCurrentUser, setLog, setIsAdmin, currentUser } = useStore();
   const handleKeyPress = (event) => {
@@ -64,9 +67,22 @@ const Login = () => {
   };
 
   const handleLoginClick = async () => {
+    if (login.username.trim() === "" || login.password.trim() === "") {
+      setOpenSnackbar(true);
+      setSnackbarMessage("Please fill in all fields!");
+      setSnackbarSuccess(false);
+      return;
+    }
+    if(account.filter((acc) => acc.username.toLowerCase() === login.username.trim().toLowerCase()).length === 0){
+      setOpenSnackbar(true);
+      setSnackbarMessage("Incorrect username and password!");
+      setSnackbarSuccess(false);
+      return
+    }  
     for (const acc of account) {
-      if (acc.username.toLowerCase() === login.username.toLowerCase() && acc.password === login.password) {
-        console.log("Login successful");
+      if (acc.username.toLowerCase() === login.username.trim().toLowerCase()){
+
+      if ( acc.password === login.password) {
         const newLog = {
           acc_id: acc.acc_id,
           logindate: new Date()
@@ -84,11 +100,19 @@ const Login = () => {
         
         return;
       }
+      else{
+        setOpenSnackbar(true);
+        setSnackbarMessage("Incorrect password!");
+        setSnackbarSuccess(false);
+        return;
+      }
+    }
+    
       // else if (login.username.toLowerCase() === "admin" && login.password === "admin"){
       //   navigate("/dashboard")
       // }
     }
-    console.log("Login failed");
+    
   };
 
   const togglePasswordVisibility = () => {
@@ -105,6 +129,21 @@ const Login = () => {
         padding: 0,
       }}
     >
+      <Snackbar
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+        open={openSnackbar}
+        autoHideDuration={2000}
+        onClose={() => setOpenSnackbar(false)}
+      >
+        <SnackbarContent
+          message={snackbarMessage}
+          style={{
+            backgroundColor:
+              snackbarSuccess ? "green" : "red",
+            justifyContent: "center",
+          }}
+        />
+      </Snackbar>
       <Box
         sx={{
           width: "50vw",

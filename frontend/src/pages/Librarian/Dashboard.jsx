@@ -11,6 +11,8 @@ import {
   TableBody,
   TableRow,
   TableCell,
+  Snackbar,
+  SnackbarContent,
 } from "@mui/material";
 import { LineChart } from "@mui/x-charts";
 import {
@@ -27,6 +29,8 @@ import { useLog } from "../../library/log.js";
 import { useAccount } from "../../library/account.js";
 import Navbar from "../../components/Navbar.jsx";
 import { useStore } from "../../library/store.js";
+import "@flaticon/flaticon-uicons/css/all/all.rounded.css";
+
 const months = [
   "Jan",
   "Feb",
@@ -43,7 +47,7 @@ const months = [
 ];
 
 const Dashboard = () => {
-  const { currentUser,  setReaderUser, setCurrentPage } = useStore();
+  const { currentUser, isFirstLogin, setIsFirstLogin, setReaderUser, setCurrentPage } = useStore();
   const navigate = useNavigate();
   const { fetchLogs, log } = useLog();
   const { fetchAccount, account } = useAccount();
@@ -124,6 +128,20 @@ const Dashboard = () => {
         alignItems: "center",
       }}
     >
+      <Snackbar
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+        open={isFirstLogin}
+        autoHideDuration={2500}
+        onClose={() => setIsFirstLogin(false)}
+      >
+        <SnackbarContent
+          message='Logged In Successfully!'
+          style={{
+            backgroundColor:'green',
+            justifyContent: "center",
+          }}
+        />
+      </Snackbar>
       <Box
         sx={{
           display: "flex",
@@ -380,17 +398,13 @@ const Dashboard = () => {
                     gap: "10px",
                   }}
                 >
-                  <img
-                    src="src/resources/pending.svg"
-                    alt=""
-                    style={{
-                      width: "5vw",
-                      height: "5vh",
-                      objectFit: "contain",
-                      //   fill: "white",
-                      filter: "invert(100%) ",
-                    }}
-                  />
+                  <i
+                  className="fi fi-rr-pending"
+                  style={{
+                    color: "#f4f4f4",
+                    fontSize: "2.5vw",
+                  }}
+                />
                   PENDING
                 </Button>
                 <Button

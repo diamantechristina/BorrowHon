@@ -2,15 +2,19 @@ import React from 'react'
 import { useState } from "react";
 import { Box, Typography, Button, Modal, Backdrop } from "@mui/material";
 import { useBook } from "../library/book.js";
+import { useSnackbar } from '../library/snackbar.js';
 
 const ConfirmBook = ({pageTitle, confirmOpen, setOpen, setConfirmOpen, handleHover, newBook}) => {
     const { createBook, deleteBook,updateBook } = useBook();
-    
+    const {setOpenSnackbar, setSnackbarSuccess, setSnackbarMessage} = useSnackbar();
     const handleAddBook = async () => {
         const { success, message } = await createBook(newBook);
         console.log("Success:", success);
         console.log("Message:", message);
         setConfirmOpen(false)
+        setOpenSnackbar(true)
+        setSnackbarSuccess(success)
+        setSnackbarMessage(message)
         setOpen !== null ? setOpen(false) : () => {}
         
     };
@@ -19,14 +23,20 @@ const ConfirmBook = ({pageTitle, confirmOpen, setOpen, setConfirmOpen, handleHov
         console.log("Success:", success);
         console.log("Message:", message);
         setConfirmOpen(false)
+        setOpenSnackbar(true)
+        setSnackbarSuccess(success)
+        setSnackbarMessage(message)
         setOpen !== null ? setOpen(false) : () => {}
     }
-
+    
     const handleUpdateBook = async () => {
         const { success, message } = await updateBook(newBook._id,newBook);
         console.log("Success:", success);
         console.log("Message:", message);
         setConfirmOpen(false)
+        setOpenSnackbar(true)
+        setSnackbarSuccess(success)
+        setSnackbarMessage(message)
         setOpen !== null ? setOpen(false) : () => {}
     }
 

@@ -20,7 +20,7 @@ export const useBook = create((set) => ({
         set((state) => ({
             books: [...state.books, data.data],
         }))
-        return{success:true, message:"Book added successfully."}
+        return{success:true, message:"Book added successfully!"}
     },
     
     fetchBook: async () => {
@@ -39,7 +39,7 @@ export const useBook = create((set) => ({
         set((state) => ({
             books: state.books.filter((book) => book._id !== id),
         }))
-        return {success:true, message:"Book deleted successfully."}
+        return {success:true, message:"Book deleted successfully!"}
     },
 
     updateBook: async (id, updatedBook) => {

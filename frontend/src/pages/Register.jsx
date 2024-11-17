@@ -1,4 +1,4 @@
-import { Typography } from "@mui/material";
+import { Typography,Snackbar, SnackbarContent } from "@mui/material";
 import React, { useState } from "react";
 import { Box, Container } from "@mui/material";
 import { TextField, Button, Divider } from "@mui/material";
@@ -8,9 +8,11 @@ import '@fontsource/inria-serif'
 // import { Arrow } from "";
 import {ArrowSmallLeft} from "react-flaticons";
 import { useAccount } from "../library/account.js";
-
+import { useSnackbar } from "../library/snackbar.js";
 const Register = () => {
   const navigate = useNavigate();
+  const {setOpenSnackbar, setSnackbarSuccess, setSnackbarMessage, openSnackbar, snackbarMessage, snackbarSuccess} = useSnackbar();
+
   const [newAccount, setNewAccount] = useState({
     firstName: "",
     lastName: "",
@@ -27,6 +29,16 @@ const Register = () => {
     }));
   };
 
+  const handleRegister = () => {
+    if (!newAccount.firstName || !newAccount.lastName || !newAccount.address || !newAccount.phoneNumber) {
+      setOpenSnackbar(true);
+      setSnackbarSuccess(false);
+      setSnackbarMessage("Please fill in all fields.");
+      return;
+    }
+    navigate("/continue-register", { state: newAccount });
+  };
+
   return (
     <Box
       sx={{
@@ -37,7 +49,21 @@ const Register = () => {
         padding: 0,
       }}
     >
-      
+      <Snackbar
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+        open={openSnackbar}
+        autoHideDuration={2000}
+        onClose={() => setOpenSnackbar(false)}
+      >
+        <SnackbarContent
+          message={snackbarMessage}
+          style={{
+            backgroundColor:
+              snackbarSuccess ? "green" : "red",
+            justifyContent: "center",
+          }}
+        />
+      </Snackbar>
       <Box
         sx={{
           backgroundColor: "#225560",
@@ -301,12 +327,7 @@ const Register = () => {
               textTransform: "none",
               
             }}
-            onClick={() => {
-              navigate("/continue-register", {
-                state: newAccount,
-              });
-              // console.log(newAccount)
-            }}
+            onClick={handleRegister}
           >
             Continue
           </Button>
