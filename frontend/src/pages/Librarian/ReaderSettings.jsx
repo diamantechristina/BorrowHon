@@ -100,6 +100,12 @@ const VisuallyHiddenInput = styled("input")({
   width: 1,
 });
 
+const suspendReasons = [
+  "Overdue Books",
+  "Multiple unreturned books",
+  "Violation of Policies",
+  "System Misuse",
+];
 const ReaderSettings = () => {
   const {
     currentUser,
@@ -112,12 +118,12 @@ const ReaderSettings = () => {
   const navigate = useNavigate();
   const [display, setDisplay] = useState(false);
   const [open, setOpen] = useState(false);
-  const [openUnsuspend, setOpenUnsuspend] = useState(true);
+  const [openUnsuspend, setOpenUnsuspend] = useState(false);
   const [suspendReason, setSuspendReason] = useState("");
   const handleOpen = () => {
     setOpen(true);
   };
-  const handeOpenUnsuspend = () => {
+  const handleOpenUnsuspend = () => {
     setOpenUnsuspend(true);
   };
 
@@ -267,6 +273,29 @@ const ReaderSettings = () => {
       profilepic: image,
     }));
   };
+
+  const handleSuspend = async () => {
+    const suspendedUser = { ...userLoggedIn, isSuspended: true, suspendReason: suspendReason };
+    const { success, message } = await updateAccount(suspendedUser._id, suspendedUser, false);
+    setReaderUser(suspendedUser)
+    setSnackbarMessage("Account suspended successfully!");
+    setSnackbarSuccess(success);
+    setOpenSnackbar(true);
+    handleClose();
+  };
+
+  const handleUnsuspend = async () => {
+    const suspendedUser = { ...userLoggedIn, isSuspended: false, suspendReason: null };
+    const { success, message } = await updateAccount(suspendedUser._id, suspendedUser, false);
+    setReaderUser(suspendedUser)
+    setSnackbarMessage("Account unsuspended successfully!");
+    setSnackbarSuccess(success);
+    setOpenSnackbar(true);
+    handleClose();
+  };
+
+
+
   return (
     <Box
       sx={{
@@ -295,7 +324,7 @@ const ReaderSettings = () => {
       </Snackbar>
       <Button
         variant="outlined"
-        onClick={handleOpen}
+        onClick={readerUser.isSuspended ? handleOpenUnsuspend : handleOpen}
         sx={{
           display: readerUser ? "auto" : "none",
           borderColor: "#f4f4f4",
@@ -310,7 +339,7 @@ const ReaderSettings = () => {
           fontFamily: "Montserrat",
         }}
       >
-        Suspend
+        {readerUser.isSuspended ? "Unsuspend" :" Suspend"}
       </Button>
       {/* for suspend */}
       <Modal
@@ -615,6 +644,7 @@ const ReaderSettings = () => {
                 >
                   {userLoggedIn?.phoneNumber}
                 </Typography>
+<<<<<<< HEAD
                 <FormControl focused={false} variant="standard">
                   <Select
                     value={suspendReason}
@@ -648,6 +678,48 @@ const ReaderSettings = () => {
                     <MenuItem value="4">4</MenuItem>
                     <MenuItem value="5">5</MenuItem>
                   </Select>
+=======
+                {suspendReason ? "" : <Typography
+                  sx={{
+                    position: "absolute",
+                    fontSize: "1.5vw",
+                    fontFamily: "Arimo",
+                    bottom: "17.5vh",
+                  }}
+                >Select a Suspend Reason</Typography>}
+                <FormControl 
+                  focused= {false}
+                variant="standard">
+                <Select
+                  value={suspendReason}
+                  label="Suspend Reason"
+                  onChange={(e) => setSuspendReason(e.target.value)}
+
+                  sx={{
+                    color: "#F4F4F4",
+                    width: "25vw",
+                    textTransform: "none",
+                    fontSize: "1.5vw",
+                    fontFamily: "Arimo",
+                    ".MuiInputBase-root-MuiInput-root-MuiSelect-root": {
+                      borderColor: "1px solid #f4f4f4 !important",
+                    "&:before": {
+                      borderColor: "1px solid #f4f4f4 !important",
+                    },
+                  },
+                    ".MuiSelect-iconStandard": {
+                      color: "#F4F4F4",
+                    },
+                  }}
+
+                >
+                  {suspendReasons.map((reason) => (
+                    <MenuItem value={reason}>
+                      {reason}
+                    </MenuItem>
+                  ))}
+                </Select>
+>>>>>>> f274954 (update)
                 </FormControl>
               </Box>
             </Box>
@@ -681,7 +753,7 @@ const ReaderSettings = () => {
                 fontSize: "18px",
               }}
               tabIndex={-1}
-              // onClick={handleBorrowBook}
+              onClick={handleSuspend}
             >
               Suspend
             </Button>
@@ -828,6 +900,7 @@ const ReaderSettings = () => {
                   fontFamily: "Arimo",
                   fontWeight: "bold",
                   width: "20vw",
+                  textWrap: "nowrap",
                 }}
               >
                 Suspend Reason
@@ -836,12 +909,16 @@ const ReaderSettings = () => {
                 sx={{
                   fontSize: "1.5vw",
                   fontFamily: "Arimo",
-                  marginLeft: "20px",
+                  marginLeft: "1vw",
                   width: "25vw",
+<<<<<<< HEAD
                   backgroundColor: "red",
+=======
+                  textWrap: "nowrap",
+>>>>>>> f274954 (update)
                 }}
               >
-                get suspend reason from account collection
+                {readerUser.suspendReason}
               </Typography>
             </Box>
           </Box>
@@ -874,7 +951,7 @@ const ReaderSettings = () => {
                 fontSize: "18px",
               }}
               tabIndex={-1}
-              // onClick={handleBorrowBook}
+              onClick={handleUnsuspend}
             >
               Unsuspend
             </Button>

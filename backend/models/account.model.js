@@ -60,7 +60,7 @@ const accountSchema = new mongoose.Schema({
         default: false,
         required: false
     },
-    suspendedMessage:{
+    suspendReason:{
         type: String,
         default: "",
         required: false
