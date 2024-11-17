@@ -46,11 +46,11 @@ const Dashboard = () => {
   console.log("currentUser: ", currentUser);
   useEffect(() => {
     fetchNotifications();
-  }, [fetchNotifications]);
+  }, [fetchNotifications, currentUser]);
 
   useEffect(() => {
     fetchHistory();
-  }, [fetchHistory]);
+  }, [fetchHistory, currentUser]);
 
   useEffect(() => {
     setCurrentPage(location.pathname);
@@ -67,6 +67,7 @@ const Dashboard = () => {
     }
   }, []);
 
+  console.log("currentUser: ", currentUser);
   const { fetchBook, books } = useBook();
   useEffect(() => {
     fetchBook();
@@ -76,7 +77,7 @@ const Dashboard = () => {
 
   const [bookCreation, setBookCreation] = useState([]);
 
-  const [openModal, setOpenModal] = useState(false);
+  const [openModal, setOpenModal] = useState(true);
 
   const handleOpenModal = () => {
     setOpenModal(true);
@@ -171,6 +172,116 @@ const Dashboard = () => {
         />
       </Snackbar>
       <Navbar />
+      {currentUser?.suspendReason !== null && currentUser?.isSuspended === true && (
+        <Modal
+          aria-labelledby="unstyled-modal-title"
+          aria-describedby="unstyled-modal-description"
+          open={openModal}
+          onClose={handleCloseModal}
+          // slots={{ backdrop: StyledBackdrop }}
+          BackdropComponent={Backdrop}
+          BackdropProps={{
+            timeout: 500,
+          }}
+        >
+          <Box
+            sx={{
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              width: "40vw",
+              height: "50vh",
+              p: 4,
+              backgroundColor: "#225560",
+              borderRadius: "20px",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              color: "#F4F4F4",
+              flexDirection: "column",
+              // gap: "20px",
+            }}
+          >
+            <i
+              class="fi fi-bs-cross-small"
+              style={{
+                fontSize: "2vw",
+                cursor: "pointer",
+                position: "absolute",
+                top: "1vh",
+                right: "1vh",
+              }}
+              onClick={handleCloseModal}
+            ></i>
+
+            <Typography
+              sx={{
+                fontSize: "3vw",
+                fontWeight: "bold",
+                fontFamily: "montserrat",
+                // marginTop: "-3vh",
+              }}
+            >
+              ACCOUNT SUSPENDED
+            </Typography>
+
+            <Box
+              sx={{
+                width: "inherit",
+                // backgroundColor: "yellow",
+                display: "flex",
+                alignItems: "center",
+                flexDirection: "column",
+                paddingTop: "10vh",
+                marginTop: "-3vh",
+                // gap: "3vh",
+              }}
+            >
+              <Typography
+                sx={{
+                  fontSize: "1.5vw",
+                  fontFamily: "Montserrat",
+                }}
+              >
+                Your account has been suspended because of:
+              </Typography>
+              <Box
+                sx={{
+                  backgroundColor: "#f4f4f4",
+                  borderRadius: "10px",
+                  padding: 1
+                }}
+              >
+                <Typography
+                  sx={{
+                    fontSize: "2vw",
+                    fontWeight: "bold",
+                    fontFamily: "Montserrat",
+                    textTransform: "uppercase",
+                    color: "#225560",
+                  }}
+                >
+                  {currentUser?.suspendReason}
+                </Typography>
+              </Box>
+
+              <Typography
+                sx={{
+                  fontSize: "1vw",
+                  fontFamily: "Montserrat",
+                  width: "80%",
+                  textAlign: "center",
+                  paddingTop: "10vh",
+                }}
+              >
+                You won't be able to borrow any books for the meantime. Please
+                contact the librarian to resolve this issue or <b>login again</b>.
+              </Typography>
+            </Box>
+          </Box>
+        </Modal>
+      )}
 
       <Box
         sx={{
@@ -542,7 +653,16 @@ const Dashboard = () => {
               </Card>
             ))}
           </Box>
-          <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", bottom: 0, right: 0, margin: 2 }}>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              bottom: 0,
+              right: 0,
+              marginTop: "-3vh",
+            }}
+          >
             <Button
               variant="contained"
               color="primary"
@@ -554,12 +674,18 @@ const Dashboard = () => {
                 backgroundColor: "#225560",
                 "&:hover": {
                   backgroundColor: "#336670",
-                  
                 },
                 borderRadius: "10px",
               }}
             >
-              <i className="fi fi-rr-arrow-small-up" style={{marginTop: ".5rem", fontSize: "1.75rem", color: "#F4F4F4"}}/>
+              <i
+                className="fi fi-rr-arrow-small-up"
+                style={{
+                  marginTop: ".5rem",
+                  fontSize: "1.75rem",
+                  color: "#F4F4F4",
+                }}
+              />
             </Button>
           </Box>
         </Box>

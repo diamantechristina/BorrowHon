@@ -42,7 +42,7 @@ const ViewBook = () => {
 
   useEffect(() => {
     fetchBook();
-  }, [fetchBook]);
+  }, [fetchBook, currentUser]);
 
   const togglePasswordVisibility = () => {
     setShowPassword((prev) => !prev);
@@ -54,7 +54,7 @@ const ViewBook = () => {
 
   useEffect(() => {
     setCurrentPage(location.pathname);
-  }, []);
+  }, [currentUser]);
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -66,7 +66,7 @@ const ViewBook = () => {
 
   useEffect(() => {
     fetchHistory();
-  }, [fetchHistory, history]);
+  }, [fetchHistory, history, currentUser]);
 
   // Locate the specific history entry that matches the current book and user
   const currentBookHistory = useMemo(() => {
@@ -90,7 +90,7 @@ const ViewBook = () => {
     } else {
       setDisplay(true);
     }
-  }, []);
+  }, [currentUser]);
 
   const [open, setOpen] = useState(false);
   const [returnOpen, setReturnOpen] = useState(false);
@@ -395,21 +395,24 @@ const ViewBook = () => {
                     color: "#F4F4F4",
                     fontWeight: "bold",
                     fontFamily: "montserrat",
-                    textTransform: "capitalize",
+                    textTransform: currentUser?.isSuspended === true ? "uppercase" : "capitalize",
                     textDecoration: "underline",
                     textUnderlineOffset: "7px",
                   }}
                 >
                   {/* conditioning for book status. when reader has book in their history,
                    then use current book history, if not then use book data */}
-                  {currentBookHistory &&
-                  currentBookHistory.book_id === bookData.book_id
-                    ? currentBookHistory?.status === "onhand"
-                      ? "Borrowed"
-                      : currentBookHistory?.status === "returned"
-                      ? bookData?.status
-                      : currentBookHistory?.status
-                    : bookData?.status}
+                   {currentUser?.isSuspended === true ? (
+                     "Your account is suspended"
+                   ) : (
+                     currentBookHistory && currentBookHistory.book_id === bookData.book_id
+                       ? currentBookHistory?.status === "onhand"
+                         ? "Borrowed"
+                         : currentBookHistory?.status === "returned"
+                         ? bookData?.status
+                         : currentBookHistory?.status
+                       : bookData?.status
+                   )}
                 </Typography>
                 <Typography
                   sx={{
@@ -570,10 +573,16 @@ const ViewBook = () => {
                     }}
                   >
                     <i
-          class="fi fi-bs-cross-small"
-          style={{ fontSize: "2vw", cursor: "pointer", position: "absolute", top: "1vh", right: "1vh" }}
-          onClick={handleClose}
-        ></i>
+                      class="fi fi-bs-cross-small"
+                      style={{
+                        fontSize: "2vw",
+                        cursor: "pointer",
+                        position: "absolute",
+                        top: "1vh",
+                        right: "1vh",
+                      }}
+                      onClick={handleClose}
+                    ></i>
                     <Typography
                       sx={{
                         fontSize: "4vw",
