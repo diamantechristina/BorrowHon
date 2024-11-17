@@ -83,7 +83,7 @@ const ListOfBooks = () => {
     >
       <Button
         variant="text"
-        onClick={() => navigate(-1)}
+        onClick={() => navigate('/dashboard')}
         sx={{
           margin: 0,
           borderRadius: "20px",

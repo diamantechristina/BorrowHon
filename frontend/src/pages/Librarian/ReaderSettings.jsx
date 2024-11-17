@@ -114,16 +114,18 @@ const ReaderSettings = () => {
   const handleClose = () => {
     setOpen(false);
   };
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (!currentUser) {
       navigate("/");
-    } else if (currentPage !== "/list-of-readers" && currentPage !== "/borrow-history") {
+    } else if (currentPage !== "/list-of-readers" && currentPage !== "/borrow-history" && currentPage !== "/reader") {
       navigate(currentPage);
-    } else if(!readerUser || readerUser === null) navigate(currentPage);
+    } else if(!readerUser || readerUser === null) currentPage==='/reader' ? navigate(-1) : navigate(currentPage);
     else {
       setDisplay(true);
     }
-  }, []);
+  }, [readerUser]);
+
+  console.log(display)
 
   useEffect(() => {
     setCurrentPage(location.pathname);
@@ -500,7 +502,6 @@ const ReaderSettings = () => {
         <Button
           variant="text"
           onClick={() => {navigate(-1)
-            setReaderUser(null);  
           }}
           sx={{
             margin: 0,
@@ -728,7 +729,7 @@ const ReaderSettings = () => {
           ></Box>
           <Button
             variant="outlined"
-            // onClick={editProfileOpen ? handleCloseEditOpen : handleOpenEditOpen}
+            onClick={editProfileOpen ? handleCloseEditOpen : handleOpenEditOpen}
             sx={{
               borderColor: "#f4f4f4",
               color: "#f4f4f4",

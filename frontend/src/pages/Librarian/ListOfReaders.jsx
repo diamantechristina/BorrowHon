@@ -52,7 +52,6 @@ const History = () => {
     currentUser,
     isAdmin,
     readerUser,
-    isOnEdit,
     setCurrentPage,
   } = useStore();
   const navigate = useNavigate();
@@ -68,7 +67,7 @@ const History = () => {
 
   useEffect(() => {
     setReaderUser(null);
-  }, [readerUser, isOnEdit]);
+  }, [readerUser]);
   useEffect(() => {
     if (!currentUser) navigate("/");
     else if (!isAdmin) navigate(-1);
