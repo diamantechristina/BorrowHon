@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useState } from "react";
 import { Box, Typography, Button, Modal, Backdrop } from "@mui/material";
 import { useBook } from "../library/book.js";
@@ -9,11 +9,15 @@ const ConfirmBook = ({pageTitle, confirmOpen, setOpen, setConfirmOpen, handleHov
     const { createBook, deleteBook,updateBook } = useBook();
     const {setOpenSnackbar, setSnackbarSuccess, setSnackbarMessage} = useSnackbar();
     
+    useEffect(() => {
+        if(pageTitle === "Confirm Book") console.log("Confirm Book: ",newBook)
+    })
     const handleClose = () => {
         setConfirmOpen(false)
     }
     const handleAddBook = async () => {
-        const { success, message } = await createBook(newBook);
+        const updatedBook = {...newBook, genre: newBook.genre.split(",")};
+        const { success, message } = await createBook(updatedBook);
         console.log("Success:", success);
         console.log("Message:", message);
         setConfirmOpen(false)
@@ -35,7 +39,8 @@ const ConfirmBook = ({pageTitle, confirmOpen, setOpen, setConfirmOpen, handleHov
     }
     
     const handleUpdateBook = async () => {
-        const { success, message } = await updateBook(newBook._id,newBook);
+        const updatedBook = {...newBook, genre: newBook.genre.split(", ")};
+        const { success, message } = await updateBook(updatedBook._id,updatedBook);
         console.log("Success:", success);
         console.log("Message:", message);
         setConfirmOpen(false)
@@ -47,7 +52,7 @@ const ConfirmBook = ({pageTitle, confirmOpen, setOpen, setConfirmOpen, handleHov
 
     const handleConfirmClose = () => {
         setConfirmOpen(false)
-        handleHover(false)
+        if(handleHover) handleHover(false)
     };
     return (
         <Modal

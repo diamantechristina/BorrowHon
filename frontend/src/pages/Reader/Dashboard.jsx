@@ -42,7 +42,7 @@ const Dashboard = () => {
     setCurrentPage,
   } = useStore();
   const { fetchHistory, history } = useHistory();
-  const { fetchAccount,fetchAccounts, account } = useAccount();
+  const { fetchAccount, account } = useAccount();
 
   const { openSnackbar, setOpenSnackbar, snackbarMessage, snackbarSuccess } = useSnackbar();
   
@@ -51,8 +51,8 @@ const Dashboard = () => {
   }, [fetchHistory]);
 
   useEffect(() => {
-    fetchAccounts();
-  }, [fetchAccounts]);
+    fetchAccount();
+  }, [fetchAccount]);
 
   useEffect(() => {
     if(account) setCurrentUser(account.find((acc) => acc.acc_id === currentUser.acc_id));

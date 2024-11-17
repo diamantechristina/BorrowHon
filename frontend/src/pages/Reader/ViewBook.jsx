@@ -118,8 +118,7 @@ const ViewBook = () => {
     return books.filter(
       (book) =>
         book._id !== bookData._id &&
-        (book.genre[0].includes(bookData.genre[0]) ||
-          bookData.genre[0].includes(book.genre[0]))
+      book.genre.some((genre) => bookData.genre.includes(genre))
     );
   }, [books, bookData]);
   const [openSnackbar, setOpenSnackbar] = useState(false);
@@ -1422,10 +1421,7 @@ const ViewBook = () => {
               <Box
                 sx={{
                   overflow: "hidden",
-                  overflowY: "scroll",
-                  "&::-webkit-scrollbar": {
-                    display: "none", // Hide scrollbars for WebKit browsers
-                  },
+
                 }}
               >
                 {relatedBooks.map((book) => (
@@ -1440,9 +1436,15 @@ const ViewBook = () => {
                     }}
                   >
                     <Card
+                      onClick={() => {
+                        navigate('/view-book');
+                        setBookData(book);
+                      }}
                       sx={{
+                        cursor: "pointer",
+                        
                         width: "90%",
-                        height: "20vh",
+                        height: "16vh",
                         borderRadius: "20px",
                         display: "flex",
                         justifyContent: "center",
@@ -1462,10 +1464,15 @@ const ViewBook = () => {
                       />
                     </Card>
                     <Typography
+                    onClick={() => {
+                      navigate('/view-book');
+                      setBookData(book);
+                    }}
                       sx={{
+                        cursor: "pointer",
                         fontFamily: "Montserrat",
                         fontWeight: "700",
-                        fontSize: "1.25rem",
+                        fontSize: "1vw",
                         marginY: "1.5vh",
                         marginX: "1.5vw ",
                         color: "#F4F4F4",
