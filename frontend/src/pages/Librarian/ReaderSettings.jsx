@@ -275,6 +275,12 @@ const ReaderSettings = () => {
   };
 
   const handleSuspend = async () => {
+    if (!suspendReason) {
+      setSnackbarMessage("Please select a suspend reason!");
+      setSnackbarSuccess(false);
+      setOpenSnackbar(true);
+      return;
+    }
     const suspendedUser = { ...userLoggedIn, isSuspended: true, suspendReason: suspendReason };
     const { success, message } = await updateAccount(suspendedUser._id, suspendedUser, false);
     setReaderUser(suspendedUser)
@@ -373,7 +379,7 @@ const ReaderSettings = () => {
           }}
         >
           <i
-            class="fi fi-bs-cross-small"
+            className="fi fi-bs-cross-small"
             style={{
               fontSize: "2vw",
               cursor: "pointer",
@@ -506,7 +512,7 @@ const ReaderSettings = () => {
                     // backgroundColor: "green",
                   }}
                 >
-                  <Marker size={30} />
+                  <Marker size={"1.75vw"} />
                   <Typography
                     sx={{
                       fontSize: "1.5vw",
@@ -529,7 +535,7 @@ const ReaderSettings = () => {
                     // backgroundColor: "green",
                   }}
                 >
-                  <Envelope size={30} />
+                  <Envelope size={"1.75vw"} />
                   <Typography
                     sx={{
                       fontSize: "1.5vw",
@@ -563,7 +569,7 @@ const ReaderSettings = () => {
                       className="fi fi-rr-phone-flip"
                       style={{
                         color: "#f4f4f4",
-                        fontSize: "2vw",
+                        fontSize: "1.75vw",
                       }}
                     />
                   </Box>
@@ -589,13 +595,36 @@ const ReaderSettings = () => {
                     // backgroundColor: "green",
                   }}
                 >
+                  <Box
+                    sx={{
+                      display: "flex",
+                      flexDirection: "row",
+                      justifyContent: "flex-end",
+                      // alignContent: "right",
+                      height: "5vh",
+                    }}
+                  >
                   <i
-                    className="fi fi-rr-ban"
+                    className="fi fi-rr-user"
                     style={{
                       color: "#f4f4f4",
-                      fontSize: "2vw",
+                      fontSize: "1.75vw",
+                    }}
+                  >
+                    <i
+                    className="fi fi-br-ban"
+                    style={{
+                      color: "#f4f4f4",
+                      fontSize: "1vw",
+                      marginTop: "1.75vh",
+                      marginLeft: "-.75vw",
+                      backgroundColor: "#225560",
+                      borderRadius: "50%",
                     }}
                   />
+                  </i>
+                  
+                  </Box>
                   <Typography
                     sx={{
                       fontSize: "1.5vw",
@@ -617,9 +646,18 @@ const ReaderSettings = () => {
                   flexDirection: "column",
                   justifyContent: "center",
                   // alignItems: "center",
-                  gap: "22px",
+                  gap: "20px",
                 }}
               >
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: "row",
+                    // alignContent: "right",
+                    height: "5vh",
+                  }}
+                >
+
                 <Typography
                   sx={{
                     fontSize: "1.5vw",
@@ -628,6 +666,18 @@ const ReaderSettings = () => {
                 >
                   {userLoggedIn?.address}
                 </Typography>
+
+                </Box>
+
+                  <Box
+                    sx={{
+                      display: "flex",
+                      flexDirection: "row",
+                      // alignContent: "right",
+                      height: "5vh",
+                    }}
+                  >
+
                 <Typography
                   sx={{
                     fontSize: "1.5vw",
@@ -636,6 +686,17 @@ const ReaderSettings = () => {
                 >
                   {userLoggedIn?.email}
                 </Typography>
+                  </Box>
+                
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: "row",
+                    // alignContent: "right",
+                    height: "5vh",
+                  }}
+                >
+
                 <Typography
                   sx={{
                     fontSize: "1.5vw",
@@ -644,13 +705,24 @@ const ReaderSettings = () => {
                 >
                   {userLoggedIn?.phoneNumber}
                 </Typography>
+                </Box>
                 
+                <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "row",
+                  // alignContent: "right",
+                  width: "30vw",
+                  height: "5vh",
+                }}
+                >
                 {suspendReason ? "" : <Typography
                   sx={{
-                    position: "absolute",
+                    position: "relative",
                     fontSize: "1.5vw",
                     fontFamily: "Arimo",
-                    bottom: "22vh",
+                    marginTop: ".5vh",
+                    textWrap: "nowrap",
                   }}
                 >Select a Suspend Reason</Typography>}
                 <FormControl 
@@ -666,7 +738,7 @@ const ReaderSettings = () => {
                     fontSize: "1.5vw",
                     fontFamily: "Arimo",
                     width: "25vw",
-                    marginTop: "-1vh",
+                    marginLeft:  suspendReason? null : "-17.75vw",
                     "&.MuiInputBase-root": {
                       "&:before": {
                         borderBottom: "2px solid #FFFFFF", // Normal state border color
@@ -686,12 +758,13 @@ const ReaderSettings = () => {
 
                 >
                   {suspendReasons.map((reason) => (
-                    <MenuItem value={reason}>
+                    <MenuItem key={reason} value={reason}>
                       {reason}
                     </MenuItem>
                   ))}
                 </Select>
                 </FormControl>
+                </Box>
               </Box>
             </Box>
           </Box>
@@ -788,7 +861,7 @@ const ReaderSettings = () => {
           }}
         >
           <i
-            class="fi fi-bs-cross-small"
+            className="fi fi-bs-cross-small"
             style={{
               fontSize: "2vw",
               cursor: "pointer",
@@ -829,7 +902,7 @@ const ReaderSettings = () => {
                 gap: "10px",
               }}
             >
-              <i class="fi fi-rr-user" style={{ fontSize: "2vw" }}></i>
+              <i className="fi fi-rr-user" style={{ fontSize: "2vw" }}></i>
               <Typography
                 sx={{
                   fontSize: "1.5vw",
