@@ -189,8 +189,9 @@ const ReaderSettings = () => {
   };
   const handleCloseEditOpen = async () => {
     setShowPassword(false);
+    dispatch({ type: "resetAllExcept", payload: "none" });
+    setEditProfileOpen(false);
     if (userLoggedIn === readerUser) {
-      setEditProfileOpen(false);
       return;
     } 
     const { success, message } = await updateAccount(
@@ -201,10 +202,7 @@ const ReaderSettings = () => {
     setSnackbarMessage(message);
     setSnackbarSuccess(success);
     if (success) {
-      setShowPassword(false);
-      dispatch({ type: "resetAllExcept", payload: "none" });
       setReaderUser(userLoggedIn)
-      setEditProfileOpen(false);
     }
     setOpenSnackbar(true);
   };
