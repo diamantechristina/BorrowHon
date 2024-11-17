@@ -11,9 +11,11 @@ import {
   TableRow,
   TableCell,
   TableBody,
-  Avatar, 
+  Avatar,
+  TextField,
+  InputAdornment,
 } from "@mui/material";
-import { ArrowSmallLeft } from "react-flaticons";
+import { ArrowSmallLeft, Search } from "react-flaticons";
 import { useAccount } from "../../library/account";
 import { useLog } from "../../library/log";
 import "@fontsource/arimo";
@@ -45,23 +47,30 @@ function stringAvatar(name) {
 }
 
 const History = () => {
-  const {setReaderUser, currentUser, isAdmin, readerUser, isOnEdit, setCurrentPage} = useStore();
+  const {
+    setReaderUser,
+    currentUser,
+    isAdmin,
+    readerUser,
+    isOnEdit,
+    setCurrentPage,
+  } = useStore();
   const navigate = useNavigate();
   const { fetchAccount, account } = useAccount();
   const { fetchLogs, log } = useLog();
-  
-  useEffect(() => {
-    setCurrentPage(location.pathname)
-  },[])
 
   useEffect(() => {
-    setReaderUser(null)
-  },[readerUser,isOnEdit])
+    setCurrentPage(location.pathname);
+  }, []);
+
   useEffect(() => {
-    if(!currentUser) navigate("/");
-    else if(!isAdmin) navigate(-1);
-  },[])
-  
+    setReaderUser(null);
+  }, [readerUser, isOnEdit]);
+  useEffect(() => {
+    if (!currentUser) navigate("/");
+    else if (!isAdmin) navigate(-1);
+  }, []);
+
   useEffect(() => {
     fetchAccount();
   }, [fetchAccount]);
@@ -69,6 +78,43 @@ const History = () => {
   useEffect(() => {
     fetchLogs();
   }, [fetchLogs]);
+
+  const sortedAccounts = account
+    ?.filter((acc) => acc.isAdmin === false)
+    .sort((a, b) => {
+      const latestLogA = log?.reduce((latest, current) => {
+        if (
+          current.acc_id === a.acc_id &&
+          (!latest || current.logindate > latest.logindate)
+        ) {
+          return current;
+        }
+        return latest;
+      }, null);
+
+      const latestLogB = log?.reduce((latest, current) => {
+        if (
+          current.acc_id === b.acc_id &&
+          (!latest || current.logindate > latest.logindate)
+        ) {
+          return current;
+        }
+        return latest;
+      }, null);
+
+      if (!latestLogA && !latestLogB) {
+        return 0;
+      } else if (!latestLogA) {
+        return 1;
+      } else if (!latestLogB) {
+        return -1;
+      } else {
+        const loginDateA = moment(latestLogA?.logindate);
+        const loginDateB = moment(latestLogB?.logindate);
+
+        return -loginDateA.diff(loginDateB);
+      }
+    });
 
   // console.log(account?.firstName);
   return (
@@ -88,8 +134,12 @@ const History = () => {
           top: 0,
           left: 0,
           width: "100vw",
-          height: "15vh",
-          zIndex: 1000, // Ensures it stays on top
+          height: "13vh",
+          // backgroundColor: "red",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          // zIndex: 1000, // Ensures it stays on top
         }}
       >
         <Button
@@ -99,18 +149,19 @@ const History = () => {
             margin: 0,
             borderRadius: "20px",
             color: "#E8E8E8",
+
             "&:hover": {
               backgroundColor: "transparent",
               filter: "drop-shadow(0 0 1px white)",
               color: "#FFFFFF",
             },
             position: "absolute",
-            left: 10,
-            top: 10,
+            left: 30,
+            top: 15,
           }}
         >
           <ArrowSmallLeft
-            size={"75px"}
+            size={"5vw"}
             style={{
               marginTop: "-10px",
               marginLeft: "-15px",
@@ -121,8 +172,8 @@ const History = () => {
         </Button>
         <Typography
           sx={{
-            marginTop: "20px",
-            marginLeft: "100px",
+            marginTop: "5px",
+            marginLeft: "110px",
             fontSize: "35px",
             fontWeight: "bold",
             color: "#f4f4f4",
@@ -131,7 +182,82 @@ const History = () => {
         >
           LIST OF READERS
         </Typography>
+        <TextField
+          type="text"
+          variant="outlined"
+          placeholder="Search"
+          InputLabelProps={{ required: false }}
+          sx={{
+            marginRight: "100px",
+            "& .MuiOutlinedInput-root": {
+              width: "clamp(20vw, 30vw, 30vw)",
+              // width: "42.2vw",
+              height: "45px",
+              // height: "clamp(7.5vh, 7.5vh, 7.5vh)",
+              paddingLeft: "6px",
+              paddingRight: "6px",
+              backgroundColor: "#F4F4F4",
+              borderRadius: "15px",
+              fontSize: "24px",
+              // marginLeft: "20px",
+            },
+            "& .MuiOutlinedInput-notchedOutline": {
+              borderColor: "#F4F4F4", // border color
+              borderWidth: "2px", // border width
+            },
+            "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline":
+              {
+                borderColor: "#F4F4F4", // focus border color
+              },
+            "& .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline": {
+              borderColor: "#F4F4F4", // hover border color
+            },
+            "& .MuiOutlinedInput-input.MuiInputBase-input::placeholder": {
+              color: "#191919",
+              // backgroundColor: "red",
+              opacity: 1,
+              fontSize: "20px",
+              position: "absolute",
+              top: 20.5,
+              fontFamily: "Arimo",
+
+            },
+            // marginTop: "20px",
+            "& .MuiOutlinedInput-input.MuiInputBase-input": {
+              marginLeft: "8px",
+              fontSize: "20px",
+              // marginTop: "5px",
+            },
+          }}
+          InputProps={{
+            style: {
+              color: "#F4F4F4",
+            },
+          }}
+          slotProps={{
+            input: {
+              startAdornment: (
+                <InputAdornment position="start">
+                  <Box
+                    marginTop="10px"
+                    marginLeft="13px"
+                    // backgroundColor="red"
+                  >
+                    <Search
+                      size="25px"
+                      style={{
+                        color: "#191919",
+                        paddingBottom: 0,
+                      }}
+                    />
+                  </Box>
+                </InputAdornment>
+              ),
+            },
+          }}
+        />
       </Box>
+
       <Box
         sx={{
           marginTop: "10vh",
@@ -185,7 +311,7 @@ const History = () => {
         <Box
           sx={{
             width: "90vw",
-            height: "75vh",
+            maxHeight: "75vh",
             backgroundColor: "#2e2e2e",
             // backgroundColor: "red",
             display: "",
@@ -201,25 +327,9 @@ const History = () => {
             // alignItems: userHistory?.length > 0 ? "" : "center",
           }}
         >
-          {/* {userHistory?.length === 0 ? (
-            <Typography
-              sx={{
-                margin: 0,
-                // left: 75,
-                top: 10,
-                color: "#E8E8E8",
-                fontFamily: "Montserrat",
-                fontWeight: "bold",
-                fontSize: "clamp(1.25rem, 3vw, 2rem)",
-              }}
-            >
-              NO HISTORY RECORD
-            </Typography>
-          ) : ( */}
-
           <Table>
             <TableBody>
-              {account?.filter((acc) => acc.isAdmin === false).map((acc, index) => {
+              {sortedAccounts?.map((acc, index) => {
                 const latestLog = log?.reduce((latest, current) => {
                   if (
                     current.acc_id === acc.acc_id &&
@@ -238,7 +348,7 @@ const History = () => {
                     }}
                     key={acc.acc_id}
                     sx={{
-                      cursor:"pointer",
+                      cursor: "pointer",
                       backgroundColor:
                         index % 2 === 0
                           ? "rgba(34,85,96, 0.20)"
@@ -255,12 +365,6 @@ const History = () => {
                         // display: "flex",
                         // justifyContent: "center",
                         fontSize: "clamp(1vw, 1.2vw, 1.5vw)",
-                        borderRadius:
-                          index % 2 === 0 && index === 0
-                            ? "20px 0px 0px 0px"
-                            : index === account.length - 1
-                            ? "0px 0px 0px 20px"
-                            : null,
                       }}
                     >
                       <Box
@@ -290,7 +394,7 @@ const History = () => {
                               src={acc.profilepic}
                               sx={{
                                 width: "clamp(2rem, 5vw, 6rem)",
-                            height: "clamp(2rem, 5vw, 6rem)",
+                                height: "clamp(2rem, 5vw, 6rem)",
                               }}
                             />
                           ) : (
@@ -300,7 +404,7 @@ const History = () => {
                               )}
                               sx={{
                                 width: "clamp(2rem, 5vw, 6rem)",
-                            height: "clamp(2rem, 5vw, 6rem)",
+                                height: "clamp(2rem, 5vw, 6rem)",
                                 fontFamily: "Montserrat",
                                 fontSize: "clamp(1rem, 2vw, 4rem)",
                                 fontWeight: "bold",
@@ -312,7 +416,7 @@ const History = () => {
                           )}
                         </Box>
                         {/* {acc.profilepic ? acc.profilepic : "N/A"} */}
-                        {acc.firstName} {acc.lastName}
+                        {acc.firstName}
                       </Box>
                     </TableCell>
                     <TableCell
@@ -329,12 +433,6 @@ const History = () => {
                         fontFamily: "Arimo",
                         borderWidth: "0px",
                         fontSize: "clamp(1vw, 1.2vw, 1.5vw)",
-                        borderRadius:
-                          index % 2 === 0 && index === 0
-                            ? "0px 20px 0px 0px"
-                            : index === account.length - 1
-                            ? "0px 0px 20px 0px"
-                            : null,
                       }}
                     >
                       {latestLog &&

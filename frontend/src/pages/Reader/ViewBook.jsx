@@ -29,6 +29,31 @@ const ViewBook = () => {
   const { updateBook } = useBook();
   const [display,setDisplay] = useState(false)
   const [showPassword, setShowPassword] = useState(false);
+  const { fetchBook, books} = useBook();
+  const currentBook = bookData
+  const currentGenre = currentBook?.genre;
+
+
+  useEffect(() => {
+    fetchBook();
+  }, [fetchBook]);
+  console.log("books: ", books);
+
+  const relatedBooks = useMemo(() => {
+    if (!books || !currentGenre) return [];
+    
+    return books.filter((book) => {
+      // Check if the book is not the current book and has a genre
+      if (book.book_id === currentBook?.book_id || !book.genre) return false;
+  
+      // Check if there's at least one matching genre
+      return book.genre.some((genre) => currentGenre.includes(genre));
+    });
+  }, [books, currentGenre]);
+   
+
+  console.log("relatedBooks: ", relatedBooks);
+
   const togglePasswordVisibility = () => {
     setShowPassword((prev) => !prev);
   };

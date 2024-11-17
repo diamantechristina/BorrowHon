@@ -261,7 +261,7 @@ const AccountSettings = () => {
           left: 0,
           width: "100vw",
           height: "5vh",
-          backgroundColor: "transparent",
+          backgroundColor: "red",
         }}
       >
         <Button
@@ -278,12 +278,12 @@ const AccountSettings = () => {
               color: "#FFFFFF",
             },
             position: "absolute",
-            left: 10,
+            left: 30,
             top: 15,
           }}
         >
           <ArrowSmallLeft
-            size={"3rem"}
+            size={"5vw"}
             style={{
               marginTop: "-10px",
               marginLeft: "-15px",
