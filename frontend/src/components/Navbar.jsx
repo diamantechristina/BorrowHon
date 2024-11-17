@@ -125,12 +125,14 @@ const Navbar = () => {
         position: "fixed",
         width: "100%",
         zIndex: "100",
+        height: "100px",
         top: 0,
         transition: "background-color 0.3s ease, backdrop-filter 0.3s ease", // Smooth transition when applying blur
         ...(scrolled && {
-          backdropFilter: "blur(10px)", // Apply blur when scrolled
-          WebkitBackdropFilter: "blur(10px)", // Safari support
-          backgroundColor: "rgba(255, 255, 255, 0.7)", // Slightly transparent background
+          backdropFilter: "blur(5px)", // Apply blur when scrolled
+          WebkitBackdropFilter: "blur(5px)", // Safari support
+          backgroundColor: "rgba(200,200,200, 0.01)", // Semi-transparent background color
+
         }),
       }}
     >

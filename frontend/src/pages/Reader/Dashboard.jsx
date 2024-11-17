@@ -1,4 +1,4 @@
-import _, { toInteger } from 'lodash';
+import _, { toInteger } from "lodash";
 import React, { useEffect, useMemo, useState } from "react";
 import {
   Box,
@@ -12,8 +12,9 @@ import {
   SnackbarContent,
   List,
   ListItem,
-  ClickAwayListener
+  ClickAwayListener,
 } from "@mui/material";
+import "@flaticon/flaticon-uicons/css/all/all.rounded.css";
 import Navbar from "../../components/Navbar";
 import { useBook } from "../../library/book.js";
 import Carousel from "react-spring-3d-carousel";
@@ -25,13 +26,21 @@ import Login from "../Login.jsx";
 import { useStore } from "../../library/store.js";
 import { useSearch } from "../../library/search.js";
 import { useNotification } from "../../library/notification.js";
-import "@fontsource/montserrat/500.css"
-import "@fontsource/montserrat/700.css"
+import "@fontsource/montserrat/500.css";
+import "@fontsource/montserrat/700.css";
 import { useHistory } from "../../library/history.js";
 import { set } from "mongoose";
 
 const Dashboard = () => {
-  const { currentUser, setBookData, bookData, isFirstLogin, setIsFirstLogin, setIsOnEdit, setCurrentPage } = useStore();
+  const {
+    currentUser,
+    setBookData,
+    bookData,
+    isFirstLogin,
+    setIsFirstLogin,
+    setIsOnEdit,
+    setCurrentPage,
+  } = useStore();
   const { fetchNotifications, notification } = useNotification();
   const { fetchHistory, history } = useHistory();
   console.log("currentUser: ", currentUser);
@@ -43,29 +52,27 @@ const Dashboard = () => {
     fetchHistory();
   }, [fetchHistory]);
 
-
   useEffect(() => {
-    setCurrentPage(location.pathname)
-  },[])
+    setCurrentPage(location.pathname);
+  }, []);
 
   const navigate = useNavigate();
-  const [display, setDisplay] = useState(false)
+  const [display, setDisplay] = useState(false);
 
   useEffect(() => {
     if (!currentUser) {
       navigate("/");
-    }else{
-      setDisplay(true)
+    } else {
+      setDisplay(true);
     }
   }, []);
-  
+
   const { fetchBook, books } = useBook();
   useEffect(() => {
     fetchBook();
   }, [fetchBook]);
   const [fetchedBooks, setFetchedBooks] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
-
 
   const [bookCreation, setBookCreation] = useState([]);
 
@@ -78,12 +85,20 @@ const Dashboard = () => {
     setOpenModal(false);
   };
 
+  const handleScrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
-
- const mostPopularBooks = _.take(_.orderBy(Object.keys(_.countBy(history, 'book_id')), (key) => _.countBy(history, 'book_id')[key], 'desc'), 5)
-   .map((bookId) => {
-     return books.find((book) => book.book_id === toInteger(bookId));
-   });
+  const mostPopularBooks = _.take(
+    _.orderBy(
+      Object.keys(_.countBy(history, "book_id")),
+      (key) => _.countBy(history, "book_id")[key],
+      "desc"
+    ),
+    5
+  ).map((bookId) => {
+    return books.find((book) => book.book_id === toInteger(bookId));
+  });
 
   useEffect(() => {
     if (books.length > 0) {
@@ -131,10 +146,10 @@ const Dashboard = () => {
   }));
 
   return (
-
     <Box
       sx={{
-        display: display ? "auto" : 'none',
+        height: "230vh",
+        display: display ? "auto" : "none",
         overflowY: "scroll", // Allow vertical scrolling
         "&::-webkit-scrollbar": {
           display: "none", // Hide scrollbars for WebKit browsers
@@ -148,161 +163,26 @@ const Dashboard = () => {
         onClose={() => setIsFirstLogin(false)}
       >
         <SnackbarContent
-          message='Logged In Successfully!'
+          message="Logged In Successfully!"
           style={{
-            backgroundColor:'green',
+            backgroundColor: "green",
             justifyContent: "center",
           }}
         />
       </Snackbar>
-      {/* <ClickAwayListener onClickAway={() => setSearchOpen(!searchOpen)}>
-      <List
-        sx={{
-          display: searchedBook ? "auto" : "none",
-          width: '100%',
-          maxWidth: '33.73vw',
-          bgcolor: '#d9d9d9',
-          position: 'fixed',
-          overflow: 'auto',
-          "&::-webkit-scrollbar": {
-          display: "none", // Hide scrollbars for WebKit browsers
-        },
-          top: '9vh',
-          left: '13.75vw',
-          zIndex: 1,
-          maxHeight: "36.6vh",
-          paddingTop: '2.5vh',
-          borderBottomLeftRadius: '20px',
-          borderBottomRightRadius: '20px',
-          filter: "drop-shadow(0.15rem 0.15rem 0.2rem rgba(0, 0, 0, 0.5))"
-        }}
-      >
-        {books.filter((book) => {
-        
-        if (filterType === 'title'){
-          return book.title.toLowerCase().includes(searchedBook?.toLowerCase())
-        }else if (filterType === 'author'){
-          return book.author.toLowerCase().includes(searchedBook?.toLowerCase())
-        }else if (filterType === 'isbn'){
-          return book.isbn.includes(searchedBook)
-        }else if (filterType === 'genre'){
-          return book.genre[0].toLowerCase().includes(searchedBook?.toLowerCase())
-        }
-        else{
-          return false;
-        }
-        
-      }).length === 0 ?(
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              height: "100%",
-            }}
-          >
-            <Typography
-              sx={{
-                fontSize: "1.5rem",
-                fontWeight: "bold",
-                color: "#191919",
-              }}
-            >
-              No Results Found
-            </Typography>
-          </Box>
-        ) : null}
-      {books.filter((book) => {
-        if (searchedBook === '') {
-          return false;
-        }
-        if (filterType === 'title'){
-          return book.title.toLowerCase().includes(searchedBook?.toLowerCase())
-        }else if (filterType === 'author'){
-          return book.author.toLowerCase().includes(searchedBook?.toLowerCase())
-        }else if (filterType === 'isbn'){
-          return book.isbn.includes(searchedBook)
-        }else if (filterType === 'genre'){
-          return book.genre[0].toLowerCase().includes(searchedBook?.toLowerCase())
-        }
-        
-      })
-      .map((book) => (
-        <ListItem
-          sx={{
-            "&:hover": {
-                backgroundColor: "#E8E8E8",
-              },
-          }}
-          key={book._id}
-          onClick={() => {
-            setBookData(book);
-            navigate("/view-book");
-          }}
-        >
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              cursor: "pointer",
-              width: "100%",
-              height: "10vh",
-              
-            }}
-          >
-            <Box
-              sx={{
-                width: "10%",
-                height: "10vh",
-                objectFit: "contain",
-                background: `url(${book.coverImage})`,
-                backgroundSize: "contain",
-                backgroundPosition: "center",
-                backgroundRepeat: "no-repeat",
-              }}
-            />
-            <Box
-              sx={{
-                margin: "0",
-              }}
-            >
-            <Typography
-              sx={{
-                fontFamily: "Montserrat",
-                marginLeft: "1vw",
-                fontSize: "1.2rem",
-                fontWeight: "bold",
-                color: "#191919",
-              }}
-            >
-              {book.title}
-            </Typography>
-            <Typography
-              sx={{
-                fontFamily: "Montserrat",
-                fontWeight: "500",
-                marginLeft: "1vw",
-                fontSize: "0.9rem",
-                color: "#191919",
-              }}
-            >
-              {book.author}
-            </Typography>
-            </Box>
+      <Navbar />
 
-          </Box>
-        </ListItem>
-      ))}
-      </List>
-      </ClickAwayListener> */}
       <Box
         sx={{
+          position: "relative",
           height: "100vh",
-          position: "relative", // para mo upod ang background image ig scroll
           backgroundImage:
             "linear-gradient(rgba(25,25,25,.9),rgba(34, 85, 96, 0.7), rgba(34, 85, 96, .7), rgba(25,25,25,1))",
           backgroundSize: "cover",
           backgroundRepeat: "no-repeat",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
         }}
       >
         <Box
@@ -319,200 +199,131 @@ const Dashboard = () => {
             zIndex: -1, // Add this property to ensure the image is behind the content
           }}
         />
-        
-        <Navbar/>
         <Box
           sx={{
+            width: "50vw",
+            height: "100vh",
             display: "flex",
-            flexDirection: "row",
             justifyContent: "center",
             alignItems: "center",
-            height: "100vh",
-            // backgroundColor: "gray",
+            flexDirection: "column",
           }}
         >
           <Box
             sx={{
-              width: "50vw",
+              width: "40vw",
               height: "100vh",
               display: "flex",
               justifyContent: "center",
               flexDirection: "column",
-
-              // backgroundColor: "#225560",
             }}
           >
-            <Box
+            <Typography
               sx={{
-                // width: "35vw",
-                width: "clamp(35vw, 35vw, 35vw)",
-                display: "flex",
-                flexDirection: "column",
-                gap: 1,
-                marginTop: "20vh",
-                marginLeft: "8vw",
-                // backgroundColor: "red"
+                fontSize: "55px",
+                fontWeight: "bold",
+                color: "#F4F4F4",
+                textTransform: "uppercase",
+                fontFamily: "Montserrat",
+                marginY: "5vh",
+                lineHeight: "7.5vh",
               }}
             >
-              <Typography
-                sx={{
-                  fontSize: "55px",
-                  fontWeight: "bold",
+              {mostPopularBooks[currentIndex]?.title}
+            </Typography>
+            <Typography
+              sx={{
+                color: "#F4F4F4",
+              }}
+            >
+              By {mostPopularBooks[currentIndex]?.author}
+            </Typography>
+            <Typography
+              sx={{
+                marginY: "5vh",
+                color: "#F4F4F4",
+              }}
+            >
+              {mostPopularBooks[currentIndex]?.description}
+            </Typography>
+            <Button
+              onClick={() => {
+                setBookData(mostPopularBooks[currentIndex]);
+                navigate("/view-book");
+              }}
+              variant="contained"
+              sx={{
+                width: "clamp(5vw, 12vw, 12vw)",
+                height: "52px",
+                borderRadius: "20px",
+                bgcolor: "#1FAA70",
+                color: "#F4F4F4",
+                "&:hover": {
+                  bgcolor: "#4dc995",
                   color: "#F4F4F4",
-                  textTransform: "uppercase",
-                  fontFamily: "Montserrat",
-                }}
-              >
-                {fetchedBooks[currentIndex]?.title}
-              </Typography>
-              <Typography
-                sx={{
-                  color: "#F4F4F4",
-                }}
-              >
-                By {fetchedBooks[currentIndex]?.author}
-              </Typography>
-              <Typography
-                sx={{
-                  color: "#F4F4F4",
-                }}
-              >
-                {fetchedBooks[currentIndex]?.description}
-              </Typography>
-              <Button
-                onClick={() => {
-                  setBookData(fetchedBooks[currentIndex])
-                  navigate("/view-book");
-                }}
-                variant="contained"
-                sx={{
-                  width: "clamp(5vw, 12vw, 12vw)",
-                  height: "52px",
-                  borderRadius: "20px",
-                  bgcolor: "#1FAA70",
-                  color: "#F4F4F4",
-                  "&:hover": {
-                    bgcolor: "#4dc995",
-                    color: "#F4F4F4",
-                    boxShadow: "none",
-                  },
-                  fontFamily: "Montserrat",
-                  fontWeight: "bold",
                   boxShadow: "none",
-                  textTransform: "none",
-                }}
-              >
-                See Book
-              </Button>
-              {/* <Modal
-                aria-labelledby="unstyled-modal-title"
-                aria-describedby="unstyled-modal-description"
-                open={openModal}
-                onClose={handleCloseModal}
-                BackdropComponent={Backdrop}
-                BackdropProps={{
-                  timeout: 500,
-                }}
-                sx={{
-                  "& .MuiBox-root": {
-                    border: "none",
-                  },
-                }}
-              >
-                <Box
-                  sx={{
-                    position: "absolute",
-                    top: "55%",
-                    left: "50%",
-                    transform: "translate(-50%, -50%)",
-                    width: "85vw",
-                    height: "70vh",
-                    bgcolor: "transparent",
-                    boxShadow: 24,
-                    p: 4,
-                    borderRadius: "20px",
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    flexDirection: "column",
-                    // overflow: "auto",
-                  }}
-                >
-                  <Box
-                    sx={{
-                      backgroundColor: "#225560",
-                      width: "75%",
-                      height: "100%",
-                      left: 0,
-                      position: "absolute",
-                      borderRadius: "20px",
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      flexDirection: "column",
-                    }}
-                  ></Box>
-                  <Box
-                    sx={{
-                      backgroundColor: "#225560",
-                      width: "23%",
-                      height: "100%",
-                      right: 0,
-                      position: "absolute",
-                      borderRadius: "20px",
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      flexDirection: "column",
-                    }}
-                  ></Box>
-                </Box>
-              </Modal> */}
-            </Box>
+                },
+                fontFamily: "Montserrat",
+                fontWeight: "bold",
+                boxShadow: "none",
+                textTransform: "none",
+              }}
+            >
+              See Book
+            </Button>
           </Box>
+        </Box>
+
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "100vh",
+            width: "50vw",
+          }}
+        >
           <Box
             sx={{
-              width: "50vw",
-              height: "100vh",
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
-              flexDirection: "column",
-              // backgroundColor: "red",
+              height: "100vh",
+              width: "33vw",
             }}
           >
-            <Box
-              sx={{
-                width: "30vw",
-                height: "80vh",
-                marginTop: "10vh",
-                zIndex: 0,
+            <Carousel
+              slides={slides}
+              goToSlide={goToSlide}
+              width={"25vw"}
+              height={"75vh"}
+              perspective={500}
+              rotation={30}
+              offsetFn={() => {
+                return {
+                  opacity: 1,
+                };
               }}
-            >
-              <Carousel
-                slides={slides}
-                goToSlide={goToSlide}
-                width={"30vw"}
-                height={"75vh"}
-                perspective={500}
-                rotation={30}
-                offsetFn={() => {
-                  return {
-                    opacity: 1,
-                  };
-                }}
-              />
-            </Box>
+            />
           </Box>
         </Box>
+      </Box>
+      <Box
+        sx={{
+          height: "130vh",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          flexDirection: "column",
+        }}
+      >
         <Box
           sx={{
-            width: "inherit",
-            height: "110vh",
-            backgroundColor: "#191919",
+            height: "5vh",
+            width: "100vw",
             display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
+            justifyContent: "flex-start",
+            alignItems: "center",
           }}
         >
           <Typography
@@ -525,225 +336,231 @@ const Dashboard = () => {
           >
             Most Popular Books
           </Typography>
+        </Box>
+        <Box>
           <Box
             sx={{
-              overflowX: "overlay",
-              "&::-webkit-scrollbar": {
-                display: "none",
-              },
+              width: "100vw",
+              height: "50vh",
               display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-            }}
-          >
-            <Box
-              sx={{
-                width: "100vw",
-                height: "58vh",
-                display: "flex",
-                justifyContent: "center",
-                // marginLeft: "17vw",
-                alignItems: "center",
-                flexDirection: "row",
-                gap: "5vw",
-              }}
-            >
-              {mostPopularBooks.slice(0, 5).map((book, index) => (
-                <Card
-                  onMouseOver={() => setHoverPopularBook(book.title)}
-                  onMouseOut={() => setHoverPopularBook(null)}
-                  onClick={() => {
-                    setBookData(book)
-                    navigate(`/view-book`);
-                  }}
-                  key={index}
-                  sx={{
-                    width: "12.6vw",
-                    height: "40vh",
-                    borderRadius: 4,
-                    position: "relative",
-                    transition: "300ms",
-                    "&:hover": {
-                      transform: "scale(1.05)",
-                    },
-                  }}
-                  style={{
-                    filter: "drop-shadow(0px 0px 15px rgba(34, 85, 96, 1))",
-                  }}
-                >
-                  <CardMedia
-                    component="img"
-                    image={book.coverImage}
-                    sx={{
-                      height: "100%",
-                    }}
-                  ></CardMedia>
-                  {hoverPopularBook == book.title && (
-                    <CardContent
-                      sx={{
-                        position: "absolute",
-                        // backgroundColor:"pink",
-                        bottom: 0,
-                        width: "100%",
-                        height: "100%",
-                        display: "flex",
-                        justifyContent: "flex-end",
-                        flexDirection: "column",
-                        
-                        color: "#F4F4F4",
-                        backgroundImage:
-                          "linear-gradient(to bottom, rgba(0, 20, 20, 0.3), rgba(20, 20, 20, 1))",
-                      }}
-                    >
-                      <Box
-                        sx={{
-                          width: "90%",
-                          display: "flex",
-                          flexDirection: "column",
-                          marginTop: "33vh",
-                        }}
-                      >
-                        <Typography
-                          sx={{
-                            fontSize: "16px",
-                            fontWeight: "bold",
-                            color: "#F4F4F4",
-                          }}
-                        >
-                          {book.title}
-                        </Typography>
-                        <Typography
-                          sx={{
-                            color: "#F4F4F4",
-                            fontSize: "14px",
-                          }}
-                        >
-                          By {book.author}
-                        </Typography>
-                      </Box>
-                    </CardContent>
-                  )}
-                </Card>
-              ))}
-            </Box>
-          </Box>
-          <Typography
-            sx={{
-              color: "#F4F4F4",
-              fontSize: "30px",
-              fontWeight: "bold",
-              marginLeft: "8vw",
-              marginBottom: "-2vh",
-            }}
-          >
-            Newly Added Books
-          </Typography>
-          <Box
-            sx={{
-              overflowX: "auto",
-              "&::-webkit-scrollbar": {
-                display: "none",
-              },
-              display: "flex",
-              flexDirection: "column",
               justifyContent: "center",
-              alignItems: "center",
-              // borderRadius: "50px",
+              // marginLeft: "17vw",
+              alignItems: "start",
+              flexDirection: "row",
+              marginTop: "3vh",
+              gap: "5vw",
             }}
           >
-            <Box
-              sx={{
-                width: "100vw",
-                height: "58vh",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                flexDirection: "row",
-                gap: "5vw",
-              }}
-            >
-              {bookCreation.slice(0, 5).map((book, index) => (
-                <Card
-                  onMouseOver={() => setHoverRecentBook(book.title)}
-                  onMouseOut={() => setHoverRecentBook(null)}
-                  key={index}
-                  onClick={() => {
-                    if(book===undefined){
-                      navigate(`/reader-dashboard`);
-                    }
-                    else{
-                      setBookData(book);
-                      navigate(`/view-book`);
-                    }
-                  }}
+            {mostPopularBooks.slice(0, 5).map((book, index) => (
+              <Card
+                onMouseOver={() => setHoverPopularBook(book.title)}
+                onMouseOut={() => setHoverPopularBook(null)}
+                onClick={() => {
+                  setBookData(book);
+                  navigate(`/view-book`);
+                }}
+                key={index}
+                sx={{
+                  width: "12.6vw",
+                  height: "40vh",
+                  borderRadius: 4,
+                  position: "relative",
+                  transition: "300ms",
+                  "&:hover": {
+                    transform: "scale(1.05)",
+                  },
+                }}
+                style={{
+                  filter: "drop-shadow(0px 0px 15px rgba(34, 85, 96, 1))",
+                }}
+              >
+                <CardMedia
+                  component="img"
+                  image={book.coverImage}
                   sx={{
-                    width: "12.6vw",
-                    height: "40vh",
-                    borderRadius: 4,
-                    position: "relative",
-                    transition: "300ms",
-                    "&:hover": {
-                      transform: "scale(1.05)",
-                    },
+                    height: "100%",
                   }}
-                  style={{
-                    filter: "drop-shadow(0px 0px 15px rgba(34, 85, 96, 1))",
-                  }}
-                >
-                  <CardMedia
-                    component="img"
-                    image={book.coverImage}
+                ></CardMedia>
+                {hoverPopularBook == book.title && (
+                  <CardContent
                     sx={{
+                      position: "absolute",
+                      // backgroundColor:"pink",
+                      bottom: 0,
+                      width: "100%",
                       height: "100%",
+                      display: "flex",
+                      justifyContent: "flex-end",
+                      flexDirection: "column",
+
+                      color: "#F4F4F4",
+                      backgroundImage:
+                        "linear-gradient(to bottom, rgba(0, 20, 20, 0.3), rgba(20, 20, 20, 1))",
                     }}
-                  ></CardMedia>
-                  {hoverRecentBook == book.title && (
-                    <CardContent
+                  >
+                    <Box
                       sx={{
-                        position: "absolute",
-                        // backgroundColor:"pink",
-                        bottom: 0,
-                        width: "100%",
-                        height: "100%",
+                        width: "90%",
                         display: "flex",
-                        justifyContent: "flex-end",
                         flexDirection: "column",
-                        color: "#F4F4F4",
-                        backgroundImage:
-                          "linear-gradient(to bottom, rgba(0, 20, 20, 0.3), rgba(20, 20, 20, 1))",
+                        marginTop: "33vh",
                       }}
                     >
-                      <Box
+                      <Typography
                         sx={{
-                          width: "90%",
-                          display: "flex",
-                          flexDirection: "column",
-                          marginTop: "33vh",
+                          fontSize: "16px",
+                          fontWeight: "bold",
+                          color: "#F4F4F4",
                         }}
                       >
-                        <Typography
-                          sx={{
-                            fontSize: "16px",
-                            fontWeight: "bold",
-                            color: "#F4F4F4",
-                          }}
-                        >
-                          {book.title}
-                        </Typography>
-                        <Typography
-                          sx={{
-                            color: "#F4F4F4",
-                            fontSize: "14px",
-                          }}
-                        >
-                          By {book.author}
-                        </Typography>
-                      </Box>
-                    </CardContent>
-                  )}
-                </Card>
-              ))}
-            </Box>
+                        {book.title}
+                      </Typography>
+                      <Typography
+                        sx={{
+                          color: "#F4F4F4",
+                          fontSize: "14px",
+                        }}
+                      >
+                        By {book.author}
+                      </Typography>
+                    </Box>
+                  </CardContent>
+                )}
+              </Card>
+            ))}
+          </Box>
+          <Box
+            sx={{
+              height: "5vh",
+              width: "100vw",
+              display: "flex",
+              justifyContent: "flex-start",
+              alignItems: "center",
+            }}
+          >
+            <Typography
+              sx={{
+                color: "#F4F4F4",
+                fontSize: "30px",
+                fontWeight: "bold",
+                marginLeft: "8vw",
+              }}
+            >
+              Newly Added Books
+            </Typography>
+          </Box>
+          <Box
+            sx={{
+              width: "100vw",
+              height: "50vh",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "start",
+              marginTop: "3vh",
+              flexDirection: "row",
+              gap: "5vw",
+            }}
+          >
+            {bookCreation.slice(0, 5).map((book, index) => (
+              <Card
+                onMouseOver={() => setHoverRecentBook(book.title)}
+                onMouseOut={() => setHoverRecentBook(null)}
+                key={index}
+                onClick={() => {
+                  if (book === undefined) {
+                    navigate(`/reader-dashboard`);
+                  } else {
+                    setBookData(book);
+                    navigate(`/view-book`);
+                  }
+                }}
+                sx={{
+                  width: "12.6vw",
+                  height: "40vh",
+                  borderRadius: 4,
+                  position: "relative",
+                  transition: "300ms",
+                  "&:hover": {
+                    transform: "scale(1.05)",
+                  },
+                }}
+                style={{
+                  filter: "drop-shadow(0px 0px 15px rgba(34, 85, 96, 1))",
+                }}
+              >
+                <CardMedia
+                  component="img"
+                  image={book.coverImage}
+                  sx={{
+                    height: "100%",
+                  }}
+                ></CardMedia>
+                {hoverRecentBook == book.title && (
+                  <CardContent
+                    sx={{
+                      position: "absolute",
+                      // backgroundColor:"pink",
+                      bottom: 0,
+                      width: "100%",
+                      height: "100%",
+                      display: "flex",
+                      justifyContent: "flex-end",
+                      flexDirection: "column",
+                      color: "#F4F4F4",
+                      backgroundImage:
+                        "linear-gradient(to bottom, rgba(0, 20, 20, 0.3), rgba(20, 20, 20, 1))",
+                    }}
+                  >
+                    <Box
+                      sx={{
+                        width: "90%",
+                        display: "flex",
+                        flexDirection: "column",
+                        marginTop: "33vh",
+                      }}
+                    >
+                      <Typography
+                        sx={{
+                          fontSize: "16px",
+                          fontWeight: "bold",
+                          color: "#F4F4F4",
+                        }}
+                      >
+                        {book.title}
+                      </Typography>
+                      <Typography
+                        sx={{
+                          color: "#F4F4F4",
+                          fontSize: "14px",
+                        }}
+                      >
+                        By {book.author}
+                      </Typography>
+                    </Box>
+                  </CardContent>
+                )}
+              </Card>
+            ))}
+          </Box>
+          <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", bottom: 0, right: 0, margin: 2 }}>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleScrollToTop}
+              sx={{
+                width: "3rem",
+
+                height: "3rem",
+                backgroundColor: "#225560",
+                "&:hover": {
+                  backgroundColor: "#336670",
+                  
+                },
+                borderRadius: "10px",
+              }}
+            >
+              <i class="fi fi-rr-arrow-small-up" style={{marginTop: ".5rem", fontSize: "1.75rem", color: "#F4F4F4"}}/>
+            </Button>
           </Box>
         </Box>
       </Box>
