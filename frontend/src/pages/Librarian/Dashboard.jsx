@@ -403,6 +403,7 @@ const Dashboard = () => {
                   style={{
                     color: "#f4f4f4",
                     fontSize: "2.5vw",
+                    marginTop: "1vh",
                   }}
                 />
                   PENDING

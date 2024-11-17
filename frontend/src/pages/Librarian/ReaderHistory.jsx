@@ -76,7 +76,7 @@ const ReaderHistory = () => {
 
   const filteredHistory = userHistory?.filter((history) => {
     const book = booksHistory.find((book) => book.book_id === history.book_id);
-    return book && book.title.toLowerCase().includes(searchQuery.toLowerCase());
+    return book && book.title.toLowerCase().includes(searchQuery.trim().toLowerCase());
   });
   // console.log("borrowdate: ", userHistory?.map((item) => item.borrowdate));
   return (
@@ -150,7 +150,7 @@ const ReaderHistory = () => {
           variant="outlined"
           placeholder="Search"
           value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value.trim())}
+          onChange={(e) => setSearchQuery(e.target.value)}
           InputLabelProps={{ required: false }}
           sx={{
             marginLeft: "65vw",
