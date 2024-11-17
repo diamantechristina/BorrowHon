@@ -163,8 +163,9 @@ const AccountSettings = () => {
   };
   const handleCloseEditOpen = async () => {
     setShowPassword(false);
+    setEditProfileOpen(false);
+    dispatch({ type: "resetAllExcept", payload: "none" });
     if (userLoggedIn === currentUser) {
-      setEditProfileOpen(false);
       return;
     }
     const { success, message } = await updateAccount(
@@ -175,9 +176,7 @@ const AccountSettings = () => {
     setSnackbarMessage(message);
     setSnackbarSuccess(success);
     if (success) {
-      dispatch({ type: "resetAllExcept", payload: "none" });
       setCurrentUser(userLoggedIn);
-      setEditProfileOpen(false);
     }
     setOpenSnackbar(true);
   };
