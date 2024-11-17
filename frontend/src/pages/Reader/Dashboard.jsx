@@ -351,7 +351,7 @@ const Dashboard = () => {
               gap: "5vw",
             }}
           >
-            {mostPopularBooks.slice(0, 5).map((book, index) => (
+            {mostPopularBooks?.slice(0, 5).map((book, index) => (
               <Card
                 onMouseOver={() => setHoverPopularBook(book.title)}
                 onMouseOut={() => setHoverPopularBook(null)}
@@ -376,12 +376,12 @@ const Dashboard = () => {
               >
                 <CardMedia
                   component="img"
-                  image={book.coverImage}
+                  image={book?.coverImage}
                   sx={{
                     height: "100%",
                   }}
                 ></CardMedia>
-                {hoverPopularBook == book.title && (
+                {hoverPopularBook == book?.title && (
                   <CardContent
                     sx={{
                       position: "absolute",
@@ -413,7 +413,7 @@ const Dashboard = () => {
                           color: "#F4F4F4",
                         }}
                       >
-                        {book.title}
+                        {book?.title}
                       </Typography>
                       <Typography
                         sx={{
@@ -421,7 +421,7 @@ const Dashboard = () => {
                           fontSize: "14px",
                         }}
                       >
-                        By {book.author}
+                        By {book?.author}
                       </Typography>
                     </Box>
                   </CardContent>
@@ -461,9 +461,9 @@ const Dashboard = () => {
               gap: "5vw",
             }}
           >
-            {bookCreation.slice(0, 5).map((book, index) => (
+            {bookCreation?.slice(0, 5).map((book, index) => (
               <Card
-                onMouseOver={() => setHoverRecentBook(book.title)}
+                onMouseOver={() => setHoverRecentBook(book?.title)}
                 onMouseOut={() => setHoverRecentBook(null)}
                 key={index}
                 onClick={() => {
@@ -490,12 +490,12 @@ const Dashboard = () => {
               >
                 <CardMedia
                   component="img"
-                  image={book.coverImage}
+                  image={book?.coverImage}
                   sx={{
                     height: "100%",
                   }}
                 ></CardMedia>
-                {hoverRecentBook == book.title && (
+                {hoverRecentBook == book?.title && (
                   <CardContent
                     sx={{
                       position: "absolute",
@@ -526,7 +526,7 @@ const Dashboard = () => {
                           color: "#F4F4F4",
                         }}
                       >
-                        {book.title}
+                        {book?.title}
                       </Typography>
                       <Typography
                         sx={{
@@ -534,7 +534,7 @@ const Dashboard = () => {
                           fontSize: "14px",
                         }}
                       >
-                        By {book.author}
+                        By {book?.author}
                       </Typography>
                     </Box>
                   </CardContent>
@@ -559,7 +559,7 @@ const Dashboard = () => {
                 borderRadius: "10px",
               }}
             >
-              <i class="fi fi-rr-arrow-small-up" style={{marginTop: ".5rem", fontSize: "1.75rem", color: "#F4F4F4"}}/>
+              <i className="fi fi-rr-arrow-small-up" style={{marginTop: ".5rem", fontSize: "1.75rem", color: "#F4F4F4"}}/>
             </Button>
           </Box>
         </Box>

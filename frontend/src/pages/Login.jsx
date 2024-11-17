@@ -313,6 +313,7 @@ const Login = () => {
                       marginRight: "15px",
                       minWidth: 0,
                     }}
+                    tabIndex={-1}
                   >
                     {showPassword ? (
                       <Eye size={17} />

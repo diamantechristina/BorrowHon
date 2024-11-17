@@ -11,6 +11,17 @@ const ContinueForgotPassword = () => {
   const navigate = useNavigate();
   const {setOpenSnackbar, setSnackbarSuccess, setSnackbarMessage, openSnackbar, snackbarMessage, snackbarSuccess} = useSnackbar();
 
+  const handleKeyPress = (event) => {
+    if (event.key === "Enter") {
+      handleContinueClick();
+    }
+  }
+  useEffect(() => {
+    document.addEventListener('keypress', handleKeyPress);
+    return () => {
+      document.removeEventListener('keypress', handleKeyPress);
+    }
+  })
   const {updateAccount} = useAccount();
   const { accountReset, setAccountReset } = useResetPassword();
   const [showPassword, setShowPassword] = useState(false);
@@ -227,6 +238,7 @@ const ContinueForgotPassword = () => {
                       minWidth:0,
                       marginRight: "15px",
                     }}
+                    tabIndex={-1}
                     >
                     {showPassword ? <Eye /> : <EyeCrossed />}
                   </Button>
@@ -287,6 +299,7 @@ const ContinueForgotPassword = () => {
                       minWidth:0,
                       marginRight: "15px",
                     }}
+                    tabIndex={-1}
                   >
                     {showConfirmPassword ? <Eye /> : <EyeCrossed />}
                   </Button>
@@ -312,7 +325,6 @@ const ContinueForgotPassword = () => {
               boxShadow: "none",
               textTransform: "none",
             }}
-            tabIndex={-1}
             onClick={handleContinueClick}
           >
             Confirm

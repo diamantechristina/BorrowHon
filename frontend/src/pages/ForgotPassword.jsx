@@ -13,6 +13,17 @@ const ForgotPassword = () => {
   const {setCurrentPage} = useStore();
   const {setOpenSnackbar, setSnackbarSuccess, setSnackbarMessage, openSnackbar, snackbarMessage, snackbarSuccess} = useSnackbar();
 
+  const handleKeyPress = (event) => {
+    if (event.key === "Enter") {
+      handleCheckAccount();
+    }
+  }
+  useEffect(() => {
+    document.addEventListener('keypress', handleKeyPress);
+    return () => {
+      document.removeEventListener('keypress', handleKeyPress);
+    }
+  })
   useEffect(() => {
     setCurrentPage(location.pathname);
   }, []);

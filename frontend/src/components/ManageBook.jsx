@@ -1,5 +1,5 @@
 import React from "react";
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import { Modal, Backdrop, Box, Typography, Button } from "@mui/material";
 import Resizer from "react-image-file-resizer";
 import { TextField, styled } from "@mui/material";
@@ -139,6 +139,11 @@ const ManageBook = ({open, setOpen, pageTitle, confirmPageTitle, handleHover, bo
                     // overflow: "auto",
                 }}
             >
+                <i
+                    class="fi fi-bs-cross-small"
+                    style={{ fontSize: "2vw", cursor: "pointer", position: "absolute", top: "1vh", right: "1vh" }}
+                    onClick={handleClose}
+                ></i>
                 <Typography
                     sx={{
                         fontSize: "32px",

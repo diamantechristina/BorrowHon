@@ -569,23 +569,11 @@ const ViewBook = () => {
                       gap: "20px",
                     }}
                   >
-                    <Box
-                      sx={{
-                        display: "flex",
-                        justifyContent: "flex-end",
-                        width: "100%",
-                        height: "0vh",
-                        marginTop: "-3.5vh",
-                        marginRight: "-3.5vw",
-                        // backgroundColor: "red",
-                      }}
-                    >
-                      <i
-                        class="fi fi-bs-cross-small"
-                        style={{ fontSize: "2vw", cursor: "pointer" }}
-                        onClick={handleClose}
-                      ></i>
-                    </Box>
+                    <i
+          class="fi fi-bs-cross-small"
+          style={{ fontSize: "2vw", cursor: "pointer", position: "absolute", top: "1vh", right: "1vh" }}
+          onClick={handleClose}
+        ></i>
                     <Typography
                       sx={{
                         fontSize: "4vw",
@@ -1124,23 +1112,17 @@ const ViewBook = () => {
                       gap: "20px",
                     }}
                   >
-                    <Box
-                      sx={{
-                        display: "flex",
-                        justifyContent: "flex-end",
-                        width: "100%",
-                        height: "0vh",
-                        marginTop: "-3.5vh",
-                        marginRight: "-3.5vw",
-                        // backgroundColor: "red",
+                    <i
+                      class="fi fi-bs-cross-small"
+                      style={{
+                        fontSize: "2vw",
+                        cursor: "pointer",
+                        position: "absolute",
+                        top: "1vh",
+                        right: "1vh",
                       }}
-                    >
-                      <i
-                        class="fi fi-bs-cross-small"
-                        style={{ fontSize: "2vw", cursor: "pointer" }}
-                        onClick={handleClose}
-                      ></i>
-                    </Box>
+                      onClick={handleClose}
+                    ></i>
                     <Typography
                       sx={{
                         fontSize: "4vw",

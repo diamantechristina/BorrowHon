@@ -47,20 +47,14 @@ function stringAvatar(name) {
 }
 
 const ListOfReaders = () => {
-  const {
-    setReaderUser,
-    currentUser,
-    isAdmin,
-    readerUser,
-    setCurrentPage,
-  } = useStore();
+  const { setReaderUser, currentUser, isAdmin, readerUser, setCurrentPage } =
+    useStore();
   const navigate = useNavigate();
   const { fetchAccount, account } = useAccount();
   const { fetchLogs, log } = useLog();
 
   const [searchQuery, setSearchQuery] = React.useState("");
 
-  
   useEffect(() => {
     setCurrentPage(location.pathname);
   }, []);
@@ -82,41 +76,51 @@ const ListOfReaders = () => {
   }, [fetchLogs]);
 
   const sortedAccounts = account
-    ?.filter((acc) => acc.isAdmin === false)
-    .sort((a, b) => {
-      const latestLogA = log?.reduce((latest, current) => {
-        if (
-          current.acc_id === a.acc_id &&
-          (!latest || current.logindate > latest.logindate)
-        ) {
-          return current;
-        }
-        return latest;
-      }, null);
+  ?.filter((acc) => acc.isAdmin === false)
+  .sort((a, b) => {
+    const currentLogA = log?.find((userlog) => userlog.acc_id === a.acc_id && userlog.logoutdate === null);
+    const currentLogB = log?.find((userlog) => userlog.acc_id === b.acc_id && userlog.logoutdate === null);
 
-      const latestLogB = log?.reduce((latest, current) => {
-        if (
-          current.acc_id === b.acc_id &&
-          (!latest || current.logindate > latest.logindate)
-        ) {
-          return current;
-        }
-        return latest;
-      }, null);
+    if (currentLogA && !currentLogB) {
+      return -1; // Active user A should come before inactive user B
+    } else if (!currentLogA && currentLogB) {
+      return 1; // Active user B should come before inactive user A
+    } else {
+      // Both are either active or inactive, so compare by the latest login date
+      const latestLogA = log
+        ?.filter((log) => log.acc_id === a.acc_id)
+        .reduce((latest, current) => {
+          if (!latest || current.logindate > latest.logindate) {
+            return current;
+          }
+          return latest;
+        }, null);
+
+      const latestLogB = log
+        ?.filter((log) => log.acc_id === b.acc_id)
+        .reduce((latest, current) => {
+          if (!latest || current.logindate > latest.logindate) {
+            return current;
+          }
+          return latest;
+        }, null);
 
       if (!latestLogA && !latestLogB) {
-        return 0;
+        return 0; // No logs for either account
       } else if (!latestLogA) {
-        return 1;
+        return 1; // Account B has logs but A does not
       } else if (!latestLogB) {
-        return -1;
+        return -1; // Account A has logs but B does not
       } else {
-        const loginDateA = moment(latestLogA?.logindate);
-        const loginDateB = moment(latestLogB?.logindate);
+        // Compare by latest login date (most recent first)
+        const loginDateA = moment(latestLogA.logindate);
+        const loginDateB = moment(latestLogB.logindate);
 
         return -loginDateA.diff(loginDateB);
       }
-    });
+    }
+  });
+
 
   // console.log(account?.firstName);
   return (
@@ -226,7 +230,6 @@ const ListOfReaders = () => {
               position: "absolute",
               top: 20.5,
               fontFamily: "Arimo",
-
             },
             // marginTop: "20px",
             "& .MuiOutlinedInput-input.MuiInputBase-input": {
@@ -264,230 +267,238 @@ const ListOfReaders = () => {
         />
       </Box>
 
-      { sortedAccounts?.filter((acc) => acc.firstName.toLowerCase().includes(searchQuery.trim().toLowerCase())).length === 0 ?
-       (
-        <Box
-        sx={{
-          marginTop: "10vh",
-          width: "90vw",
-          height: "85vh",
-          // backgroundColor: "red",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-        >
-          <Typography
-              sx={{
-                margin: 0,
-                // left: 75,
-                top: 10,
-                color: "#E8E8E8",
-                fontFamily: "Montserrat",
-                fontWeight: "bold",
-                fontSize: "clamp(1.25rem, 3vw, 2rem)",
-              }}
-            >
-              NO ACCOUNT FOUND
-            </Typography>
-        </Box>
-       ):(
-      <Box
-        sx={{
-          marginTop: "10vh",
-          width: "90vw",
-          height: "85vh",
-          // backgroundColor: "red",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-        }}
-      >
-        <Table>
-          <TableHead
-            sx={{
-              position: "sticky",
-              top: 0,
-              zIndex: 1,
-              // backgroundColor: "blue",
-            }}
-          >
-            <TableRow>
-              <TableCell
-                sx={{
-                  fontWeight: "bold",
-                  color: "#f4f4f4",
-                  textAlign: "center",
-                  fontSize: "clamp(1vw, 2.2vw, 2.5vw)",
-                  borderWidth: "0px",
-                  width: "50vw",
-                  paddingRight: "5vw",
-                  // backgroundColor: "pink",
-                }}
-              >
-              &nbsp;Name
-              </TableCell>
-              <TableCell
-                sx={{
-                  fontWeight: "bold",
-                  color: "#f4f4f4",
-                  textAlign: "center",
-                  fontSize: "clamp(1vw, 2.2vw, 2.5vw)",
-                  borderWidth: "0px",
-                  paddingLeft: "5vw",
-                  width: "50vw",
-                  // backgroundColor: "purple",
-                }}
-              >
-                Login Status
-              </TableCell>
-            </TableRow>
-          </TableHead>
-        </Table>
+      {sortedAccounts?.filter((acc) =>
+        acc.firstName.toLowerCase().includes(searchQuery.trim().toLowerCase())
+      ).length === 0 ? (
         <Box
           sx={{
+            marginTop: "10vh",
             width: "90vw",
-            maxHeight: "75vh",
-            backgroundColor: "#2e2e2e",
+            height: "85vh",
             // backgroundColor: "red",
-            display: "",
-            justifyContent: "",
-            alignItems: "",
-            overflowY: "scroll",
-            borderRadius: "20px",
-            "&::-webkit-scrollbar": {
-              display: "none",
-            },
-            // display: userHistory?.length > 0 ? "" : "flex",
-            // justifyContent: userHistory?.length > 0 ? "" : "center",
-            // alignItems: userHistory?.length > 0 ? "" : "center",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Typography
+            sx={{
+              margin: 0,
+              // left: 75,
+              top: 10,
+              color: "#E8E8E8",
+              fontFamily: "Montserrat",
+              fontWeight: "bold",
+              fontSize: "clamp(1.25rem, 3vw, 2rem)",
+            }}
+          >
+            NO ACCOUNT FOUND
+          </Typography>
+        </Box>
+      ) : (
+        <Box
+          sx={{
+            marginTop: "10vh",
+            width: "90vw",
+            height: "85vh",
+            // backgroundColor: "red",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
           }}
         >
           <Table>
-            <TableBody>
-              {sortedAccounts?.filter((acc) => acc.firstName.toLowerCase().includes(searchQuery.trim().toLowerCase())).map((acc, index) => {
-                const latestLog = log?.reduce((latest, current) => {
-                  if (
-                    current.acc_id === acc.acc_id &&
-                    (!latest || current.logindate > latest.logindate)
-                  ) {
-                    return current;
-                  }
-                  return latest;
-                }, null);
+            <TableHead
+              sx={{
+                position: "sticky",
+                top: 0,
+                zIndex: 1,
+                // backgroundColor: "blue",
+              }}
+            >
+              <TableRow>
+                <TableCell
+                  sx={{
+                    fontWeight: "bold",
+                    color: "#f4f4f4",
+                    textAlign: "center",
+                    fontSize: "clamp(1vw, 2.2vw, 2.5vw)",
+                    borderWidth: "0px",
+                    width: "50vw",
+                    paddingRight: "5vw",
+                    // backgroundColor: "pink",
+                  }}
+                >
+                  &nbsp;Name
+                </TableCell>
+                <TableCell
+                  sx={{
+                    fontWeight: "bold",
+                    color: "#f4f4f4",
+                    textAlign: "center",
+                    fontSize: "clamp(1vw, 2.2vw, 2.5vw)",
+                    borderWidth: "0px",
+                    paddingLeft: "5vw",
+                    width: "50vw",
+                    // backgroundColor: "purple",
+                  }}
+                >
+                  Login Status
+                </TableCell>
+              </TableRow>
+            </TableHead>
+          </Table>
+          <Box
+            sx={{
+              width: "90vw",
+              maxHeight: "75vh",
+              backgroundColor: "#2e2e2e",
+              // backgroundColor: "red",
+              display: "",
+              justifyContent: "",
+              alignItems: "",
+              overflowY: "scroll",
+              borderRadius: "20px",
+              "&::-webkit-scrollbar": {
+                display: "none",
+              },
+              // display: userHistory?.length > 0 ? "" : "flex",
+              // justifyContent: userHistory?.length > 0 ? "" : "center",
+              // alignItems: userHistory?.length > 0 ? "" : "center",
+            }}
+          >
+            <Table>
+              <TableBody>
+                {sortedAccounts
+                  ?.filter((acc) =>
+                    acc.firstName
+                      .toLowerCase()
+                      .includes(searchQuery.trim().toLowerCase())
+                  )
+                  .map((acc, index) => {
+                    const latestLog = log?.reduce((latest, current) => {
+                      if (
+                        current.acc_id === acc.acc_id &&
+                        (!latest || current.logindate > latest.logindate)
+                      ) {
+                        return current;
+                      }
+                      return latest;
+                    }, null);
 
-                return (
-                  <TableRow
-                    onClick={() => {
-                      setReaderUser(acc);
-                      navigate(`/reader`);
-                    }}
-                    key={acc.acc_id}
-                    sx={{
-                      cursor: "pointer",
-                      backgroundColor:
-                        index % 2 === 0
-                          ? "rgba(34,85,96, 0.20)"
-                          : "rgba(34,85,96, 0.40)",
-                    }}
-                  >
-                    <TableCell
-                      sx={{
-                        width: "20vw",
-                        color: "#E8E8E8",
-                        textAlign: "center",
-                        fontFamily: "Arimo",
-                        borderWidth: "0px",
-                        // display: "flex",
-                        // justifyContent: "center",
-                        fontSize: "clamp(1vw, 1.2vw, 1.5vw)",
-                      }}
-                    >
-                      <Box
+                    return (
+                      <TableRow
+                        onClick={() => {
+                          setReaderUser(acc);
+                          navigate(`/reader`);
+                        }}
+                        key={acc.acc_id}
                         sx={{
-                          display: "flex",
-                          justifyContent: "left",
-                          alignItems: "center",
-                          paddingLeft: "10vw",
-                          gap: "1vw",
+                          cursor: "pointer",
+                          backgroundColor:
+                            index % 2 === 0
+                              ? "rgba(34,85,96, 0.20)"
+                              : "rgba(34,85,96, 0.40)",
                         }}
                       >
-                        <Box
+                        <TableCell
                           sx={{
-                            width: "clamp(6vw, 6vw, 6vw)",
-                            height: "clamp(6vw, 6vw, 6vw)",
-                            borderRadius: "50%",
-
-                            // remove when there's profile na in database
-                            display: "flex",
-                            justifyContent: "center",
-                            alignItems: "center",
+                            width: "20vw",
+                            color: "#E8E8E8",
+                            textAlign: "center",
+                            fontFamily: "Arimo",
+                            borderWidth: "0px",
+                            // display: "flex",
+                            // justifyContent: "center",
+                            fontSize: "clamp(1vw, 1.2vw, 1.5vw)",
                           }}
                         >
-                          {acc.profilepic !== undefined ? (
-                            <Avatar
-                              alt={acc.firstName + " " + acc.lastName}
-                              src={acc.profilepic}
+                          <Box
+                            sx={{
+                              display: "flex",
+                              justifyContent: "left",
+                              alignItems: "center",
+                              paddingLeft: "10vw",
+                              gap: "1vw",
+                            }}
+                          >
+                            <Box
                               sx={{
-                                width: "clamp(2rem, 5vw, 6rem)",
-                                height: "clamp(2rem, 5vw, 6rem)",
+                                width: "clamp(6vw, 6vw, 6vw)",
+                                height: "clamp(6vw, 6vw, 6vw)",
+                                borderRadius: "50%",
+
+                                // remove when there's profile na in database
+                                display: "flex",
+                                justifyContent: "center",
+                                alignItems: "center",
                               }}
-                            />
-                          ) : (
-                            <Avatar
-                              {...stringAvatar(
-                                acc.firstName + " " + acc.lastName
+                            >
+                              {acc.profilepic !== undefined ? (
+                                <Avatar
+                                  alt={acc.firstName + " " + acc.lastName}
+                                  src={acc.profilepic}
+                                  sx={{
+                                    width: "clamp(2rem, 5vw, 6rem)",
+                                    height: "clamp(2rem, 5vw, 6rem)",
+                                  }}
+                                />
+                              ) : (
+                                <Avatar
+                                  {...stringAvatar(
+                                    acc.firstName + " " + acc.lastName
+                                  )}
+                                  sx={{
+                                    width: "clamp(2rem, 5vw, 6rem)",
+                                    height: "clamp(2rem, 5vw, 6rem)",
+                                    fontFamily: "Montserrat",
+                                    fontSize: "clamp(1rem, 2vw, 4rem)",
+                                    fontWeight: "bold",
+                                    backgroundColor: stringToColor(
+                                      acc.firstName + " " + acc.lastName
+                                    ),
+                                  }}
+                                />
                               )}
-                              sx={{
-                                width: "clamp(2rem, 5vw, 6rem)",
-                                height: "clamp(2rem, 5vw, 6rem)",
-                                fontFamily: "Montserrat",
-                                fontSize: "clamp(1rem, 2vw, 4rem)",
-                                fontWeight: "bold",
-                                backgroundColor: stringToColor(
-                                  acc.firstName + " " + acc.lastName
-                                ),
-                              }}
-                            />
-                          )}
-                        </Box>
-                        {/* {acc.profilepic ? acc.profilepic : "N/A"} */}
-                        {acc.firstName}
-                      </Box>
-                    </TableCell>
-                    <TableCell
-                      sx={{
-                        width: "20vw",
-                        color: latestLog
-                          ? !latestLog?.logoutdate &&
-                            latestLog?.logindate != null
-                            ? "#05B049"
-                            : "#E8E8E8"
-                          : "#E8E8E8",
-                        textAlign: "center",
-                        textTransform: "capitalize",
-                        fontFamily: "Arimo",
-                        borderWidth: "0px",
-                        fontSize: "clamp(1vw, 1.2vw, 1.5vw)",
-                      }}
-                    >
-                      {latestLog &&
-                      !latestLog?.logoutdate &&
-                      latestLog?.logindate != null
-                        ? "Online"
-                        : latestLog && latestLog?.logoutdate != null
-                        ? moment(latestLog?.logoutdate).fromNow()
-                        : "Never Logged In"}
-                    </TableCell>
-                  </TableRow>
-                );
-              })}
-            </TableBody>
-          </Table>
-          {/* // )} */}
-      </Box>
-        </Box>)}
+                            </Box>
+                            {/* {acc.profilepic ? acc.profilepic : "N/A"} */}
+                            {acc.firstName}
+                          </Box>
+                        </TableCell>
+                        <TableCell
+                          sx={{
+                            width: "20vw",
+                            color: latestLog
+                              ? !latestLog?.logoutdate &&
+                                latestLog?.logindate != null
+                                ? "#05B049"
+                                : "#E8E8E8"
+                              : "#E8E8E8",
+                            textAlign: "center",
+                            textTransform: "capitalize",
+                            fontFamily: "Arimo",
+                            borderWidth: "0px",
+                            fontSize: "clamp(1vw, 1.2vw, 1.5vw)",
+                          }}
+                        >
+                          {latestLog &&
+                          !latestLog?.logoutdate &&
+                          latestLog?.logindate != null
+                            ? "Online"
+                            : latestLog && latestLog?.logoutdate != null
+                            ? moment(latestLog?.logoutdate).fromNow()
+                            : "Never Logged In"}
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
+              </TableBody>
+            </Table>
+            {/* // )} */}
+          </Box>
+        </Box>
+      )}
     </Box>
   );
 };

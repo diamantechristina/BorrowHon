@@ -150,6 +150,11 @@ const PendingConfirm = ({
           tabindex: "-1",
         }}
       >
+        <i
+          class="fi fi-bs-cross-small"
+          style={{ fontSize: "2vw", cursor: "pointer", position: "absolute", top: "1vh", right: "1vh" }}
+          onClick={handleClose}
+        ></i>
         <Box>
           <Typography
             sx={{

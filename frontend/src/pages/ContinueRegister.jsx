@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useNavigate, useLocation } from "react-router-dom";
 import { Box, Typography, TextField, Button, InputAdornment, Snackbar, SnackbarContent } from "@mui/material";
 import { Link } from "react-router-dom";
@@ -22,6 +22,18 @@ const ContinueRegister = () => {
       password: "",
     })
     
+    const handleKeyPress = (event) => {
+      if (event.key === "Enter") {
+        handleAddAccount();
+      }
+    }
+
+    useEffect (() => {
+      document.addEventListener("keydown", handleKeyPress);
+      return () => {
+        document.removeEventListener("keydown", handleKeyPress);
+      };
+    });
 
     const { createAccount} = useAccount();
     

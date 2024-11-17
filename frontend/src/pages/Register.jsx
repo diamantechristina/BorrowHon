@@ -1,6 +1,6 @@
 import { Typography,Snackbar, SnackbarContent } from "@mui/material";
-import React, { useState } from "react";
-import { Box, Container } from "@mui/material";
+import React, { useState, useEffect } from "react";
+import { Box } from "@mui/material";
 import { TextField, Button, Divider } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 import '@fontsource/arsenal'
@@ -20,6 +20,17 @@ const Register = () => {
     phoneNumber: "",
   })
 
+  const handleKeyPress = (event) => {
+    if (event.key === "Enter") {
+      handleRegister();
+    }
+  }
+  useEffect(() => {
+    document.addEventListener('keypress', handleKeyPress);
+    return () => {
+      document.removeEventListener('keypress', handleKeyPress);
+    }
+  })
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;

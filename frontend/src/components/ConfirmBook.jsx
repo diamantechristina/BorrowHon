@@ -3,10 +3,15 @@ import { useState } from "react";
 import { Box, Typography, Button, Modal, Backdrop } from "@mui/material";
 import { useBook } from "../library/book.js";
 import { useSnackbar } from '../library/snackbar.js';
+import { set } from 'mongoose';
 
 const ConfirmBook = ({pageTitle, confirmOpen, setOpen, setConfirmOpen, handleHover, newBook}) => {
     const { createBook, deleteBook,updateBook } = useBook();
     const {setOpenSnackbar, setSnackbarSuccess, setSnackbarMessage} = useSnackbar();
+    
+    const handleClose = () => {
+        setConfirmOpen(false)
+    }
     const handleAddBook = async () => {
         const { success, message } = await createBook(newBook);
         console.log("Success:", success);
@@ -79,6 +84,23 @@ const ConfirmBook = ({pageTitle, confirmOpen, setOpen, setConfirmOpen, handleHov
                     // overflow: "auto",
                 }}
             >
+                <Box
+                      sx={{
+                        display: "flex",
+                        justifyContent: "flex-end",
+                        width: "100%",
+                        height: "0vh",
+                        marginTop: "-3.5vh",
+                        marginRight: "-3.5vw",
+                        // backgroundColor: "red",
+                      }}
+                    >
+                      <i
+                        class="fi fi-bs-cross-small"
+                        style={{ fontSize: "2vw", cursor: "pointer" }}
+                        onClick={handleClose}
+                      ></i>
+                    </Box>
                 <Typography
                     sx={{
                         fontSize: "4vw",
