@@ -46,7 +46,7 @@ function stringAvatar(name) {
   };
 }
 
-const History = () => {
+const ListOfReaders = () => {
   const {
     setReaderUser,
     currentUser,
@@ -492,4 +492,4 @@ const History = () => {
   );
 };
 
-export default History;
+export default ListOfReaders;

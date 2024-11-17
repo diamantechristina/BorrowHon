@@ -108,13 +108,18 @@ const ReaderSettings = () => {
   const navigate = useNavigate();
   const [display, setDisplay] = useState(false);
   const [open, setOpen] = useState(false);
+  const [openUnsuspend, setOpenUnsuspend] = useState(true);
 
   const handleOpen = () => {
     setOpen(true);
   };
+  const handeOpenUnsuspend = () => {
+    setOpenUnsuspend(true);
+  };
 
   const handleClose = () => {
     setOpen(false);
+    setOpenUnsuspend(false);
   };
   useEffect(() => {
     if (!currentUser) {
@@ -304,6 +309,7 @@ const ReaderSettings = () => {
       >
         Suspend
       </Button>
+      {/* for suspend */}
       <Modal
         aria-labelledby="unstyled-modal-title"
         aria-describedby="unstyled-modal-description"
@@ -418,7 +424,9 @@ const ReaderSettings = () => {
                     fontFamily: "Arimo",
                     fontSize: "1.5vw",
                   }}
-                >{userLoggedIn?.username}</Typography>
+                >
+                  {userLoggedIn?.username}
+                </Typography>
               </Box>
             </Box>
             <Box
@@ -569,26 +577,34 @@ const ReaderSettings = () => {
                     fontSize: "1.5vw",
                     fontFamily: "Arimo",
                   }}
-                >{userLoggedIn?.address}</Typography>
+                >
+                  {userLoggedIn?.address}
+                </Typography>
                 <Typography
                   sx={{
                     fontSize: "1.5vw",
                     fontFamily: "Arimo",
                   }}
-                >{userLoggedIn?.email}</Typography>
+                >
+                  {userLoggedIn?.email}
+                </Typography>
                 <Typography
                   sx={{
                     fontSize: "1.5vw",
                     fontFamily: "Arimo",
                   }}
-                >{userLoggedIn?.phoneNumber}</Typography>
+                >
+                  {userLoggedIn?.phoneNumber}
+                </Typography>
                 <Typography
                   sx={{
                     fontSize: "1.5vw",
                     fontFamily: "Arimo",
-                    backgroundColor: "red"
+                    backgroundColor: "red",
                   }}
-                >change to dropdown, as well as icon</Typography>
+                >
+                  change to dropdown, as well as icon
+                </Typography>
               </Box>
             </Box>
           </Box>
@@ -625,6 +641,185 @@ const ReaderSettings = () => {
             >
               Suspend
             </Button>
+            <Button
+              variant="contained"
+              sx={{
+                width: "clamp(10rem, 12vw, 40rem)",
+                height: "70px",
+                borderRadius: "20px",
+                bgcolor: "transparent",
+                border: "2px solid #f4f4f4",
+                color: "#F4F4F4",
+                "&:hover": {
+                  // bgcolor: "#4dc995",
+                  // color: "#F4F4F4",
+                  boxShadow: "none",
+                },
+                fontFamily: "Montserrat",
+                fontWeight: "bold",
+                boxShadow: "none",
+                textTransform: "none",
+                fontSize: "18px",
+              }}
+              tabIndex={-1}
+              onClick={handleClose}
+            >
+              Cancel
+            </Button>
+          </Box>
+        </Box>
+      </Modal>
+      {/* For unsuspend */}
+      <Modal
+        aria-labelledby="unstyled-modal-title"
+        aria-describedby="unstyled-modal-description"
+        open={openUnsuspend}
+        onClose={handleClose}
+        // slots={{ backdrop: StyledBackdrop }}
+        BackdropComponent={Backdrop}
+        BackdropProps={{
+          timeout: 500,
+        }}
+      >
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: "40vw",
+            height: "50vh",
+            p: 4,
+            backgroundColor: "#225560",
+            borderRadius: "20px",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            color: "#F4F4F4",
+            flexDirection: "column",
+            // gap: "20px",
+          }}
+        >
+          <Typography
+            sx={{
+              fontSize: "3vw",
+              fontWeight: "bold",
+              fontFamily: "montserrat",
+              // marginTop: "-3vh",
+            }}
+          >
+            UNSUSPEND ACCOUNT
+          </Typography>
+          <Box
+            sx={{
+              width: "33vw",
+              height: "100vh",
+              // backgroundColor: "yellow",
+              display: "flex",
+              justifyContent: "center",
+              // alignItems: "center",
+              flexDirection: "column",
+              gap: "3vh",
+            }}
+          >
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "row",
+                gap: "10px",
+              }}
+            >
+              <i class="fi fi-rr-user" style={{ fontSize: "2vw" }}></i>
+              <Typography
+                sx={{
+                  fontSize: "1.5vw",
+                  fontFamily: "Arimo",
+                  fontWeight: "bold",
+                }}
+              >
+                Username
+              </Typography>
+              <Typography
+                sx={{
+                  fontSize: "1.5vw",
+                  fontFamily: "Arimo",
+                  marginLeft: "20px",
+                }}
+              >{userLoggedIn?.username}</Typography>
+            </Box>
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "row",
+                gap: "10px",
+                // backgroundColor: "red",
+              }}
+            >
+              <i
+                className="fi fi-rr-ban"
+                style={{
+                  color: "#f4f4f4",
+                  fontSize: "2vw",
+                }}
+              />
+
+              <Typography
+                sx={{
+                  fontSize: "1.5vw",
+                  fontFamily: "Arimo",
+                  fontWeight: "bold",
+                  width: "20vw",
+                }}
+              >
+                Suspend Reason
+              </Typography>
+              <Typography
+                sx={{
+                  fontSize: "1.5vw",
+                  fontFamily: "Arimo",
+                  marginLeft: "20px",
+                  width: "25vw",
+                  backgroundColor: "red"
+                }}
+              >
+                get suspend reason from account collection
+              </Typography>
+            </Box>
+          </Box>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "space-between",
+              width: "30vw",
+              gap: "10px",
+            }}
+          >
+            <Button
+              variant="contained"
+              sx={{
+                width: "clamp(10rem, 12vw, 40rem)",
+                height: "70px",
+                borderRadius: "20px", // border radius
+                bgcolor: "#1FAA70",
+                color: "#F4F4F4",
+                "&:hover": {
+                  bgcolor: "#4dc995",
+                  color: "#F4F4F4",
+                  boxShadow: "none",
+                },
+                fontFamily: "Montserrat",
+                fontWeight: "bold",
+                boxShadow: "none",
+                textTransform: "none",
+                fontSize: "18px",
+              }}
+              tabIndex={-1}
+              // onClick={handleBorrowBook}
+            >
+              Unsuspend
+            </Button>
+
             <Button
               variant="contained"
               sx={{
