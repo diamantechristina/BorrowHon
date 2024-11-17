@@ -192,7 +192,7 @@ const History = () => {
           variant="outlined"
           placeholder="Search"
           value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value.trim())}
+          onChange={(e) => setSearchQuery(e.target.value)}
           InputLabelProps={{ required: false }}
           sx={{
             marginLeft: "65vw",
@@ -265,6 +265,35 @@ const History = () => {
         />
       </Box>
 
+      { sortedAccounts?.filter((acc) => acc.firstName.toLowerCase().includes(searchQuery.trim().toLowerCase())).length === 0 ?
+       (
+        <Box
+        sx={{
+          marginTop: "10vh",
+          width: "90vw",
+          height: "85vh",
+          // backgroundColor: "red",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+        >
+          <Typography
+              sx={{
+                margin: 0,
+                // left: 75,
+                top: 10,
+                color: "#E8E8E8",
+                fontFamily: "Montserrat",
+                fontWeight: "bold",
+                fontSize: "clamp(1.25rem, 3vw, 2rem)",
+              }}
+            >
+              NO ACCOUNT FOUND
+            </Typography>
+        </Box>
+       ):(
       <Box
         sx={{
           marginTop: "10vh",
@@ -338,7 +367,7 @@ const History = () => {
         >
           <Table>
             <TableBody>
-              {sortedAccounts?.filter((acc) => acc.firstName.toLowerCase().includes(searchQuery.toLowerCase())).map((acc, index) => {
+              {sortedAccounts?.filter((acc) => acc.firstName.toLowerCase().includes(searchQuery.trim().toLowerCase())).map((acc, index) => {
                 const latestLog = log?.reduce((latest, current) => {
                   if (
                     current.acc_id === acc.acc_id &&
@@ -458,8 +487,8 @@ const History = () => {
             </TableBody>
           </Table>
           {/* // )} */}
-        </Box>
       </Box>
+        </Box>)}
     </Box>
   );
 };
