@@ -188,6 +188,7 @@ const ReaderSettings = () => {
     dispatch({ type: "resetAllExcept", payload: "phoneNumber" });
   };
   const handleCloseEditOpen = async () => {
+    setShowPassword(false);
     if (userLoggedIn === readerUser) {
       setEditProfileOpen(false);
       return;
@@ -203,9 +204,9 @@ const ReaderSettings = () => {
       setShowPassword(false);
       dispatch({ type: "resetAllExcept", payload: "none" });
       setReaderUser(userLoggedIn)
+      setEditProfileOpen(false);
     }
     setOpenSnackbar(true);
-    if (success) setEditProfileOpen(false);
   };
   const handleOpenEditOpen = () => setEditProfileOpen(true);
   const togglePasswordVisibility = () => {
