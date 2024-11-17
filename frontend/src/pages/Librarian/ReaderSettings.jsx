@@ -20,6 +20,10 @@ import {
   SnackbarContent,
   Modal,
   Backdrop,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
 } from "@mui/material";
 import { ArrowSmallLeft, Marker, Envelope } from "react-flaticons";
 import { useAccount } from "../../library/account";
@@ -109,7 +113,7 @@ const ReaderSettings = () => {
   const [display, setDisplay] = useState(false);
   const [open, setOpen] = useState(false);
   const [openUnsuspend, setOpenUnsuspend] = useState(true);
-
+  const [suspendReason, setSuspendReason] = useState("");
   const handleOpen = () => {
     setOpen(true);
   };
@@ -119,6 +123,7 @@ const ReaderSettings = () => {
 
   const handleClose = () => {
     setOpen(false);
+    setSuspendReason("");
     setOpenUnsuspend(false);
   };
   useEffect(() => {
@@ -137,7 +142,6 @@ const ReaderSettings = () => {
     }
   }, [readerUser]);
 
-  console.log(display);
 
   useEffect(() => {
     setCurrentPage(location.pathname);
@@ -598,18 +602,52 @@ const ReaderSettings = () => {
                     fontSize: "1.5vw",
                     fontFamily: "Arimo",
                   }}
-                >
+                  >
                   {userLoggedIn?.phoneNumber}
                 </Typography>
-                <Typography
+                <FormControl 
+                  focused= {false}
+                variant="standard">
+                {/* <InputLabel
                   sx={{
-                    fontSize: "1.5vw",
+                    color: "#F4F4F4",
+                    ffontSize: "1.5vw",
                     fontFamily: "Arimo",
-                    backgroundColor: "red",
+                    textTransform: "none",
+                    fontSize: "18px",
                   }}
+                >Suspend Reason</InputLabel> */}
+                <Select
+                  value={suspendReason}
+                  label="Suspend Reason"
+                  onChange={(e) => setSuspendReason(e.target.value)}
+
+                  sx={{
+                    color: "#F4F4F4",
+                    fontFamily: "Montserrat",
+                    fontWeight: "bold",
+                    boxShadow: "none",
+                    textTransform: "none",
+                    fontSize: "18px",
+                    ".MuiInput-root": {
+                      borderColor: "1px solid #f4f4f4 !important",
+                    ":before": {
+                      borderColor: "1px solid #f4f4f4 !important",
+                    },
+                  },
+                    ".MuiSelect-iconStandard": {
+                      color: "#F4F4F4",
+                    },
+                  }}
+
                 >
-                  change to dropdown, as well as icon
-                </Typography>
+                  <MenuItem value="1">1</MenuItem>
+                  <MenuItem value="2">2</MenuItem>
+                  <MenuItem value="3">3</MenuItem>
+                  <MenuItem value="4">4</MenuItem>
+                  <MenuItem value="5">5</MenuItem>
+                </Select>
+                </FormControl>
               </Box>
             </Box>
           </Box>

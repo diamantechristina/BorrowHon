@@ -129,9 +129,9 @@ const Navbar = () => {
         top: 0,
         transition: "background-color 0.3s ease, backdrop-filter 0.3s ease", // Smooth transition when applying blur
         ...(scrolled && {
-          backdropFilter: "blur(5px)", // Apply blur when scrolled
-          WebkitBackdropFilter: "blur(5px)", // Safari support
-          backgroundColor: "rgba(200,200,200, 0.01)", // Semi-transparent background color
+          backdropFilter: "blur(4px)", // Apply blur when scrolled
+          WebkitBackdropFilter: "blur(4px)", // Safari support
+          backgroundColor: "rgba(50,50,50, 0.1)", // Semi-transparent background color
 
         }),
       }}

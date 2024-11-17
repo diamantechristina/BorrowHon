@@ -54,6 +54,16 @@ const accountSchema = new mongoose.Schema({
         type: Boolean,
         default: false,
         required: false
+    },
+    isSuspended:{
+        type: Boolean,
+        default: false,
+        required: false
+    },
+    suspendedMessage:{
+        type: String,
+        default: "",
+        required: false
     }
 },
 {
