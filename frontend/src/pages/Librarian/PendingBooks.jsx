@@ -1,4 +1,4 @@
-import { Box, Typography, Button } from "@mui/material";
+import { Box, Typography, Button, Snackbar, SnackbarContent } from "@mui/material";
 import { ArrowSmallLeft } from "react-flaticons";
 import { useBook } from "../../library/book";
 import { useAccount } from "../../library/account";
@@ -7,8 +7,10 @@ import React, { useEffect, useMemo } from "react";
 import PendingBookCard from "../../components/PendingBookCard";
 import { useNavigate } from "react-router-dom";
 import { useStore } from "../../library/store";
-
+import { useSnackbar } from "../../library/snackbar";
 const PendingBooks = () => {
+  const {setOpenSnackbar, openSnackbar, snackbarMessage, snackbarSuccess} = useSnackbar();
+
   const { currentUser, isAdmin, setCurrentPage } = useStore();
   const navigate = useNavigate();
   const { fetchHistory, history } = useHistory();
@@ -64,6 +66,21 @@ const PendingBooks = () => {
         },
       }}
     >
+      <Snackbar
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+        open={openSnackbar}
+        autoHideDuration={1000}
+        onClose={() => setOpenSnackbar(false)}
+      >
+        <SnackbarContent
+          message={snackbarMessage}
+          style={{
+            backgroundColor:
+              snackbarSuccess ? "green" : "red",
+            justifyContent: "center",
+          }}
+        />
+      </Snackbar>
       <Box
         sx={{
           display: "flex",

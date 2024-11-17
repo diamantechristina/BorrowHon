@@ -10,6 +10,7 @@ import "@fontsource/montserrat/200.css";
 import { useBook } from "../library/book.js";
 import { useHistory } from "../library/history.js";
 import { useNotification } from "../library/notification.js";
+import { useSnackbar } from "../library/snackbar.js";
 
 const PendingConfirm = ({
   open,
@@ -19,6 +20,8 @@ const PendingConfirm = ({
   account,
   userHistory,
 }) => {
+  const {setOpenSnackbar, setSnackbarSuccess, setSnackbarMessage} = useSnackbar();
+
   const { updateBook } = useBook();
   const { fetchHistory, updateHistory, deleteHistory, history } = useHistory();
   const { createNotification } = useNotification();
@@ -80,12 +83,19 @@ const PendingConfirm = ({
     });
     handleUpdateBook(updatedBook._id, updatedBook);
     handleUpdateHistory(updatedUserHistory._id, updatedUserHistory);
+    setOpenSnackbar(true);
+    setSnackbarSuccess(true);
+    setSnackbarMessage("Book request Accepted!");
+
     handleNotification(updatedUserHistory.acc_id,"Book Request Accepted", `Your book request for ${book.title} has been accepted!`);
     setOpen !== null ? setOpen(false) : () => {};
   };
 
   const handleDeclinePending = () => {
     handleDeleteHistory(userHistory.acc_id,userHistory)
+    setOpenSnackbar(true);
+    setSnackbarSuccess(true);
+    setSnackbarMessage("Book request Declined!");
   }
 
   const months = [

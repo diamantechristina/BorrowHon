@@ -26,6 +26,7 @@ import { useSearch } from "../library/search";
 import {useBook} from "../library/book";
 import { useNotification } from "../library/notification";
 import "@fontsource/montserrat/700.css";
+import { set } from "mongoose";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -40,6 +41,7 @@ const Navbar = () => {
   const [searchOpen,setSearchOpen] = useState(false);
   const [isTextFieldFocus, setIsTextFieldFocus] = useState(false);
   const [notificationOpen, setNotificationOpen] = useState(false);
+  const [unreadOpen, setUnreadOpen] = useState(false);
   useEffect(() => {
     const handleScroll = () => {
       if (window.scrollY > 0) {
@@ -93,7 +95,7 @@ const Navbar = () => {
   };
   const handleNotificationClick = () => {
     notification?.filter((item)=> item.acc_id === currentUser.acc_id).map(async (notification) => await updateNotification(notification._id, {...notification,status:"read"}))
-
+    setUnreadOpen(true);
     setNotificationOpen(!notificationOpen);
 
   }
@@ -608,7 +610,7 @@ const Navbar = () => {
                 </Typography>
             </ListItem> )
             :
-            (notification?.filter((item)=> item.acc_id === currentUser.acc_id).map((item)=>(
+            (notification?.filter((item)=> item.acc_id === currentUser.acc_id).reverse().map((item)=>(
               <ListItem
               key={item._id}
                 sx={{
@@ -712,7 +714,7 @@ const Navbar = () => {
               },
             }}
           >
-              {notification?.filter((item)=> item.acc_id === currentUser.acc_id && item.status === "unread").length > 0 ?
+              {notification?.filter((item)=> item.acc_id === currentUser.acc_id && item.status === "unread").length > 0 && !unreadOpen ?
               <i
               className="fi fi-ss-circle"
               style={{

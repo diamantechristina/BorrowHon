@@ -242,7 +242,7 @@ const AccountSettings = () => {
       <Snackbar
         anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
         open={openSnackbar}
-        autoHideDuration={3000}
+        autoHideDuration={1000}
         onClose={() => setOpenSnackbar(false)}
       >
         <SnackbarContent

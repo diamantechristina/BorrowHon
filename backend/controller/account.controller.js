@@ -29,31 +29,10 @@ export const getAccounts = async (req, res) => {
 export const createAccount = async (req, res) => {
   const account = req.body; // getting the data from frontend
 
-  const existingAccount = await Account.findOne({
-    $or: [
-      { email: account.email },
-      { username: account.username },
-      { phoneNumber: account.phoneNumber },
-    ],
-  });
+  const existingAccount = await Account.findOne({ username: account.username });
   if (existingAccount) {
-    return res
-      .status(400)
-      .json({ message: "Email or username or phone number already exists" });
+    return res.status(400).json({ message: "Username already taken!" });
   }
-
-  if (
-    !account.firstName ||
-    !account.lastName ||
-    !account.address ||
-    !account.phoneNumber ||
-    !account.username ||
-    !account.email ||
-    !account.password
-  ) {
-    return res.status(400).json({ message: "Please fill in all fields" });
-  }
-
   const newAccount = new Account(account);
 
   try {

@@ -59,6 +59,9 @@ const History = () => {
   const { fetchAccount, account } = useAccount();
   const { fetchLogs, log } = useLog();
 
+  const [searchQuery, setSearchQuery] = React.useState("");
+
+  
   useEffect(() => {
     setCurrentPage(location.pathname);
   }, []);
@@ -188,9 +191,11 @@ const History = () => {
           type="text"
           variant="outlined"
           placeholder="Search"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value.trim())}
           InputLabelProps={{ required: false }}
           sx={{
-            marginLeft: "63vw",
+            marginLeft: "65vw",
             "& .MuiOutlinedInput-root": {
               width: "clamp(20vw, 30vw, 30vw)",
               // width: "42.2vw",
@@ -289,10 +294,11 @@ const History = () => {
                   fontSize: "clamp(1vw, 2.2vw, 2.5vw)",
                   borderWidth: "0px",
                   width: "50vw",
+                  paddingRight: "5vw",
                   // backgroundColor: "pink",
                 }}
               >
-                Name
+              &nbsp;Name
               </TableCell>
               <TableCell
                 sx={{
@@ -301,6 +307,7 @@ const History = () => {
                   textAlign: "center",
                   fontSize: "clamp(1vw, 2.2vw, 2.5vw)",
                   borderWidth: "0px",
+                  paddingLeft: "5vw",
                   width: "50vw",
                   // backgroundColor: "purple",
                 }}
@@ -331,7 +338,7 @@ const History = () => {
         >
           <Table>
             <TableBody>
-              {sortedAccounts?.map((acc, index) => {
+              {sortedAccounts?.filter((acc) => acc.firstName.toLowerCase().includes(searchQuery.toLowerCase())).map((acc, index) => {
                 const latestLog = log?.reduce((latest, current) => {
                   if (
                     current.acc_id === acc.acc_id &&

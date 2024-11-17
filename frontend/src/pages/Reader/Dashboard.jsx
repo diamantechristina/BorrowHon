@@ -131,7 +131,7 @@ const Dashboard = () => {
       <Snackbar
         anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
         open={isFirstLogin}
-        autoHideDuration={2500}
+        autoHideDuration={1000}
         onClose={() => setIsFirstLogin(false)}
       >
         <SnackbarContent

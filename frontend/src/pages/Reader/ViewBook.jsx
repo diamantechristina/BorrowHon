@@ -1,5 +1,5 @@
 import { set } from "mongoose";
-import React, { useState, useEffect, useMemo, useRef } from "react";
+import React, { useState, useEffect, useMemo, useRef, useCallback } from "react";
 import {
   Modal,
   Backdrop,
@@ -10,6 +10,9 @@ import {
   InputAdornment,
   Snackbar,
   SnackbarContent,
+  Card,
+  CardMedia,
+  CardContent,
 } from "@mui/material";
 import { useLocation } from "react-router-dom";
 import { useHistory } from "../../library/history";
@@ -22,37 +25,19 @@ import { useBook } from "../../library/book";
 import { useStore } from "../../library/store";
 
 const ViewBook = () => {
-  const { currentUser, bookData, setBookData, isAdmin, setCurrentPage } = useStore();
+  const { currentUser, bookData, setBookData, isAdmin, setCurrentPage } =
+    useStore();
   const navigate = useNavigate();
-  console.log("bookData: ", bookData);
   const { fetchHistory, history } = useHistory();
   const { updateBook } = useBook();
-  const [display,setDisplay] = useState(false)
+  const [display, setDisplay] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const { fetchBook, books} = useBook();
-  const currentBook = bookData
-  const currentGenre = currentBook?.genre;
-
+  const { fetchBook, books } = useBook();
 
   useEffect(() => {
     fetchBook();
   }, [fetchBook]);
-  console.log("books: ", books);
 
-  const relatedBooks = useMemo(() => {
-    if (!books || !currentGenre) return [];
-    
-    return books.filter((book) => {
-      // Check if the book is not the current book and has a genre
-      if (book.book_id === currentBook?.book_id || !book.genre) return false;
-  
-      // Check if there's at least one matching genre
-      return book.genre.some((genre) => currentGenre.includes(genre));
-    });
-  }, [books, currentGenre]);
-   
-
-  console.log("relatedBooks: ", relatedBooks);
 
   const togglePasswordVisibility = () => {
     setShowPassword((prev) => !prev);
@@ -63,9 +48,8 @@ const ViewBook = () => {
   });
 
   useEffect(() => {
-    setCurrentPage(location.pathname)
-  },[])
-
+    setCurrentPage(location.pathname);
+  }, []);
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -79,29 +63,28 @@ const ViewBook = () => {
     fetchHistory();
   }, [fetchHistory, history]);
 
-  console.log("User: ", currentUser);
 
   // Locate the specific history entry that matches the current book and user
   const currentBookHistory = useMemo(() => {
-    return history?.filter(
-      (entry) =>
-        entry?.book_id === bookData?.book_id &&
-        entry.acc_id === currentUser?.acc_id
-    ).slice(-1)[0];
+    return history
+      ?.filter(
+        (entry) =>
+          entry?.book_id === bookData?.book_id &&
+          entry.acc_id === currentUser?.acc_id
+      )
+      .slice(-1)[0];
   }, [history, bookData, currentUser]);
 
-  console.log("bookData: ", bookData);
-  console.log("currentBookHistory: ", currentBookHistory);
 
   //get book dat
   useEffect(() => {
-    if(!currentUser){
+    if (!currentUser) {
       navigate("/");
-    }else if(!bookData){
+    } else if (!bookData) {
       navigate(-1);
-    }else if(isAdmin){
+    } else if (isAdmin) {
       navigate(-1);
-    }else{
+    } else {
       setDisplay(true);
     }
   }, []);
@@ -128,6 +111,9 @@ const ViewBook = () => {
     setRenewOpen(false);
   };
 
+  const relatedBooks = useMemo(() => {
+    return books.filter((book) => book._id !== bookData._id || (book.genre[0].includes(bookData.genre[0]) || bookData.genre[0].includes(book.genre[0]) ))
+  }, [books, bookData]);
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
 
@@ -139,8 +125,6 @@ const ViewBook = () => {
         acc_id: currentUser.acc_id,
       };
       const { success, message } = await createHistory(newHistory);
-      console.log("Success:", success);
-      console.log("Message:", message);
       setOpen(false);
       setSnackbarMessage("Book borrow request sent!");
       setOpenSnackbar(true);
@@ -150,17 +134,12 @@ const ViewBook = () => {
     }
   };
 
-  
   const handleUpdateBook = async (id, book) => {
     const { success, message } = await updateBook(id, book);
-    console.log("Success:", success);
-    console.log("Message:", message);
     setBookData(book);
   };
   const handleupdateHistory = async (id, history) => {
     const { success, message } = await updateHistory(id, history);
-    console.log("Success:", success);
-    console.log("Message:", message);
     setBookData(book);
   };
 
@@ -213,6 +192,7 @@ const ViewBook = () => {
       }
     }
   };
+  
 
   useEffect(() => {
     document.addEventListener("keypress", handleKeyPress);
@@ -245,7 +225,7 @@ const ViewBook = () => {
       <Snackbar
         anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
         open={openSnackbar}
-        autoHideDuration={3000}
+        autoHideDuration={1000}
         onClose={() => setOpenSnackbar(false)}
       >
         <SnackbarContent
@@ -416,12 +396,12 @@ const ViewBook = () => {
                   {/* conditioning for book status. when reader has book in their history,
                    then use current book history, if not then use book data */}
                   {currentBookHistory &&
-                  currentBookHistory.book_id === bookData.book_id ? 
-                    (currentBookHistory?.status === "onhand" ? 
-                      "Borrowed"
-                      : 
-                      (currentBookHistory?.status === "returned"  ? 
-                      bookData?.status : currentBookHistory?.status))
+                  currentBookHistory.book_id === bookData.book_id
+                    ? currentBookHistory?.status === "onhand"
+                      ? "Borrowed"
+                      : currentBookHistory?.status === "returned"
+                      ? bookData?.status
+                      : currentBookHistory?.status
                     : bookData?.status}
                 </Typography>
                 <Typography
@@ -1366,11 +1346,92 @@ const ViewBook = () => {
               position: "absolute",
               borderRadius: "20px",
               display: "flex",
-              justifyContent: "center",
+              justifyContent: "flex-start",
               alignItems: "center",
               flexDirection: "column",
             }}
-          ></Box>
+          >
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                flexDirection: "column",
+                marginY: "2.5vh",
+                overflow: "hidden",
+              }}
+            >
+              <Typography
+                sx={{
+                  fontSize: "2rem",
+                  fontFamily: "Montserrat",
+                  fontWeight: "700",
+                }}
+              >
+                Related Books
+              </Typography>
+              <Box
+                sx={{
+                  overflow: "hidden",
+                  overflowY: "scroll",
+                  "&::-webkit-scrollbar": {
+                    display: "none", // Hide scrollbars for WebKit browsers
+                  },
+                }}
+              >
+                {relatedBooks.map((book) => (
+                  <Box
+                    key={book._id}
+                    sx={{
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      flexDirection: "column",
+                      marginY: "1.5vh",
+                    }}
+                  > 
+                    <Card
+                      sx={{ 
+                        width: "90%",
+                        height: "20vh",
+                        borderRadius: "20px",
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        flexDirection: "column",
+                      }}    
+                    >
+                      <CardMedia  
+                        component="img"
+                        image={book.coverImage}  
+                        alt={book.title}
+                        sx={{
+                          borderRadius: "20px",
+                          objectFit: "cover ",
+                          paddingTop: "25vh",
+                        }}
+                      />
+                    </Card>
+                    <Typography
+                      sx={{
+                        fontFamily: "Montserrat",
+                        fontWeight: "700",
+                        fontSize: "1.25rem",
+                        marginY: "1.5vh",
+                        marginX: "1.5vw ",
+                        color: "#F4F4F4",
+                        textAlign: "center",
+                        lineHeight: "1.2",
+                      }}
+                    >
+                      {book.title}
+                    </Typography>
+                    
+                  </Box>
+                ))}
+              </Box>
+            </Box>
+          </Box>
         </Box>
       </Box>
     </Box>

@@ -73,7 +73,7 @@ const ForgotPassword = () => {
       <Snackbar
         anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
         open={openSnackbar}
-        autoHideDuration={2000}
+        autoHideDuration={1000}
         onClose={() => setOpenSnackbar(false)}
       >
         <SnackbarContent

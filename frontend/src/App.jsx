@@ -51,16 +51,24 @@ function App() {
         const borrowerNotification = {
           acc_id: history.acc_id,
           title: "Overdue Book",
-          message: `Your borrowed book ${borrowedBook.title.toUpperCase()} is overdue! Please return it as soon as possible.`,
+          message: `Your borrowed book ${borrowedBook.title.toUpperCase()} was overdued at ${new Date(history.returndate).toLocaleString("default", {
+            month: "long",
+            day: "numeric",
+            year: "numeric",
+          })}! Please return it as soon as possible.`,
           date: new Date(),
         }
         const adminNotification = {
           acc_id: 8,
           title: "Overdue Book",
-          message: `Borrowed book ${borrowedBook.title.toUpperCase()} by ${borrower.firstname} ${borrower.lastname} is overdue!`,
+          message: `Borrowed book ${borrowedBook.title.toUpperCase()} by ${borrower.firstname} ${borrower.lastname} was overdued at ${new Date(history.returndate).toLocaleString("default", {
+            month: "long",
+            day: "numeric",
+            year: "numeric",
+          })}!`,
           date: new Date(),
         }
-        if(!notification.includes(borrowerNotification) && !notification.includes(adminNotification)){
+        if(!notification.find((notification) => notification.message === borrowerNotification.message) && !notification.find((notification) => notification.message === adminNotification.message)){
           handleCreateNotification(borrowerNotification)
           handleCreateNotification(adminNotification)
         }

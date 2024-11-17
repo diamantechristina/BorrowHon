@@ -14,7 +14,7 @@ const ContinueRegister = () => {
     const newAccount = location.state;
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-
+    const [confirmPassword, setConfirmPassword] = useState("");
     const [newAccountState, setNewAccountState] = useState({
       ...newAccount,
       username: "",
@@ -26,20 +26,31 @@ const ContinueRegister = () => {
     const { createAccount} = useAccount();
     
     const handleAddAccount = async () => {
-      const { success, message } = await createAccount(newAccountState);
+      if(newAccountState.password.trim() !== confirmPassword.trim()){
+        setOpenSnackbar(true);
+        setSnackbarMessage("Passwords do not match!");
+        setSnackbarSuccess(false);
+        return
+      }
+      else{
+        const { success, message } = await createAccount(newAccountState);
       setOpenSnackbar(true);
       setSnackbarMessage(message);
       setSnackbarSuccess(success);
       if (success) {
         navigate("/");
       }
+      }
     };
 
+    const handleConfirmPasswordChange = (event) => {
+      setConfirmPassword(event.target.value.trim());
+    }
     const handleInputChange = (event) => {
       const { name, value } = event.target;
       setNewAccountState((prevAccount) => ({
         ...prevAccount,
-        [name]: value,
+        [name]: value.trim(),
       }));
     };
 
@@ -66,7 +77,7 @@ const ContinueRegister = () => {
       <Snackbar
         anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
         open={openSnackbar}
-        autoHideDuration={2000}
+        autoHideDuration={1000}
         onClose={() => setOpenSnackbar(false)}
       >
         <SnackbarContent
@@ -301,6 +312,8 @@ const ContinueRegister = () => {
             variant="outlined"
             label="Confirm Password"
             name="confirmPassword"
+            value={confirmPassword}
+            onChange={handleConfirmPasswordChange}
             InputLabelProps={{ required: false }}
             sx={{
               "& .MuiInputLabel-root": {

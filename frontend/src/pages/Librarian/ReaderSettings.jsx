@@ -118,8 +118,9 @@ const ReaderSettings = () => {
     if (!currentUser) {
       navigate("/");
     } else if (currentPage !== "/list-of-readers" && currentPage !== "/borrow-history") {
-      navigate(-1);
-    } else {
+      navigate(currentPage);
+    } else if(!readerUser || readerUser === null) navigate(currentPage);
+    else {
       setDisplay(true);
     }
   }, []);
@@ -144,7 +145,6 @@ const ReaderSettings = () => {
   );
   const [editProfileOpen, setEditProfileOpen] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  console.log("reader: ", readerUser);
   const handleToggleUsername = () => {
     if (editProfile.username) {
       userLoggedIn.username =
@@ -189,10 +189,7 @@ const ReaderSettings = () => {
     if (userLoggedIn === readerUser) {
       setEditProfileOpen(false);
       return;
-    } else if (userLoggedIn === currentUser) {
-      setEditProfileOpen(false);
-      return;
-    }
+    } 
     const { success, message } = await updateAccount(
       userLoggedIn._id,
       userLoggedIn,
@@ -203,9 +200,7 @@ const ReaderSettings = () => {
     if (success) {
       setShowPassword(false);
       dispatch({ type: "resetAllExcept", payload: "none" });
-      readerUser !== null
-        ? setReaderUser(userLoggedIn)
-        : setCurrentUser(userLoggedIn);
+      setReaderUser(userLoggedIn)
     }
     setOpenSnackbar(true);
     if (success) setEditProfileOpen(false);
@@ -271,7 +266,7 @@ const ReaderSettings = () => {
       <Snackbar
         anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
         open={openSnackbar}
-        autoHideDuration={3000}
+        autoHideDuration={1000}
         onClose={() => setOpenSnackbar(false)}
       >
         <SnackbarContent
@@ -504,7 +499,9 @@ const ReaderSettings = () => {
       >
         <Button
           variant="text"
-          onClick={() => navigate(-1)}
+          onClick={() => {navigate(-1)
+            setReaderUser(null);  
+          }}
           sx={{
             margin: 0,
             borderRadius: "20px",
@@ -704,8 +701,6 @@ const ReaderSettings = () => {
           </Box>
           <Button
             onClick={() => {
-              console.log("adsad ", location.pathname);
-
               navigate("/borrow-history");
             }}
             variant="outlined"
