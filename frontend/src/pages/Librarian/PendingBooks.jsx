@@ -68,7 +68,7 @@ const PendingBooks = () => {
     >
       <Snackbar
         anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-        open={openSnackbar}
+        open={openSnackbar && snackbarMessage !==""}
         autoHideDuration={1000}
         onClose={() => setOpenSnackbar(false)}
       >

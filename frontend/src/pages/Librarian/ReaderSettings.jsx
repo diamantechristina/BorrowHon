@@ -101,7 +101,6 @@ const VisuallyHiddenInput = styled("input")({
 });
 
 const suspendReasons = [
-  "Overdue Books",
   "Multiple unreturned books",
   "Violation of Policies",
   "System Misuse",

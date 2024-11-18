@@ -98,18 +98,11 @@ const Dashboard = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  const mostPopularBooks = _.take(
-    _.orderBy(
-      Object.keys(_.countBy(history, "book_id")),
-      (key) => _.countBy(history, "book_id")[key],
-      "desc"
-    ),
-    5
-  ).map((bookId) => {
-    return books.find((book) => book.book_id === toInteger(bookId));
-  });
 
-  useEffect(() => {
+const [mostPopularBooks, setMostPopularBooks] = useState([]);
+
+
+useEffect(() => {
     if (books.length > 0) {
       const combinedData = books.map((book) => ({
         _id: book._id,
@@ -132,6 +125,27 @@ const Dashboard = () => {
       setBookCreation(sortedBooks);
     }
   }, [books]);
+  
+  useEffect(() => {
+    const popularBooks = _.take(
+      _.orderBy(
+        Object.keys(_.countBy(history, "book_id")),
+        (key) => _.countBy(history, "book_id")[key],
+        "desc"
+      ),
+      5
+    ).map((bookId) => {
+      return books.find((book) => book.book_id === toInteger(bookId));
+    });
+  
+    if (popularBooks.length < 5) {
+      const remainingBooks = bookCreation.filter((book) => !popularBooks.map((book) => book.book_id).includes(book.book_id));
+      const additionalBooks = remainingBooks.slice(0, 5 - popularBooks.length);
+      setMostPopularBooks([...popularBooks, ...additionalBooks]);
+    } else {
+      setMostPopularBooks(popularBooks);
+    }
+  }, [bookCreation, history]);
 
   const [goToSlide, setGoToSlide] = useState(null);
 
@@ -252,7 +266,7 @@ const Dashboard = () => {
                   fontFamily: "Montserrat",
                 }}
               >
-                Your account has been suspended because of:
+                Your account has been suspended due to
               </Typography>
               <Box
                 sx={{

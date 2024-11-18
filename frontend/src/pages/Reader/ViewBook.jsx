@@ -28,18 +28,32 @@ import { useNavigate } from "react-router-dom";
 import { useLog } from "../../library/log";
 import "@fontsource/montserrat";
 import { useBook } from "../../library/book";
+import { useAccount } from "../../library/account";
 import { useStore } from "../../library/store";
 
 const ViewBook = () => {
-  const { currentUser, bookData, setBookData, isAdmin, setCurrentPage } =
-    useStore();
+  const { setCurrentUser, currentUser, bookData, setBookData, isAdmin, setCurrentPage } =
+  useStore();
   const navigate = useNavigate();
   const { fetchHistory, history } = useHistory();
   const { updateBook } = useBook();
   const [display, setDisplay] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const { fetchBook, books } = useBook();
+  const { fetchAccount, account } = useAccount();
+  
+    const [open, setOpen] = useState(false);
+    const [returnOpen, setReturnOpen] = useState(false);
+    const [renewOpen, setRenewOpen] = useState(false);
+    const [renewHover, setRenewHover] = useState(false);
 
+  useEffect(() => {
+    fetchAccount();
+  }, [fetchAccount, renewHover]);
+
+  useEffect(() => {
+    if(account) setCurrentUser(account.find((acc) => acc.acc_id === currentUser.acc_id));
+  },[account]);
   useEffect(() => {
     fetchBook();
   }, [fetchBook, currentUser]);
@@ -91,10 +105,6 @@ const ViewBook = () => {
       setDisplay(true);
     }
   }, [currentUser]);
-
-  const [open, setOpen] = useState(false);
-  const [returnOpen, setReturnOpen] = useState(false);
-  const [renewOpen, setRenewOpen] = useState(false);
 
   const handleOpen = () => {
     setOpen(true);
@@ -206,6 +216,29 @@ const ViewBook = () => {
       document.removeEventListener("keypress", handleKeyPress);
     };
   });
+
+  const getStatus = () => {
+    if (currentUser?.isSuspended === true && bookData?.status === "available") {
+      return "Your account is suspended";
+    } 
+    else if(currentUser?.isSuspended === true && currentBookHistory?.book_id !== bookData?.book_id) {
+      return "Your account is suspended";
+      
+    }
+    else {
+      if (currentBookHistory && currentBookHistory?.book_id === bookData?.book_id) {
+        if (currentBookHistory?.status === "onhand") {
+          return "Borrowed";
+        } else if (currentBookHistory?.status === "returned") {
+          return bookData?.status;
+        } else {
+          return currentBookHistory?.status;
+        }
+      } else {
+        return bookData?.status;
+      }
+    }
+  };
   return (
     <Box
       sx={{
@@ -401,17 +434,24 @@ const ViewBook = () => {
                 >
                   {/* conditioning for book status. when reader has book in their history,
                    then use current book history, if not then use book data */}
-                   {currentUser?.isSuspended === true ? (
-                     "Your account is suspended"
-                   ) : (
-                     currentBookHistory && currentBookHistory.book_id === bookData.book_id
-                       ? currentBookHistory?.status === "onhand"
-                         ? "Borrowed"
-                         : currentBookHistory?.status === "returned"
-                         ? bookData?.status
-                         : currentBookHistory?.status
-                       : bookData?.status
-                   )}
+                   {/* {() =>{if (currentUser?.isSuspended === true && bookData.status === "available") {
+                     return "Your account is suspended";
+                   } 
+                   else {
+                     if (currentBookHistory && currentBookHistory.book_id === bookData.book_id) {
+                       if (currentBookHistory?.status === "onhand") {
+                         return "Borrowed";
+                       } else if (currentBookHistory?.status === "returned") {
+                         return bookData?.status;
+                       } else {
+                         return currentBookHistory?.status;
+                       }
+                     } 
+                     else {
+                       return bookData?.status;
+                     }
+                   }}} */}
+                   {getStatus()}
                 </Typography>
                 <Typography
                   sx={{
@@ -518,8 +558,11 @@ const ViewBook = () => {
                     >
                       Return
                     </Button>
-                    <Button
+                    {currentUser?.isSuspended === true ? null : (
+                      <Button
                       onClick={handleOpenRenew}
+                      onMouseEnter={() => setRenewHover(true)}
+                      onMouseLeave={() => setRenewHover(false)}
                       variant="contained"
                       sx={{
                         width: "clamp(10vw, 10vw, 10vw)",
@@ -539,6 +582,8 @@ const ViewBook = () => {
                     >
                       Renew
                     </Button>
+                    )}
+                    
                   </Box>
                 ) : null}
                 <Modal
