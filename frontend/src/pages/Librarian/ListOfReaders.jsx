@@ -1,7 +1,7 @@
 import React from "react";
 import moment from "moment";
-import { useEffect, useMemo } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Box,
   Button,
@@ -76,53 +76,55 @@ const ListOfReaders = () => {
   }, [fetchLogs]);
 
   const sortedAccounts = account
-  ?.filter((acc) => acc.isAdmin === false)
-  .sort((a, b) => {
-    const currentLogA = log?.find((userlog) => userlog.acc_id === a.acc_id && userlog.logoutdate === null);
-    const currentLogB = log?.find((userlog) => userlog.acc_id === b.acc_id && userlog.logoutdate === null);
+    ?.filter((acc) => acc.isAdmin === false)
+    .sort((a, b) => {
+      const currentLogA = log?.find(
+        (userlog) => userlog.acc_id === a.acc_id && userlog.logoutdate === null
+      );
+      const currentLogB = log?.find(
+        (userlog) => userlog.acc_id === b.acc_id && userlog.logoutdate === null
+      );
 
-    if (currentLogA && !currentLogB) {
-      return -1; // Active user A should come before inactive user B
-    } else if (!currentLogA && currentLogB) {
-      return 1; // Active user B should come before inactive user A
-    } else {
-      // Both are either active or inactive, so compare by the latest login date
-      const latestLogA = log
-        ?.filter((log) => log.acc_id === a.acc_id)
-        .reduce((latest, current) => {
-          if (!latest || current.logindate > latest.logindate) {
-            return current;
-          }
-          return latest;
-        }, null);
-
-      const latestLogB = log
-        ?.filter((log) => log.acc_id === b.acc_id)
-        .reduce((latest, current) => {
-          if (!latest || current.logindate > latest.logindate) {
-            return current;
-          }
-          return latest;
-        }, null);
-
-      if (!latestLogA && !latestLogB) {
-        return 0; // No logs for either account
-      } else if (!latestLogA) {
-        return 1; // Account B has logs but A does not
-      } else if (!latestLogB) {
-        return -1; // Account A has logs but B does not
+      if (currentLogA && !currentLogB) {
+        return -1; // Active user A should come before inactive user B
+      } else if (!currentLogA && currentLogB) {
+        return 1; // Active user B should come before inactive user A
       } else {
-        // Compare by latest login date (most recent first)
-        const loginDateA = moment(latestLogA.logindate);
-        const loginDateB = moment(latestLogB.logindate);
+        // Both are either active or inactive, so compare by the latest login date
+        const latestLogA = log
+          ?.filter((log) => log.acc_id === a.acc_id)
+          .reduce((latest, current) => {
+            if (!latest || current.logindate > latest.logindate) {
+              return current;
+            }
+            return latest;
+          }, null);
 
-        return -loginDateA.diff(loginDateB);
+        const latestLogB = log
+          ?.filter((log) => log.acc_id === b.acc_id)
+          .reduce((latest, current) => {
+            if (!latest || current.logindate > latest.logindate) {
+              return current;
+            }
+            return latest;
+          }, null);
+
+        if (!latestLogA && !latestLogB) {
+          return 0; // No logs for either account
+        } else if (!latestLogA) {
+          return 1; // Account B has logs but A does not
+        } else if (!latestLogB) {
+          return -1; // Account A has logs but B does not
+        } else {
+          // Compare by latest login date (most recent first)
+          const loginDateA = moment(latestLogA.logindate);
+          const loginDateB = moment(latestLogB.logindate);
+
+          return -loginDateA.diff(loginDateB);
+        }
       }
-    }
-  });
+    });
 
-
-  // console.log(account?.firstName);
   return (
     <Box
       sx={{
@@ -141,11 +143,9 @@ const ListOfReaders = () => {
           left: 0,
           width: "100vw",
           height: "13vh",
-          // backgroundColor: "red",
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
-          // zIndex: 1000, // Ensures it stays on top
         }}
       >
         <Button
@@ -201,15 +201,12 @@ const ListOfReaders = () => {
             marginLeft: "65vw",
             "& .MuiOutlinedInput-root": {
               width: "clamp(20vw, 30vw, 30vw)",
-              // width: "42.2vw",
               height: "45px",
-              // height: "clamp(7.5vh, 7.5vh, 7.5vh)",
               paddingLeft: "6px",
               paddingRight: "6px",
               backgroundColor: "#F4F4F4",
               borderRadius: "15px",
               fontSize: "24px",
-              // marginLeft: "20px",
             },
             "& .MuiOutlinedInput-notchedOutline": {
               borderColor: "#F4F4F4", // border color
@@ -224,18 +221,15 @@ const ListOfReaders = () => {
             },
             "& .MuiOutlinedInput-input.MuiInputBase-input::placeholder": {
               color: "#191919",
-              // backgroundColor: "red",
               opacity: 1,
               fontSize: "20px",
               position: "absolute",
               top: 20.5,
               fontFamily: "Arimo",
             },
-            // marginTop: "20px",
             "& .MuiOutlinedInput-input.MuiInputBase-input": {
               marginLeft: "8px",
               fontSize: "20px",
-              // marginTop: "5px",
             },
           }}
           InputProps={{
@@ -250,7 +244,6 @@ const ListOfReaders = () => {
                   <Box
                     marginTop="10px"
                     marginLeft="13px"
-                    // backgroundColor="red"
                   >
                     <Search
                       size="25px"
@@ -275,7 +268,6 @@ const ListOfReaders = () => {
             marginTop: "10vh",
             width: "90vw",
             height: "85vh",
-            // backgroundColor: "red",
             display: "flex",
             flexDirection: "column",
             justifyContent: "center",
@@ -285,7 +277,6 @@ const ListOfReaders = () => {
           <Typography
             sx={{
               margin: 0,
-              // left: 75,
               top: 10,
               color: "#E8E8E8",
               fontFamily: "Montserrat",
@@ -302,7 +293,6 @@ const ListOfReaders = () => {
             marginTop: "10vh",
             width: "90vw",
             height: "85vh",
-            // backgroundColor: "red",
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
@@ -314,7 +304,6 @@ const ListOfReaders = () => {
                 position: "sticky",
                 top: 0,
                 zIndex: 1,
-                // backgroundColor: "blue",
               }}
             >
               <TableRow>
@@ -327,7 +316,6 @@ const ListOfReaders = () => {
                     borderWidth: "0px",
                     width: "50vw",
                     paddingRight: "5vw",
-                    // backgroundColor: "pink",
                   }}
                 >
                   &nbsp;Name
@@ -341,7 +329,6 @@ const ListOfReaders = () => {
                     borderWidth: "0px",
                     paddingLeft: "5vw",
                     width: "50vw",
-                    // backgroundColor: "purple",
                   }}
                 >
                   Login Status
@@ -354,7 +341,6 @@ const ListOfReaders = () => {
               width: "90vw",
               maxHeight: "75vh",
               backgroundColor: "#2e2e2e",
-              // backgroundColor: "red",
               display: "",
               justifyContent: "",
               alignItems: "",
@@ -363,9 +349,6 @@ const ListOfReaders = () => {
               "&::-webkit-scrollbar": {
                 display: "none",
               },
-              // display: userHistory?.length > 0 ? "" : "flex",
-              // justifyContent: userHistory?.length > 0 ? "" : "center",
-              // alignItems: userHistory?.length > 0 ? "" : "center",
             }}
           >
             <Table>
@@ -409,8 +392,6 @@ const ListOfReaders = () => {
                             textAlign: "center",
                             fontFamily: "Arimo",
                             borderWidth: "0px",
-                            // display: "flex",
-                            // justifyContent: "center",
                             fontSize: "clamp(1vw, 1.2vw, 1.5vw)",
                           }}
                         >

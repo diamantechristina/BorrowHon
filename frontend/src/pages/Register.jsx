@@ -40,11 +40,25 @@ const Register = () => {
     }));
   };
 
+  function allLetters(str) {
+    return /^[a-zA-Z\s]+$/.test(str);
+  }
+
+  function allNumbers(str) {
+    return /^\d+$/.test(str);
+  }
+
   const handleRegister = () => {
     if (!newAccount.firstName || !newAccount.lastName || !newAccount.address || !newAccount.phoneNumber) {
       setOpenSnackbar(true);
       setSnackbarSuccess(false);
       setSnackbarMessage("Please fill in all fields.");
+      return;
+    }
+    if (!allLetters(newAccount.firstName) || !allLetters(newAccount.lastName) || !allNumbers(newAccount.phoneNumber)) {
+      setOpenSnackbar(true);
+      setSnackbarSuccess(false);
+      setSnackbarMessage("Invalid Inputs.");
       return;
     }
     navigate("/continue-register", { state: newAccount });

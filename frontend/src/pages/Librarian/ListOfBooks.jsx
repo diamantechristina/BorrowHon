@@ -9,7 +9,7 @@ import {
   Snackbar,
   SnackbarContent,
 } from "@mui/material";
-import { ArrowSmallLeft, Books } from "react-flaticons";
+import { ArrowSmallLeft } from "react-flaticons";
 import { useBook } from "../../library/book.js";
 import BookCard from "../../components/BookCard.jsx";
 import AddBook from "../../components/ManageBook.jsx";
@@ -47,7 +47,7 @@ const ListOfBooks = () => {
         height: "100vh",
         overflowY: "scroll",
         "&::-webkit-scrollbar": {
-          display: "none", // Hide scrollbars for WebKit browsers
+          display: "none",
         },
       }}
     >
@@ -75,7 +75,7 @@ const ListOfBooks = () => {
           overflow: "hidden",
           overflowY: "scroll",
           "&::-webkit-scrollbar": {
-            display: "none", // Hide scrollbars for WebKit browsers
+            display: "none",
           },
         }}
       >

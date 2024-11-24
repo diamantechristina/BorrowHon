@@ -1,80 +1,91 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { Box, Typography, TextField, Button, InputAdornment, Snackbar, SnackbarContent } from "@mui/material";
+import {
+  Box,
+  Typography,
+  TextField,
+  Button,
+  InputAdornment,
+  Snackbar,
+  SnackbarContent,
+} from "@mui/material";
 import { Link } from "react-router-dom";
 import { ArrowSmallLeft, EyeCrossed, Eye } from "react-flaticons";
 import { useAccount } from "../library/account.js";
-import { useSnackbar } from '../library/snackbar.js'; 
+import { useSnackbar } from "../library/snackbar.js";
 
 const ContinueRegister = () => {
-    const navigate = useNavigate();
-    const location = useLocation();
-  const {setOpenSnackbar, setSnackbarSuccess, setSnackbarMessage, openSnackbar, snackbarMessage, snackbarSuccess} = useSnackbar();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const {
+    setOpenSnackbar,
+    setSnackbarSuccess,
+    setSnackbarMessage,
+    openSnackbar,
+    snackbarMessage,
+    snackbarSuccess,
+  } = useSnackbar();
 
-    const newAccount = location.state;
-    const [showPassword, setShowPassword] = useState(false);
-    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-    const [confirmPassword, setConfirmPassword] = useState("");
-    const [newAccountState, setNewAccountState] = useState({
-      ...newAccount,
-      username: "",
-      email: "",
-      password: "",
-    })
-    
-    const handleKeyPress = (event) => {
-      if (event.key === "Enter") {
-        handleAddAccount();
-      }
+  const newAccount = location.state;
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [newAccountState, setNewAccountState] = useState({
+    ...newAccount,
+    username: "",
+    email: "",
+    password: "",
+  });
+
+  const handleKeyPress = (event) => {
+    if (event.key === "Enter") {
+      handleAddAccount();
     }
+  };
 
-    useEffect (() => {
-      document.addEventListener("keydown", handleKeyPress);
-      return () => {
-        document.removeEventListener("keydown", handleKeyPress);
-      };
-    });
+  useEffect(() => {
+    document.addEventListener("keydown", handleKeyPress);
+    return () => {
+      document.removeEventListener("keydown", handleKeyPress);
+    };
+  });
 
-    const { createAccount} = useAccount();
-    
-    const handleAddAccount = async () => {
-      if(newAccountState.password.trim() !== confirmPassword.trim()){
-        setOpenSnackbar(true);
-        setSnackbarMessage("Passwords do not match!");
-        setSnackbarSuccess(false);
-        return
-      }
-      else{
-        const { success, message } = await createAccount(newAccountState);
+  const { createAccount } = useAccount();
+
+  const handleAddAccount = async () => {
+    if (newAccountState.password.trim() !== confirmPassword.trim()) {
+      setOpenSnackbar(true);
+      setSnackbarMessage("Passwords do not match!");
+      setSnackbarSuccess(false);
+      return;
+    } else {
+      const { success, message } = await createAccount(newAccountState);
       setOpenSnackbar(true);
       setSnackbarMessage(message);
       setSnackbarSuccess(success);
       if (success) {
         navigate("/");
       }
-      }
-    };
-
-    const handleConfirmPasswordChange = (event) => {
-      setConfirmPassword(event.target.value.trim());
     }
-    const handleInputChange = (event) => {
-      const { name, value } = event.target;
-      setNewAccountState((prevAccount) => ({
-        ...prevAccount,
-        [name]: value.trim(),
-      }));
-    };
+  };
 
-    
+  const handleConfirmPasswordChange = (event) => {
+    setConfirmPassword(event.target.value.trim());
+  };
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
+    setNewAccountState((prevAccount) => ({
+      ...prevAccount,
+      [name]: value.trim(),
+    }));
+  };
 
-    const togglePasswordVisibility = () => {
-      setShowPassword((prev) => !prev);
-    };
-    const toggleConfirmPasswordVisibility = () => {
-      setShowConfirmPassword((prev) => !prev);
-    };
-
+  const togglePasswordVisibility = () => {
+    setShowPassword((prev) => !prev);
+  };
+  const toggleConfirmPasswordVisibility = () => {
+    setShowConfirmPassword((prev) => !prev);
+  };
 
   return (
     <Box
@@ -95,8 +106,7 @@ const ContinueRegister = () => {
         <SnackbarContent
           message={snackbarMessage}
           style={{
-            backgroundColor:
-              snackbarSuccess ? "green" : "red",
+            backgroundColor: snackbarSuccess ? "green" : "red",
             justifyContent: "center",
           }}
         />
@@ -120,17 +130,17 @@ const ContinueRegister = () => {
             margin: 0,
             borderRadius: "20px",
             color: "#E8E8E8",
-            
+
             // backgroundColor:"red",
             "&:hover": {
               backgroundColor: "transparent",
               filter: "drop-shadow(0 0 1px white)",
               color: "#FFFFFF",
             },
-            position:"absolute",
-            left:10,
-            top:10,
-          }}         
+            position: "absolute",
+            left: 10,
+            top: 10,
+          }}
         >
           <ArrowSmallLeft
             size={"75px"}
@@ -257,7 +267,8 @@ const ContinueRegister = () => {
                 color: "#F4F4F4",
               },
             }}
-          /><TextField
+          />
+          <TextField
             required
             type={showPassword ? "text" : "password"}
             // id='outlined-basic'
@@ -299,7 +310,7 @@ const ContinueRegister = () => {
               style: {
                 color: "#F4F4F4",
               },
-              
+
               endAdornment: (
                 <InputAdornment position="end">
                   <Button
@@ -311,7 +322,11 @@ const ContinueRegister = () => {
                     }}
                     tabIndex={-1}
                   >
-                    {showPassword ? <Eye size={17} /> : <EyeCrossed size={17} />}
+                    {showPassword ? (
+                      <Eye size={17} />
+                    ) : (
+                      <EyeCrossed size={17} />
+                    )}
                   </Button>
                 </InputAdornment>
               ),
@@ -397,14 +412,13 @@ const ContinueRegister = () => {
               fontWeight: "bold",
               boxShadow: "none",
               textTransform: "none",
-              
             }}
             onClick={handleAddAccount}
           >
             Continue
           </Button>
         </Box>
-        
+
         <Box
           sx={{
             height: "1px",
@@ -469,7 +483,7 @@ const ContinueRegister = () => {
         />
       </Box>
     </Box>
-  )
-}
+  );
+};
 
-export default ContinueRegister
+export default ContinueRegister;

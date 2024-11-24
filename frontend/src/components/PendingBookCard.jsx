@@ -136,7 +136,6 @@ const PendingBookCard = ({ book, account, history }) => {
             userHistory={history}
             pageTitle={"Decline Pending"}
           />
-          
         </Box>
       </Box>
     </Box>

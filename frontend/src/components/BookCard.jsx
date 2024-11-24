@@ -11,7 +11,6 @@ const BookCard = ({ book, open, setOpen }) => {
   const [isHover, setIsHover] = useState(false);
 
   const handleOpen = () => {
-    console.log("book: ", book);
     setEditOpen(true);
     setIsHover(false);
   };

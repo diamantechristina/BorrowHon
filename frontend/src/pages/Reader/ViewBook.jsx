@@ -796,6 +796,7 @@ const ViewBook = () => {
                                     marginRight: "15px",
                                     minWidth: 0,
                                   }}
+                                  tabIndex={-1}
                                 >
                                   {showPassword ? (
                                     <Eye size={17} />
@@ -828,7 +829,6 @@ const ViewBook = () => {
                         textTransform: "none",
                         fontSize: "18px",
                       }}
-                      tabIndex={-1}
                       onClick={handleBorrowBook}
                     >
                       Confirm
@@ -1469,7 +1469,8 @@ const ViewBook = () => {
 
                 }}
               >
-                {relatedBooks.map((book) => (
+                {relatedBooks.length > 0 ? (
+                  relatedBooks.map((book) => (
                   <Box
                     key={book._id}
                     sx={{
@@ -1528,7 +1529,23 @@ const ViewBook = () => {
                       {book.title}
                     </Typography>
                   </Box>
-                ))}
+                ))
+                ) : (
+                  <Typography
+                    sx={{
+                      fontFamily: "Montserrat",
+                      fontWeight: "700",
+                      fontSize: "1vw",
+                      marginY: "1.5vh",
+                      marginX: "1.5vw ",
+                      color: "#F4F4F4",
+                      textAlign: "center",
+                      lineHeight: "1.2",
+                    }}
+                  >
+                    No related books found
+                  </Typography>
+                )}
               </Box>
             </Box>
           </Box>

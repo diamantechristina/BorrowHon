@@ -1,4 +1,10 @@
-import { Box, Typography, Button, Snackbar, SnackbarContent } from "@mui/material";
+import {
+  Box,
+  Typography,
+  Button,
+  Snackbar,
+  SnackbarContent,
+} from "@mui/material";
 import { ArrowSmallLeft } from "react-flaticons";
 import { useBook } from "../../library/book";
 import { useAccount } from "../../library/account";
@@ -9,7 +15,8 @@ import { useNavigate } from "react-router-dom";
 import { useStore } from "../../library/store";
 import { useSnackbar } from "../../library/snackbar";
 const PendingBooks = () => {
-  const {setOpenSnackbar, openSnackbar, snackbarMessage, snackbarSuccess} = useSnackbar();
+  const { setOpenSnackbar, openSnackbar, snackbarMessage, snackbarSuccess } =
+    useSnackbar();
 
   const { currentUser, isAdmin, setCurrentPage } = useStore();
   const navigate = useNavigate();
@@ -21,10 +28,9 @@ const PendingBooks = () => {
     fetchHistory();
   }, [fetchHistory, history]);
 
-  
   useEffect(() => {
-    setCurrentPage(location.pathname)
-  },[])
+    setCurrentPage(location.pathname);
+  }, []);
 
   useEffect(() => {
     fetchAccount();
@@ -35,30 +41,27 @@ const PendingBooks = () => {
   }, [fetchBook]);
 
   useEffect(() => {
-    if(!currentUser) navigate("/");
-    else if(!isAdmin) navigate(-1);
-  },[])
+    if (!currentUser) navigate("/");
+    else if (!isAdmin) navigate(-1);
+  }, []);
 
   const pendingHistories = history?.filter((item) => item.status === "pending");
   useEffect(() => {
     setPendings(pendingHistories?.length);
-
-  },[history])    
+  }, [history]);
 
   const pendingBooks = books?.filter((book) => {
-      return pendingHistories
-        ?.map((item) => item.book_id)
-        .includes(book.book_id);
-    });
+    return pendingHistories?.map((item) => item.book_id).includes(book.book_id);
+  });
 
   const borrowerAccounts = account?.filter((acc) => {
-      return pendingHistories?.map((item) => item.acc_id).includes(acc.acc_id);
-    });
+    return pendingHistories?.map((item) => item.acc_id).includes(acc.acc_id);
+  });
 
   return (
     <Box
       sx={{
-        display: isAdmin ? "auto": "none",
+        display: isAdmin ? "auto" : "none",
         backgroundColor: "#191919",
         overflowY: "scroll",
         "&::-webkit-scrollbar": {
@@ -68,15 +71,14 @@ const PendingBooks = () => {
     >
       <Snackbar
         anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-        open={openSnackbar && snackbarMessage !==""}
+        open={openSnackbar && snackbarMessage !== ""}
         autoHideDuration={1000}
         onClose={() => setOpenSnackbar(false)}
       >
         <SnackbarContent
           message={snackbarMessage}
           style={{
-            backgroundColor:
-              snackbarSuccess ? "green" : "red",
+            backgroundColor: snackbarSuccess ? "green" : "red",
             justifyContent: "center",
           }}
         />
@@ -134,78 +136,74 @@ const PendingBooks = () => {
         </Typography>
         <Box
           sx={{
-            display:"flex",
-            justifyContent:"center",
-            flexDirection:"column",
-            width:"inherit",
-            height:"100vh",
-            marginTop: pendings < 5 ? "" :"20vh",
-            paddingLeft: pendingHistories?.length === 0 ? "" :"5vw"
+            display: "flex",
+            justifyContent: "center",
+            flexDirection: "column",
+            width: "inherit",
+            height: "100vh",
+            marginTop: pendings < 5 ? "" : "20vh",
+            paddingLeft: pendingHistories?.length === 0 ? "" : "5vw",
             // paddingLeft: "5vw"
           }}
         >
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "flex-start",
-            flexWrap: "wrap",
-            backgroundColor: "#191919",
-            width: "95vw",
-            height: pendings < 5 ? "95vh" : "auto",
-            marginTop: pendings < 5 ? "" : "10vh",
-            paddingTop: pendings < 5 ? "" : "5vh",
-            gap: "3.5vw",
-            paddingBottom: "5vh",
-            rowGap: "3vh",
-          }}
-        >
-          {pendingHistories?.length === 0 ? (
-            <Box
-              sx={{
-                width: "100vw",
-                height: "100vh",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                // paddingTop: "100px"
-                paddingLeft: "5vw"
-              }}
-            >
-              <Typography
-              sx={{
-                margin: 0,
-                // left: 75,
-                top: 10,
-                color: "#E8E8E8",
-                fontFamily: "Montserrat",
-                fontWeight: "bold",
-                fontSize: "clamp(1.25rem, 3vw, 2rem)",
-              }}
-            >
-              NO PENDING REQUEST
-            </Typography></Box>
-            
-          ) : (
-            pendingHistories?.map((history) => (
-            <PendingBookCard
-              key={history._id}
-              history={history}
-              book={pendingBooks?.find(
-                (book) => book.book_id === history.book_id
-              )}
-              account={borrowerAccounts?.find(
-                (acc) => acc.acc_id === history.acc_id
-              )}
-            />
-          ))
-        )}
-          
-          
-          
-        </Box>
-        
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "flex-start",
+              flexWrap: "wrap",
+              backgroundColor: "#191919",
+              width: "95vw",
+              height: pendings < 5 ? "95vh" : "auto",
+              marginTop: pendings < 5 ? "" : "10vh",
+              paddingTop: pendings < 5 ? "" : "5vh",
+              gap: "3.5vw",
+              paddingBottom: "5vh",
+              rowGap: "3vh",
+            }}
+          >
+            {pendingHistories?.length === 0 ? (
+              <Box
+                sx={{
+                  width: "100vw",
+                  height: "100vh",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  // paddingTop: "100px"
+                  paddingLeft: "5vw",
+                }}
+              >
+                <Typography
+                  sx={{
+                    margin: 0,
+                    // left: 75,
+                    top: 10,
+                    color: "#E8E8E8",
+                    fontFamily: "Montserrat",
+                    fontWeight: "bold",
+                    fontSize: "clamp(1.25rem, 3vw, 2rem)",
+                  }}
+                >
+                  NO PENDING REQUEST
+                </Typography>
+              </Box>
+            ) : (
+              pendingHistories?.map((history) => (
+                <PendingBookCard
+                  key={history._id}
+                  history={history}
+                  book={pendingBooks?.find(
+                    (book) => book.book_id === history.book_id
+                  )}
+                  account={borrowerAccounts?.find(
+                    (acc) => acc.acc_id === history.acc_id
+                  )}
+                />
+              ))
+            )}
+          </Box>
         </Box>
       </Box>
     </Box>

@@ -15,13 +15,7 @@ import {
   SnackbarContent,
 } from "@mui/material";
 import { LineChart } from "@mui/x-charts";
-import {
-  Bell,
-  MenuBurger,
-  BookAlt,
-  BookOpenReader,
-  BowArrow,
-} from "react-flaticons";
+import { BookAlt, BookOpenReader, BowArrow } from "react-flaticons";
 import { useBook } from "../../library/book.js";
 import { useHistory } from "../../library/history.js";
 import { useNavigate } from "react-router-dom";
@@ -47,19 +41,24 @@ const months = [
 ];
 
 const Dashboard = () => {
-  const { currentUser, isFirstLogin, setIsFirstLogin, setReaderUser, setCurrentPage } = useStore();
+  const {
+    currentUser,
+    isFirstLogin,
+    setIsFirstLogin,
+    setReaderUser,
+    setCurrentPage,
+  } = useStore();
   const navigate = useNavigate();
   const { fetchLogs, log } = useLog();
   const { fetchAccount, account } = useAccount();
 
-  
   useEffect(() => {
-    setCurrentPage(location.pathname)
-  },[])
+    setCurrentPage(location.pathname);
+  }, []);
 
   useEffect(() => {
-    setReaderUser(null)
-  },[])
+    setReaderUser(null);
+  }, []);
   useEffect(() => {
     fetchAccount();
   }, [fetchAccount]);
@@ -73,7 +72,10 @@ const Dashboard = () => {
     months.forEach((month) => {
       logCounts[month] = log?.filter((logItem) => {
         const logDate = new Date(logItem.logindate);
-        return logDate.getMonth() === months.indexOf(month) && logItem.acc_id != currentUser.acc_id;
+        return (
+          logDate.getMonth() === months.indexOf(month) &&
+          logItem.acc_id != currentUser.acc_id
+        );
       }).length;
     });
     return logCounts;
@@ -104,16 +106,17 @@ const Dashboard = () => {
   const unavailableBooks = useMemo(() => {
     return books?.filter((item) => item.status === "unavailable").length;
   }, [books]);
-  
+
   const [borrowedBooks, setBorrowedBooks] = React.useState([]);
 
   useEffect(() => {
-    const borrowedBooks = history?.filter((item) => item.status === "onhand" || item.status === "returned")
-    .sort((a, b) => new Date(b.borrow_date) - new Date(a.borrow_date)).reverse();
+    const borrowedBooks = history
+      ?.filter((item) => item.status === "onhand" || item.status === "returned")
+      .sort((a, b) => new Date(b.borrow_date) - new Date(a.borrow_date))
+      .reverse();
     setBorrowedBooks(borrowedBooks);
-    console.log(borrowedBooks)
   }, [history]);
-  
+
   return (
     <Box
       sx={{
@@ -135,9 +138,9 @@ const Dashboard = () => {
         onClose={() => setIsFirstLogin(false)}
       >
         <SnackbarContent
-          message='Logged In Successfully!'
+          message="Logged In Successfully!"
           style={{
-            backgroundColor:'green',
+            backgroundColor: "green",
             justifyContent: "center",
           }}
         />
@@ -181,7 +184,6 @@ const Dashboard = () => {
               sx={{
                 width: "44vw",
                 height: "inherit",
-                // backgroundColor: "red",
               }}
             >
               {/* book catalog */}
@@ -272,7 +274,6 @@ const Dashboard = () => {
                     >
                       AVAILABLE BOOKS
                     </Typography>
-                    {/* change to actual count of available books */}
                     <Typography
                       sx={{
                         color: "#F4F4F4",
@@ -281,7 +282,6 @@ const Dashboard = () => {
                         fontWeight: "bold",
                       }}
                     >
-                      {/* {books?.map((book) => book.status === "available").length } */}
                       {availableBooks}
                     </Typography>
                     <Typography
@@ -300,7 +300,6 @@ const Dashboard = () => {
                   sx={{
                     width: "44vw",
                     height: "15vh",
-                    // backgroundColor: "gray",
                     display: "flex",
                     flexDirection: "column",
                     marginTop: "-15px",
@@ -359,7 +358,6 @@ const Dashboard = () => {
                 sx={{
                   width: "44vw",
                   height: "10vh",
-                  //   backgroundColor: "pink",
                   borderRadius: "20px",
                   justifyContent: "space-between",
                   display: "flex",
@@ -399,13 +397,13 @@ const Dashboard = () => {
                   }}
                 >
                   <i
-                  className="fi fi-rr-pending"
-                  style={{
-                    color: "#f4f4f4",
-                    fontSize: "2.5vw",
-                    marginTop: "1vh",
-                  }}
-                />
+                    className="fi fi-rr-pending"
+                    style={{
+                      color: "#f4f4f4",
+                      fontSize: "2.5vw",
+                      marginTop: "1vh",
+                    }}
+                  />
                   PENDING
                 </Button>
                 <Button
@@ -435,7 +433,6 @@ const Dashboard = () => {
                 display: "flex",
                 flexDirection: "column",
                 gap: "2vh",
-                // backgroundColor: "pink",
               }}
             >
               <Box
@@ -507,7 +504,6 @@ const Dashboard = () => {
                     color: "#F4F4F4",
                     fontFamily: "Montserrat",
                     marginTop: "10px",
-                    // marginBottom: "-50px",
                     fontSize: "3vh",
                   }}
                 >
@@ -555,8 +551,6 @@ const Dashboard = () => {
                                 sx={{
                                   color: "#F4F4F4",
                                   fontFamily: "Montserrat",
-                                  // fontSize: "2vh",
-                                  // textAlign: "center",
                                   marginLeft: "4vw",
                                   textTransform: "uppercase",
                                 }}
@@ -575,9 +569,7 @@ const Dashboard = () => {
                                 sx={{
                                   color: "#F4F4F4",
                                   fontFamily: "Montserrat",
-                                  // fontSize: "2vh",
                                   marginLeft: "5vw",
-                                  // textAlign: "center",
                                 }}
                               >
                                 {user ? user.firstName : ""}

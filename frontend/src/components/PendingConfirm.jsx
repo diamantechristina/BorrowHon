@@ -20,7 +20,8 @@ const PendingConfirm = ({
   account,
   userHistory,
 }) => {
-  const {setOpenSnackbar, setSnackbarSuccess, setSnackbarMessage} = useSnackbar();
+  const { setOpenSnackbar, setSnackbarSuccess, setSnackbarMessage } =
+    useSnackbar();
 
   const { updateBook } = useBook();
   const { fetchHistory, updateHistory, deleteHistory, history } = useHistory();
@@ -28,8 +29,6 @@ const PendingConfirm = ({
   useEffect(() => {
     fetchHistory();
   }, [fetchHistory]);
-
-
 
   const handleClose = () => setOpen(false);
   const [titleHover, setTitleHover] = useState(false);
@@ -42,36 +41,38 @@ const PendingConfirm = ({
 
   const handleUpdateBook = async (id, book) => {
     const { success, message } = await updateBook(id, book);
-    console.log("Success:", success);
-    console.log("Message:", message);
   };
 
   const handleUpdateHistory = async (id, history) => {
     const { success, message } = await updateHistory(id, history);
-    console.log("Success:", success);
-    console.log("Message:", message);
   };
 
   const handleDeleteHistory = async (acc_id, history) => {
     const { success, message } = await deleteHistory(history._id);
-    console.log("Success:", success);
-    console.log("Message:", message);
-    handleNotification(acc_id,"Book Request Declined", `Your book request for ${book.title} has been declined!`);
+    handleNotification(
+      acc_id,
+      "Book Request Declined",
+      `Your book request for ${book.title} has been declined!`
+    );
     setOpen !== null ? setOpen(false) : () => {};
   };
 
-  const handleNotification = async (acc_id,title, messages) => {
+  const handleNotification = async (acc_id, title, messages) => {
     const { success, message } = await createNotification({
       acc_id: acc_id,
       title: title,
       message: messages,
       date: new Date(),
-    })
-  }
+    });
+  };
 
   const handleAcceptPending = () => {
-    const pendingHistories = history.filter((item) => item.status === "pending" && item.book_id === book.book_id && item.acc_id !== account.acc_id);
-    console.log("pendingHistories: ", pendingHistories);
+    const pendingHistories = history.filter(
+      (item) =>
+        item.status === "pending" &&
+        item.book_id === book.book_id &&
+        item.acc_id !== account.acc_id
+    );
     const updatedBook = { ...book };
     updatedBook.status = "unavailable";
     const updatedUserHistory = { ...userHistory };
@@ -87,16 +88,20 @@ const PendingConfirm = ({
     setSnackbarSuccess(true);
     setSnackbarMessage("Book request Accepted!");
 
-    handleNotification(updatedUserHistory.acc_id,"Book Request Accepted", `Your book request for ${book.title} has been accepted!`);
+    handleNotification(
+      updatedUserHistory.acc_id,
+      "Book Request Accepted",
+      `Your book request for ${book.title} has been accepted!`
+    );
     setOpen !== null ? setOpen(false) : () => {};
   };
 
   const handleDeclinePending = () => {
-    handleDeleteHistory(userHistory.acc_id,userHistory)
+    handleDeleteHistory(userHistory.acc_id, userHistory);
     setOpenSnackbar(true);
     setSnackbarSuccess(true);
     setSnackbarMessage("Book request Declined!");
-  }
+  };
 
   const months = [
     "January",
@@ -152,7 +157,13 @@ const PendingConfirm = ({
       >
         <i
           class="fi fi-bs-cross-small"
-          style={{ fontSize: "2vw", cursor: "pointer", position: "absolute", top: "1vh", right: "1vh" }}
+          style={{
+            fontSize: "2vw",
+            cursor: "pointer",
+            position: "absolute",
+            top: "1vh",
+            right: "1vh",
+          }}
           onClick={handleClose}
         ></i>
         <Box>
