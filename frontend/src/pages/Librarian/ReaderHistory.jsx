@@ -47,7 +47,8 @@ const ReaderHistory = () => {
 
   useEffect(() => {
     if (!currentUser) navigate("/");
-    else if (currentPage !== "/reader" && currentPage !== "/borrow-history") navigate(currentPage);
+    else if (currentPage !== "/reader" && currentPage !== "/borrow-history")
+      navigate(currentPage);
     else if (!readerUser) navigate(currentPage);
     else setDisplay(true);
   }, []);
@@ -76,9 +77,12 @@ const ReaderHistory = () => {
 
   const filteredHistory = userHistory?.filter((history) => {
     const book = booksHistory.find((book) => book.book_id === history.book_id);
-    return book && book.title.toLowerCase().includes(searchQuery.trim().toLowerCase());
+    return (
+      book &&
+      book.title.toLowerCase().includes(searchQuery.trim().toLowerCase())
+    );
   });
-  // console.log("borrowdate: ", userHistory?.map((item) => item.borrowdate));
+
   return (
     <Box
       sx={{
@@ -97,7 +101,6 @@ const ReaderHistory = () => {
           left: 0,
           width: "100vw",
           height: "13vh",
-          // backgroundColor: "red",
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
@@ -156,15 +159,12 @@ const ReaderHistory = () => {
             marginLeft: "65vw",
             "& .MuiOutlinedInput-root": {
               width: "clamp(20vw, 30vw, 30vw)",
-              // width: "42.2vw",
               height: "45px",
-              // height: "clamp(7.5vh, 7.5vh, 7.5vh)",
               paddingLeft: "6px",
               paddingRight: "6px",
               backgroundColor: "#F4F4F4",
               borderRadius: "15px",
               fontSize: "24px",
-              // marginLeft: "20px",
             },
             "& .MuiOutlinedInput-notchedOutline": {
               borderColor: "#F4F4F4", // border color
@@ -179,18 +179,15 @@ const ReaderHistory = () => {
             },
             "& .MuiOutlinedInput-input.MuiInputBase-input::placeholder": {
               color: "#191919",
-              // backgroundColor: "red",
               opacity: 1,
               fontSize: "20px",
               position: "absolute",
               top: 20.5,
               fontFamily: "Arimo",
             },
-            // marginTop: "20px",
             "& .MuiOutlinedInput-input.MuiInputBase-input": {
               marginLeft: "8px",
               fontSize: "20px",
-              // marginTop: "5px",
             },
           }}
           InputProps={{
@@ -202,11 +199,7 @@ const ReaderHistory = () => {
             input: {
               startAdornment: (
                 <InputAdornment position="start">
-                  <Box
-                    marginTop="10px"
-                    marginLeft="13px"
-                    // backgroundColor="red"
-                  >
+                  <Box marginTop="10px" marginLeft="13px">
                     <Search
                       size="25px"
                       style={{
@@ -226,7 +219,6 @@ const ReaderHistory = () => {
           marginTop: "15vh",
           width: "100vw",
           height: "85vh",
-          // backgroundColor: "red",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
@@ -246,7 +238,6 @@ const ReaderHistory = () => {
             <Typography
               sx={{
                 margin: 0,
-                // left: 75,
                 top: 10,
                 color: "#E8E8E8",
                 fontFamily: "Montserrat",
@@ -308,124 +299,116 @@ const ReaderHistory = () => {
               </TableHead>
               <TableBody>
                 {filteredHistory?.map((history, index) => (
-                    <TableRow
-                      key={index}
+                  <TableRow
+                    key={index}
+                    sx={{
+                      backgroundColor:
+                        index % 2 === 0 ? "rgba(34, 85, 96, 0.15)" : "#2e2e2e",
+                    }}
+                  >
+                    <TableCell
                       sx={{
-                        backgroundColor:
-                          index % 2 === 0
-                            ? "rgba(34, 85, 96, 0.15)"
-                            : "#2e2e2e",
+                        width: "20vw",
+                        color: "#f4f4f4",
+                        textAlign: "center",
+                        fontFamily: "Inria Serif",
+                        borderWidth: "0px",
+                        fontSize: "clamp(1vw, 1.2vw, 1.5vw)",
+                        borderRadius:
+                          index % 2 === 0 ? "20px 0px 0px 20px" : null,
                       }}
                     >
-                      <TableCell
-                        sx={{
-                          width: "20vw",
-                          color: "#f4f4f4",
-                          textAlign: "center",
-                          fontFamily: "Inria Serif",
-                          borderWidth: "0px",
-                          fontSize: "clamp(1vw, 1.2vw, 1.5vw)",
-                          borderRadius:
-                            index % 2 === 0 ? "20px 0px 0px 20px" : null,
-                        }}
-                      >
-                        {
-                          booksHistory.find(
-                            (book) => book.book_id === history.book_id
-                          )?.title
-                        }
-                      </TableCell>
-                      <TableCell
-                        sx={{
-                          width: "20vw",
-                          color: "#f4f4f4",
-                          textAlign: "center",
-                          fontFamily: "Inria Serif",
-                          borderWidth: "0px",
-                          fontSize: "clamp(1vw, 1.2vw, 1.5vw)",
-                        }}
-                      >
-                        {history.borrowdate ? (
-                          new Date(history.borrowdate).toLocaleString(
-                            "default",
-                            {
-                              month: "long",
-                              day: "numeric",
-                              year: "numeric",
-                            }
-                          )
-                        ) : (
-                          <span
-                            style={{
-                              display: "flex",
-                              justifyContent: "center",
-                              textAlign: "center",
+                      {
+                        booksHistory.find(
+                          (book) => book.book_id === history.book_id
+                        )?.title
+                      }
+                    </TableCell>
+                    <TableCell
+                      sx={{
+                        width: "20vw",
+                        color: "#f4f4f4",
+                        textAlign: "center",
+                        fontFamily: "Inria Serif",
+                        borderWidth: "0px",
+                        fontSize: "clamp(1vw, 1.2vw, 1.5vw)",
+                      }}
+                    >
+                      {history.borrowdate ? (
+                        new Date(history.borrowdate).toLocaleString("default", {
+                          month: "long",
+                          day: "numeric",
+                          year: "numeric",
+                        })
+                      ) : (
+                        <span
+                          style={{
+                            display: "flex",
+                            justifyContent: "center",
+                            textAlign: "center",
+                          }}
+                        >
+                          <Box
+                            sx={{
+                              height: "1px",
+                              width: "20%",
+                              backgroundColor: "#f4f4f4",
                             }}
-                          >
-                            <Box
-                              sx={{
-                                height: "1px",
-                                width: "20%",
-                                backgroundColor: "#f4f4f4",
-                              }}
-                            ></Box>
-                          </span>
-                        )}
-                      </TableCell>
-                      <TableCell
-                        sx={{
-                          width: "20vw",
-                          color: "#f4f4f4",
-                          textAlign: "center",
-                          fontFamily: "Inria Serif",
-                          borderWidth: "0px",
-                          fontSize: "clamp(1vw, 1.2vw, 1.5vw)",
-                        }}
-                      >
-                        {history.returndate ? (
-                          new Date(history.returndate).toLocaleString(
-                            "default",
-                            {
-                              month: "long",
-                              day: "numeric",
-                              year: "numeric",
-                            }
-                          )
-                        ) : (
-                          <span
-                            style={{
-                              display: "flex",
-                              justifyContent: "center",
-                              textAlign: "center",
+                          ></Box>
+                        </span>
+                      )}
+                    </TableCell>
+                    <TableCell
+                      sx={{
+                        width: "20vw",
+                        color: "#f4f4f4",
+                        textAlign: "center",
+                        fontFamily: "Inria Serif",
+                        borderWidth: "0px",
+                        fontSize: "clamp(1vw, 1.2vw, 1.5vw)",
+                      }}
+                    >
+                      {history.returndate ? (
+                        new Date(history.returndate).toLocaleString("default", {
+                          month: "long",
+                          day: "numeric",
+                          year: "numeric",
+                        })
+                      ) : (
+                        <span
+                          style={{
+                            display: "flex",
+                            justifyContent: "center",
+                            textAlign: "center",
+                          }}
+                        >
+                          <Box
+                            sx={{
+                              height: "1px",
+                              width: "20%",
+                              backgroundColor: "#f4f4f4",
                             }}
-                          >
-                            <Box
-                              sx={{
-                                height: "1px",
-                                width: "20%",
-                                backgroundColor: "#f4f4f4",
-                              }}
-                            ></Box>
-                          </span>
-                        )}
-                      </TableCell>
-                      <TableCell
-                        sx={{
-                          width: "20vw",
-                          color: "#f4f4f4",
-                          textAlign: "center",
-                          textTransform: "capitalize",
-                          fontFamily: "Inria Serif",
-                          borderWidth: "0px",
-                          fontSize: "clamp(1vw, 1.2vw, 1.5vw)",
-                          borderRadius:
-                            index % 2 === 0 ? "0px 20px 20px 0px" : null,
-                        }}
-                      >
-                        {history.status}
-                      </TableCell>
-                    </TableRow>
-                  ))}
+                          ></Box>
+                        </span>
+                      )}
+                    </TableCell>
+                    <TableCell
+                      sx={{
+                        width: "20vw",
+                        color: "#f4f4f4",
+                        textAlign: "center",
+                        textTransform: "capitalize",
+                        fontFamily: "Inria Serif",
+                        borderWidth: "0px",
+                        fontSize: "clamp(1vw, 1.2vw, 1.5vw)",
+                        borderRadius:
+                          index % 2 === 0 ? "0px 20px 20px 0px" : null,
+                      }}
+                    >
+                      {history.status}
+                    </TableCell>
+                  </TableRow>
+                ))}
               </TableBody>
             </Table>
           )}

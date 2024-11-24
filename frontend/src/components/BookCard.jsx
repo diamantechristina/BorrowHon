@@ -33,7 +33,7 @@ const BookCard = ({ book, open, setOpen }) => {
         height: "60vh",
         objectFit: "contain",
         background:
-          book.coverImage !== undefined
+          book.coverImage
             ? `url(${book.coverImage})`
             : 'url("src/resources/defaultCover.png")',
         backgroundColor: "#225560",

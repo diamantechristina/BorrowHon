@@ -241,10 +241,7 @@ const ListOfReaders = () => {
             input: {
               startAdornment: (
                 <InputAdornment position="start">
-                  <Box
-                    marginTop="10px"
-                    marginLeft="13px"
-                  >
+                  <Box marginTop="10px" marginLeft="13px">
                     <Search
                       size="25px"
                       style={{
@@ -443,7 +440,6 @@ const ListOfReaders = () => {
                                 />
                               )}
                             </Box>
-                            {/* {acc.profilepic ? acc.profilepic : "N/A"} */}
                             {acc.firstName}
                           </Box>
                         </TableCell>
@@ -476,7 +472,6 @@ const ListOfReaders = () => {
                   })}
               </TableBody>
             </Table>
-            {/* // )} */}
           </Box>
         </Box>
       )}

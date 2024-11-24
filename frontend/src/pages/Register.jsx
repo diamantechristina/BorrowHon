@@ -1,36 +1,41 @@
-import { Typography,Snackbar, SnackbarContent } from "@mui/material";
+import { Typography, Snackbar, SnackbarContent } from "@mui/material";
 import React, { useState, useEffect } from "react";
 import { Box } from "@mui/material";
-import { TextField, Button, Divider } from "@mui/material";
+import { TextField, Button } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
-import '@fontsource/arsenal'
-import '@fontsource/inria-serif'
-// import { Arrow } from "";
-import {ArrowSmallLeft} from "react-flaticons";
-import { useAccount } from "../library/account.js";
+import "@fontsource/arsenal";
+import "@fontsource/inria-serif";
+import { ArrowSmallLeft } from "react-flaticons";
 import { useSnackbar } from "../library/snackbar.js";
 const Register = () => {
   const navigate = useNavigate();
-  const {setOpenSnackbar, setSnackbarSuccess, setSnackbarMessage, openSnackbar, snackbarMessage, snackbarSuccess} = useSnackbar();
+  const {
+    setOpenSnackbar,
+    setSnackbarSuccess,
+    setSnackbarMessage,
+    openSnackbar,
+    snackbarMessage,
+    snackbarSuccess,
+  } = useSnackbar();
 
   const [newAccount, setNewAccount] = useState({
     firstName: "",
     lastName: "",
     address: "",
     phoneNumber: "",
-  })
+  });
 
   const handleKeyPress = (event) => {
     if (event.key === "Enter") {
       handleRegister();
     }
-  }
+  };
   useEffect(() => {
-    document.addEventListener('keypress', handleKeyPress);
+    document.addEventListener("keypress", handleKeyPress);
     return () => {
-      document.removeEventListener('keypress', handleKeyPress);
-    }
-  })
+      document.removeEventListener("keypress", handleKeyPress);
+    };
+  });
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -49,13 +54,22 @@ const Register = () => {
   }
 
   const handleRegister = () => {
-    if (!newAccount.firstName || !newAccount.lastName || !newAccount.address || !newAccount.phoneNumber) {
+    if (
+      !newAccount.firstName ||
+      !newAccount.lastName ||
+      !newAccount.address ||
+      !newAccount.phoneNumber
+    ) {
       setOpenSnackbar(true);
       setSnackbarSuccess(false);
       setSnackbarMessage("Please fill in all fields.");
       return;
     }
-    if (!allLetters(newAccount.firstName) || !allLetters(newAccount.lastName) || !allNumbers(newAccount.phoneNumber)) {
+    if (
+      !allLetters(newAccount.firstName) ||
+      !allLetters(newAccount.lastName) ||
+      !allNumbers(newAccount.phoneNumber)
+    ) {
       setOpenSnackbar(true);
       setSnackbarSuccess(false);
       setSnackbarMessage("Invalid Inputs.");
@@ -83,8 +97,7 @@ const Register = () => {
         <SnackbarContent
           message={snackbarMessage}
           style={{
-            backgroundColor:
-              snackbarSuccess ? "green" : "red",
+            backgroundColor: snackbarSuccess ? "green" : "red",
             justifyContent: "center",
           }}
         />
@@ -108,23 +121,19 @@ const Register = () => {
             margin: 0,
             borderRadius: "20px",
             color: "#E8E8E8",
-            
-            // backgroundColor:"red",
             "&:hover": {
               backgroundColor: "transparent",
               filter: "drop-shadow(0 0 1px white)",
               color: "#FFFFFF",
             },
-            position:"absolute",
-            left:10,
-            top:10,
-          }}         
+            position: "absolute",
+            left: 10,
+            top: 10,
+          }}
         >
           <ArrowSmallLeft
             size={"75px"}
             style={{
-              // backgroundColor: "green",
-              // margin: "-px -px -px -px",
               marginTop: "-10px",
               marginLeft: "-15px",
               marginRight: "-10px",
@@ -155,7 +164,6 @@ const Register = () => {
             alignItems: "center",
           }}
           gap={2}
-          // backgroundColor="blue"
           height="clamp(25rem, 10vh, 30rem)"
         >
           <TextField
@@ -205,7 +213,6 @@ const Register = () => {
           <TextField
             required
             type="text"
-            // id='outlined-basic'
             variant="outlined"
             label="Lastname"
             name="lastName"
@@ -245,10 +252,10 @@ const Register = () => {
                 color: "#F4F4F4",
               },
             }}
-          /><TextField
+          />
+          <TextField
             required
             type="text"
-            // id='outlined-basic'
             variant="outlined"
             label="Address"
             name="address"
@@ -292,7 +299,6 @@ const Register = () => {
           <TextField
             required
             type="text"
-            // id='outlined-basic'
             variant="outlined"
             label="Phone Number"
             name="phoneNumber"
@@ -301,7 +307,7 @@ const Register = () => {
             InputLabelProps={{ required: false }}
             sx={{
               "& .MuiInputLabel-root": {
-                color: "#F4F4F4", // label color
+                color: "#F4F4F4",
                 paddingLeft: "6px",
               },
               "& .MuiInputLabel-root.Mui-focused": {
@@ -338,7 +344,7 @@ const Register = () => {
             sx={{
               width: "clamp(10rem, 29vw, 40rem)",
               height: "52px",
-              borderRadius: "20px", // border radius
+              borderRadius: "20px",
               bgcolor: "#1FAA70",
               color: "#F4F4F4",
               "&:hover": {
@@ -350,14 +356,13 @@ const Register = () => {
               fontWeight: "bold",
               boxShadow: "none",
               textTransform: "none",
-              
             }}
             onClick={handleRegister}
           >
             Continue
           </Button>
         </Box>
-        
+
         <Box
           sx={{
             height: "1px",

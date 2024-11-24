@@ -65,7 +65,7 @@ const PendingBooks = () => {
         backgroundColor: "#191919",
         overflowY: "scroll",
         "&::-webkit-scrollbar": {
-          display: "none", // Hide scrollbars for WebKit browsers
+          display: "none",
         },
       }}
     >
@@ -143,7 +143,6 @@ const PendingBooks = () => {
             height: "100vh",
             marginTop: pendings < 5 ? "" : "20vh",
             paddingLeft: pendingHistories?.length === 0 ? "" : "5vw",
-            // paddingLeft: "5vw"
           }}
         >
           <Box
@@ -171,14 +170,12 @@ const PendingBooks = () => {
                   display: "flex",
                   justifyContent: "center",
                   alignItems: "center",
-                  // paddingTop: "100px"
                   paddingLeft: "5vw",
                 }}
               >
                 <Typography
                   sx={{
                     margin: 0,
-                    // left: 75,
                     top: 10,
                     color: "#E8E8E8",
                     fontFamily: "Montserrat",

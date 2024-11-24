@@ -37,40 +37,41 @@ const History = () => {
     fetchBook();
   }, [fetchBook]);
 
-  
   useEffect(() => {
-    
     if (!currentUser) navigate("/");
-    else setDisplay(true)
-    }, []);
-  
+    else setDisplay(true);
+  }, []);
+
   useEffect(() => {
-    setCurrentPage(location.pathname)
-  },[])
+    setCurrentPage(location.pathname);
+  }, []);
   const [searchQuery, setSearchQuery] = useState("");
-  const userHistory = useMemo(() => {  
-    return history?.filter((item) => item.acc_id === currentUser.acc_id)
-      .sort((a, b) =>{
-        const statusOrder = ['pending', 'onhand', 'returned'];
+  const userHistory = useMemo(() => {
+    return history
+      ?.filter((item) => item.acc_id === currentUser.acc_id)
+      .sort((a, b) => {
+        const statusOrder = ["pending", "onhand", "returned"];
         const statusA = statusOrder.indexOf(a.status);
         const statusB = statusOrder.indexOf(b.status);
-        if (statusA !== statusB){
+        if (statusA !== statusB) {
           return statusA - statusB;
         } else {
           return new Date(b.borrowdate) - new Date(a.borrowdate);
         }
-      })
+      });
   }, [history, currentUser]);
-
 
   const booksHistory = books.filter((book) => {
     return userHistory?.some((item) => item.book_id === book.book_id);
   });
   const filteredHistory = userHistory?.filter((history) => {
     const book = booksHistory.find((book) => book.book_id === history.book_id);
-    return book && book.title.toLowerCase().includes(searchQuery.trim().toLowerCase());
+    return (
+      book &&
+      book.title.toLowerCase().includes(searchQuery.trim().toLowerCase())
+    );
   });
-  // console.log("borrowdate: ", userHistory?.map((item) => item.borrowdate));
+
   return (
     <Box
       sx={{
@@ -89,7 +90,6 @@ const History = () => {
           left: 0,
           width: "100vw",
           height: "13vh",
-          // backgroundColor: "red",
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
@@ -102,7 +102,6 @@ const History = () => {
             margin: 0,
             borderRadius: "20px",
             color: "#E8E8E8",
-
             "&:hover": {
               backgroundColor: "transparent",
               filter: "drop-shadow(0 0 1px white)",
@@ -148,15 +147,12 @@ const History = () => {
             marginLeft: "65vw",
             "& .MuiOutlinedInput-root": {
               width: "clamp(20vw, 30vw, 30vw)",
-              // width: "42.2vw",
               height: "45px",
-              // height: "clamp(7.5vh, 7.5vh, 7.5vh)",
               paddingLeft: "6px",
               paddingRight: "6px",
               backgroundColor: "#F4F4F4",
               borderRadius: "15px",
               fontSize: "24px",
-              // marginLeft: "20px",
             },
             "& .MuiOutlinedInput-notchedOutline": {
               borderColor: "#F4F4F4", // border color
@@ -171,18 +167,15 @@ const History = () => {
             },
             "& .MuiOutlinedInput-input.MuiInputBase-input::placeholder": {
               color: "#191919",
-              // backgroundColor: "red",
               opacity: 1,
               fontSize: "20px",
               position: "absolute",
               top: 20.5,
               fontFamily: "Arimo",
             },
-            // marginTop: "20px",
             "& .MuiOutlinedInput-input.MuiInputBase-input": {
               marginLeft: "8px",
               fontSize: "20px",
-              // marginTop: "5px",
             },
           }}
           InputProps={{
@@ -194,11 +187,7 @@ const History = () => {
             input: {
               startAdornment: (
                 <InputAdornment position="start">
-                  <Box
-                    marginTop="10px"
-                    marginLeft="13px"
-                    // backgroundColor="red"
-                  >
+                  <Box marginTop="10px" marginLeft="13px">
                     <Search
                       size="25px"
                       style={{
@@ -218,7 +207,6 @@ const History = () => {
           marginTop: "15vh",
           width: "100vw",
           height: "85vh",
-          // backgroundColor: "red",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
@@ -238,7 +226,6 @@ const History = () => {
             <Typography
               sx={{
                 margin: 0,
-                // left: 75,
                 top: 10,
                 color: "#E8E8E8",
                 fontFamily: "Montserrat",

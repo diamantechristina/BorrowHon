@@ -10,9 +10,6 @@ import {
   Backdrop,
   Snackbar,
   SnackbarContent,
-  List,
-  ListItem,
-  ClickAwayListener,
 } from "@mui/material";
 import "@flaticon/flaticon-uicons/css/all/all.rounded.css";
 import Navbar from "../../components/Navbar";
@@ -20,9 +17,7 @@ import { useBook } from "../../library/book.js";
 import Carousel from "react-spring-3d-carousel";
 import { Modal } from "@mui/material";
 import { v4 as uuidv4 } from "uuid";
-import { useNavigate, useLocation } from "react-router-dom";
-import { Navigate } from "react-router-dom";
-import Login from "../Login.jsx";
+import { useNavigate } from "react-router-dom";
 import { useStore } from "../../library/store.js";
 import { useAccount } from "../../library/account.js";
 import "@fontsource/montserrat/500.css";
@@ -34,18 +29,16 @@ const Dashboard = () => {
   const {
     currentUser,
     setBookData,
-    bookData,
     setCurrentUser,
     isFirstLogin,
     setIsFirstLogin,
-    setIsOnEdit,
     setCurrentPage,
   } = useStore();
   const { fetchHistory, history } = useHistory();
   const { fetchAccount, account } = useAccount();
 
-  const { openSnackbar, setOpenSnackbar, snackbarMessage, snackbarSuccess } = useSnackbar();
-  
+  const { openSnackbar, setOpenSnackbar } = useSnackbar();
+
   useEffect(() => {
     fetchHistory();
   }, [fetchHistory]);
@@ -55,10 +48,9 @@ const Dashboard = () => {
   }, [fetchAccount]);
 
   useEffect(() => {
-    if(account) setCurrentUser(account.find((acc) => acc.acc_id === currentUser.acc_id));
-  },[account]);
-
-  console.log("current user: ", currentUser);
+    if (account)
+      setCurrentUser(account.find((acc) => acc.acc_id === currentUser.acc_id));
+  }, [account]);
 
   useEffect(() => {
     setCurrentPage(location.pathname);
@@ -98,11 +90,9 @@ const Dashboard = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
+  const [mostPopularBooks, setMostPopularBooks] = useState([]);
 
-const [mostPopularBooks, setMostPopularBooks] = useState([]);
-
-
-useEffect(() => {
+  useEffect(() => {
     if (books.length > 0) {
       const combinedData = books.map((book) => ({
         _id: book._id,
@@ -125,7 +115,7 @@ useEffect(() => {
       setBookCreation(sortedBooks);
     }
   }, [books]);
-  
+
   useEffect(() => {
     const popularBooks = _.take(
       _.orderBy(
@@ -137,9 +127,12 @@ useEffect(() => {
     ).map((bookId) => {
       return books.find((book) => book.book_id === toInteger(bookId));
     });
-  
+
     if (popularBooks.length < 5) {
-      const remainingBooks = bookCreation.filter((book) => !popularBooks.map((book) => book.book_id).includes(book.book_id));
+      const remainingBooks = bookCreation.filter(
+        (book) =>
+          !popularBooks.map((book) => book.book_id).includes(book.book_id)
+      );
       const additionalBooks = remainingBooks.slice(0, 5 - popularBooks.length);
       setMostPopularBooks([...popularBooks, ...additionalBooks]);
     } else {
@@ -173,9 +166,9 @@ useEffect(() => {
       sx={{
         height: "230vh",
         display: display ? "auto" : "none",
-        overflowY: "scroll", // Allow vertical scrolling
+        overflowY: "scroll",
         "&::-webkit-scrollbar": {
-          display: "none", // Hide scrollbars for WebKit browsers
+          display: "none",
         },
       }}
     >
@@ -194,116 +187,112 @@ useEffect(() => {
         />
       </Snackbar>
       <Navbar />
-      {currentUser?.suspendReason !== null && currentUser?.isSuspended === true && (
-        <Modal
-          aria-labelledby="unstyled-modal-title"
-          aria-describedby="unstyled-modal-description"
-          open={isFirstLogin}
-          onClose={handleCloseModal}
-          // slots={{ backdrop: StyledBackdrop }}
-          BackdropComponent={Backdrop}
-          BackdropProps={{
-            timeout: 500,
-          }}
-        >
-          <Box
-            sx={{
-              position: "absolute",
-              top: "50%",
-              left: "50%",
-              transform: "translate(-50%, -50%)",
-              width: "40vw",
-              height: "50vh",
-              p: 4,
-              backgroundColor: "#225560",
-              borderRadius: "20px",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              color: "#F4F4F4",
-              flexDirection: "column",
-              // gap: "20px",
+      {currentUser?.suspendReason !== null &&
+        currentUser?.isSuspended === true && (
+          <Modal
+            aria-labelledby="unstyled-modal-title"
+            aria-describedby="unstyled-modal-description"
+            open={isFirstLogin}
+            onClose={handleCloseModal}
+            BackdropComponent={Backdrop}
+            BackdropProps={{
+              timeout: 500,
             }}
           >
-            <i
-              class="fi fi-bs-cross-small"
-              style={{
-                fontSize: "2vw",
-                cursor: "pointer",
-                position: "absolute",
-                top: "1vh",
-                right: "1vh",
-              }}
-              onClick={handleCloseModal}
-            ></i>
-
-            <Typography
-              sx={{
-                fontSize: "3vw",
-                fontWeight: "bold",
-                fontFamily: "montserrat",
-                // marginTop: "-3vh",
-              }}
-            >
-              ACCOUNT SUSPENDED
-            </Typography>
-
             <Box
               sx={{
-                width: "inherit",
-                // backgroundColor: "yellow",
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                width: "40vw",
+                height: "50vh",
+                p: 4,
+                backgroundColor: "#225560",
+                borderRadius: "20px",
                 display: "flex",
+                justifyContent: "center",
                 alignItems: "center",
+                color: "#F4F4F4",
                 flexDirection: "column",
-                paddingTop: "10vh",
-                marginTop: "-3vh",
-                // gap: "3vh",
               }}
             >
+              <i
+                class="fi fi-bs-cross-small"
+                style={{
+                  fontSize: "2vw",
+                  cursor: "pointer",
+                  position: "absolute",
+                  top: "1vh",
+                  right: "1vh",
+                }}
+                onClick={handleCloseModal}
+              ></i>
+
               <Typography
                 sx={{
-                  fontSize: "1.5vw",
-                  fontFamily: "Montserrat",
+                  fontSize: "3vw",
+                  fontWeight: "bold",
+                  fontFamily: "montserrat",
                 }}
               >
-                Your account has been suspended due to
+                ACCOUNT SUSPENDED
               </Typography>
+
               <Box
                 sx={{
-                  backgroundColor: "#f4f4f4",
-                  borderRadius: "10px",
-                  padding: 1
+                  width: "inherit",
+                  display: "flex",
+                  alignItems: "center",
+                  flexDirection: "column",
+                  paddingTop: "10vh",
+                  marginTop: "-3vh",
                 }}
               >
                 <Typography
                   sx={{
-                    fontSize: "2vw",
-                    fontWeight: "bold",
+                    fontSize: "1.5vw",
                     fontFamily: "Montserrat",
-                    textTransform: "uppercase",
-                    color: "#225560",
                   }}
                 >
-                  {currentUser?.suspendReason}
+                  Your account has been suspended due to
+                </Typography>
+                <Box
+                  sx={{
+                    backgroundColor: "#f4f4f4",
+                    borderRadius: "10px",
+                    padding: 1,
+                  }}
+                >
+                  <Typography
+                    sx={{
+                      fontSize: "2vw",
+                      fontWeight: "bold",
+                      fontFamily: "Montserrat",
+                      textTransform: "uppercase",
+                      color: "#225560",
+                    }}
+                  >
+                    {currentUser?.suspendReason}
+                  </Typography>
+                </Box>
+
+                <Typography
+                  sx={{
+                    fontSize: "1vw",
+                    fontFamily: "Montserrat",
+                    width: "80%",
+                    textAlign: "center",
+                    paddingTop: "10vh",
+                  }}
+                >
+                  You won't be able to borrow any books for the meantime. Please
+                  contact the librarian to resolve this issue.
                 </Typography>
               </Box>
-
-              <Typography
-                sx={{
-                  fontSize: "1vw",
-                  fontFamily: "Montserrat",
-                  width: "80%",
-                  textAlign: "center",
-                  paddingTop: "10vh",
-                }}
-              >
-                You won't be able to borrow any books for the meantime. Please
-                contact the librarian to resolve this issue or <b>login again</b>.
-              </Typography>
             </Box>
-          </Box>
-        </Modal>
-      )}
+          </Modal>
+        )}
 
       <Box
         sx={{
@@ -328,8 +317,8 @@ useEffect(() => {
             backgroundImage: 'url("src/resources/readerdashboardbg.jpg")',
             backgroundSize: "cover",
             backgroundRepeat: "no-repeat",
-            filter: "contrast(0.5)", // Adjust the contrast of the background image
-            zIndex: -1, // Add this property to ensure the image is behind the content
+            filter: "contrast(0.5)",
+            zIndex: -1, // ensure image is behind the content
           }}
         />
         <Box
@@ -477,7 +466,6 @@ useEffect(() => {
               height: "50vh",
               display: "flex",
               justifyContent: "center",
-              // marginLeft: "17vw",
               alignItems: "start",
               flexDirection: "row",
               marginTop: "3vh",
@@ -518,7 +506,6 @@ useEffect(() => {
                   <CardContent
                     sx={{
                       position: "absolute",
-                      // backgroundColor:"pink",
                       bottom: 0,
                       width: "100%",
                       height: "100%",
@@ -632,7 +619,6 @@ useEffect(() => {
                   <CardContent
                     sx={{
                       position: "absolute",
-                      // backgroundColor:"pink",
                       bottom: 0,
                       width: "100%",
                       height: "100%",

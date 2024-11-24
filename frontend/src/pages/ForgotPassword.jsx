@@ -1,29 +1,43 @@
-import { Box, Typography, TextField, Button, Snackbar, SnackbarContent } from "@mui/material";
+import {
+  Box,
+  Typography,
+  TextField,
+  Button,
+  Snackbar,
+  SnackbarContent,
+} from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowSmallLeft } from "react-flaticons";
 import { useAccount } from "../library/account";
 import { useResetPassword } from "../library/resetpassword";
-import {useStore} from "../library/store";
+import { useStore } from "../library/store";
 import { useSnackbar } from "../library/snackbar";
 const ForgotPassword = () => {
   const navigate = useNavigate();
-  const {fetchAccount, account} = useAccount();
-  const {setAccountReset, accountReset} = useResetPassword();
-  const {setCurrentPage} = useStore();
-  const {setOpenSnackbar, setSnackbarSuccess, setSnackbarMessage, openSnackbar, snackbarMessage, snackbarSuccess} = useSnackbar();
+  const { fetchAccount, account } = useAccount();
+  const { setAccountReset, accountReset } = useResetPassword();
+  const { setCurrentPage } = useStore();
+  const {
+    setOpenSnackbar,
+    setSnackbarSuccess,
+    setSnackbarMessage,
+    openSnackbar,
+    snackbarMessage,
+    snackbarSuccess,
+  } = useSnackbar();
 
   const handleKeyPress = (event) => {
     if (event.key === "Enter") {
       handleCheckAccount();
     }
-  }
+  };
   useEffect(() => {
-    document.addEventListener('keypress', handleKeyPress);
+    document.addEventListener("keypress", handleKeyPress);
     return () => {
-      document.removeEventListener('keypress', handleKeyPress);
-    }
-  })
+      document.removeEventListener("keypress", handleKeyPress);
+    };
+  });
   useEffect(() => {
     setCurrentPage(location.pathname);
   }, []);
@@ -45,29 +59,28 @@ const ForgotPassword = () => {
       setSnackbarMessage("Please fill in all fields!");
       setOpenSnackbar(true);
       setSnackbarSuccess(false);
-      return
+      return;
     }
     for (let i = 0; i < account.length; i++) {
       if (account[i].username === username.trim()) {
-        if( account[i].email === email.trim()) {
+        if (account[i].email === email.trim()) {
           setAccountReset(account[i]);
           navigate("/resetpassword");
-          return
-      }
-      else{
-        setSnackbarMessage("Username and email do not match!");
-        setOpenSnackbar(true);
-        setSnackbarSuccess(false);
-        return
+          return;
+        } else {
+          setSnackbarMessage("Username and email do not match!");
+          setOpenSnackbar(true);
+          setSnackbarSuccess(false);
+          return;
+        }
       }
     }
-  }
-  if(!accountReset){
-    setSnackbarMessage("Account does not exist!");
-    setOpenSnackbar(true);
-    setSnackbarSuccess(false);
+    if (!accountReset) {
+      setSnackbarMessage("Account does not exist!");
+      setOpenSnackbar(true);
+      setSnackbarSuccess(false);
     }
-  }
+  };
   return (
     <Box
       sx={{
@@ -90,8 +103,7 @@ const ForgotPassword = () => {
         <SnackbarContent
           message={snackbarMessage}
           style={{
-            backgroundColor:
-              snackbarSuccess ? "green" : "red",
+            backgroundColor: snackbarSuccess ? "green" : "red",
             justifyContent: "center",
           }}
         />
@@ -105,7 +117,6 @@ const ForgotPassword = () => {
           alignItems: "center",
           flexDirection: "column",
           backgroundColor: "#225560",
-          // backgroundColor: "red"
         }}
       >
         <Button
@@ -114,8 +125,6 @@ const ForgotPassword = () => {
             margin: 0,
             borderRadius: "20px",
             color: "#E8E8E8",
-
-            // backgroundColor:"red",
             "&:hover": {
               backgroundColor: "transparent",
               filter: "drop-shadow(0 0 1px white)",
@@ -162,7 +171,6 @@ const ForgotPassword = () => {
           justifyContent={"center"}
           alignItems={"center"}
           gap={3}
-          // backgroundColor="gray"
           height={"clamp(20rem, 30vh, 30rem)"}
         >
           <TextField
@@ -256,7 +264,7 @@ const ForgotPassword = () => {
             sx={{
               width: "clamp(10rem, 29vw, 40rem)",
               height: "52px",
-              borderRadius: "20px", // border radius
+              borderRadius: "20px",
               bgcolor: "#1FAA70",
               color: "#F4F4F4",
               "&:hover": {

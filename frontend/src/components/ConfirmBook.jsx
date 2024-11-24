@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import { useState } from "react";
 import { Box, Typography, Button, Modal, Backdrop } from "@mui/material";
 import { useBook } from "../library/book.js";
 import { useSnackbar } from "../library/snackbar.js";
@@ -60,6 +59,7 @@ const ConfirmBook = ({
     setConfirmOpen(false);
     if (handleHover) handleHover(false);
   };
+
   return (
     <Modal
       aria-labelledby="unstyled-modal-title"
@@ -120,7 +120,8 @@ const ConfirmBook = ({
         <Box
           sx={{
             width: "60vw",
-            height: "55vh",
+            maxHeight: "50vh",
+            // backgroundColor: "red",
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
@@ -135,11 +136,14 @@ const ConfirmBook = ({
           >
             <Box
               sx={{
-                height: "55vh",
-                backgroundImage: `url(${newBook.coverImage})`,
+                height: "50vh",
+                backgroundImage: newBook.coverImage
+                  ? `url(${newBook.coverImage})`
+                  : 'url("src/resources/defaultCover.png")',
                 backgroundSize: "contain",
                 backgroundRepeat: "no-repeat",
                 mx: "1.5vw",
+                marginTop: !newBook.coverImage ? "10vh" : "",
               }}
             ></Box>
           </Box>
@@ -195,14 +199,31 @@ const ConfirmBook = ({
                 my: "2vh",
               }}
             ></Box>
-            <Typography
+
+            <Box
               sx={{
-                fontSize: "20px",
-                fontFamily: "montserrat",
+                overflow: "hidden",
+                maxHeight: "15vh",
               }}
             >
-              {newBook.description}
-            </Typography>
+              <Box
+                sx={{
+                  width: "100%",
+                  height: "15vh",
+                  overflow: "scroll",
+                }}
+              >
+                <Typography
+                  sx={{
+                    fontSize: "1vw",
+                    fontFamily: "montserrat",
+                    textAlign: "justify",
+                  }}
+                >
+                  {newBook.description}
+                </Typography>
+              </Box>
+            </Box>
           </Box>
         </Box>
         <Button

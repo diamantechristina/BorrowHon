@@ -33,7 +33,6 @@ import { useNavigate, useLocation } from "react-router-dom";
 import "@fontsource/arimo/600.css";
 import "@fontsource/montserrat/600.css";
 import { useStore } from "../../library/store";
-import { set } from "mongoose";
 
 const editProfileReducer = (state, action) => {
   switch (action.type) {
@@ -108,7 +107,6 @@ const suspendReasons = [
 const ReaderSettings = () => {
   const {
     currentUser,
-    setCurrentUser,
     readerUser,
     setReaderUser,
     setCurrentPage,
@@ -280,9 +278,17 @@ const ReaderSettings = () => {
       setOpenSnackbar(true);
       return;
     }
-    const suspendedUser = { ...userLoggedIn, isSuspended: true, suspendReason: suspendReason };
-    const { success, message } = await updateAccount(suspendedUser._id, suspendedUser, false);
-    setReaderUser(suspendedUser)
+    const suspendedUser = {
+      ...userLoggedIn,
+      isSuspended: true,
+      suspendReason: suspendReason,
+    };
+    const { success, message } = await updateAccount(
+      suspendedUser._id,
+      suspendedUser,
+      false
+    );
+    setReaderUser(suspendedUser);
     setSnackbarMessage("Account suspended successfully!");
     setSnackbarSuccess(success);
     setOpenSnackbar(true);
@@ -290,16 +296,22 @@ const ReaderSettings = () => {
   };
 
   const handleUnsuspend = async () => {
-    const suspendedUser = { ...userLoggedIn, isSuspended: false, suspendReason: null };
-    const { success, message } = await updateAccount(suspendedUser._id, suspendedUser, false);
-    setReaderUser(suspendedUser)
+    const suspendedUser = {
+      ...userLoggedIn,
+      isSuspended: false,
+      suspendReason: null,
+    };
+    const { success, message } = await updateAccount(
+      suspendedUser._id,
+      suspendedUser,
+      false
+    );
+    setReaderUser(suspendedUser);
     setSnackbarMessage("Account unsuspended successfully!");
     setSnackbarSuccess(success);
     setOpenSnackbar(true);
     handleClose();
   };
-
-
 
   return (
     <Box
@@ -344,7 +356,7 @@ const ReaderSettings = () => {
           fontFamily: "Montserrat",
         }}
       >
-        {readerUser.isSuspended ? "Unsuspend" :" Suspend"}
+        {readerUser.isSuspended ? "Unsuspend" : " Suspend"}
       </Button>
       {/* for suspend */}
       <Modal
@@ -352,7 +364,6 @@ const ReaderSettings = () => {
         aria-describedby="unstyled-modal-description"
         open={open}
         onClose={handleClose}
-        // slots={{ backdrop: StyledBackdrop }}
         BackdropComponent={Backdrop}
         BackdropProps={{
           timeout: 500,
@@ -374,7 +385,6 @@ const ReaderSettings = () => {
             alignItems: "center",
             color: "#F4F4F4",
             flexDirection: "column",
-            // gap: "20px",
           }}
         >
           <i
@@ -393,7 +403,6 @@ const ReaderSettings = () => {
               fontSize: "3.5vw",
               fontWeight: "bold",
               fontFamily: "montserrat",
-              // marginTop: "-3vh",
             }}
           >
             SUSPEND ACCOUNT
@@ -402,12 +411,10 @@ const ReaderSettings = () => {
             sx={{
               width: "50vw",
               height: "100vh",
-              // backgroundColor: "yellow",
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
               flexDirection: "column",
-              // overflow: "auto",
             }}
           >
             <Box
@@ -415,7 +422,6 @@ const ReaderSettings = () => {
                 display: "flex",
                 flexDirection: "row",
                 justifyContent: "left",
-                // backgroundColor: "blue",
                 width: "50vw",
                 gap: "30px",
               }}
@@ -453,8 +459,6 @@ const ReaderSettings = () => {
                   display: "flex",
                   flexDirection: "column",
                   justifyContent: "center",
-                  // alignItems: "ce",
-                  // marginTop: "-6rem",
                 }}
               >
                 <Typography
@@ -463,7 +467,6 @@ const ReaderSettings = () => {
                     fontWeight: "bold",
                     fontFamily: "montserrat",
                     fontColor: "#ECECEC",
-                    //   marginTop: "-5vh",
                   }}
                 >
                   {userLoggedIn?.firstName + " " + userLoggedIn?.lastName}
@@ -492,7 +495,6 @@ const ReaderSettings = () => {
                 sx={{
                   width: "20vw",
                   height: "45vh",
-                  // backgroundColor: "red",
                   display: "flex",
                   flexDirection: "column",
                   justifyContent: "center",
@@ -505,10 +507,8 @@ const ReaderSettings = () => {
                     display: "flex",
                     flexDirection: "row",
                     justifyContent: "flex-end",
-                    // alignContent: "right",
                     gap: "10px",
                     height: "5vh",
-                    // backgroundColor: "green",
                   }}
                 >
                   <Marker size={"1.75vw"} />
@@ -528,10 +528,8 @@ const ReaderSettings = () => {
                     display: "flex",
                     flexDirection: "row",
                     justifyContent: "flex-end",
-                    // alignContent: "right",
                     gap: "10px",
                     height: "5vh",
-                    // backgroundColor: "green",
                   }}
                 >
                   <Envelope size={"1.75vw"} />
@@ -551,10 +549,8 @@ const ReaderSettings = () => {
                     display: "flex",
                     flexDirection: "row",
                     justifyContent: "flex-end",
-                    // alignContent: "right",
                     gap: "10px",
                     height: "5vh",
-                    // backgroundColor: "green",
                   }}
                 >
                   <Box
@@ -588,10 +584,8 @@ const ReaderSettings = () => {
                     display: "flex",
                     flexDirection: "row",
                     justifyContent: "flex-end",
-                    // alignContent: "right",
                     gap: "10px",
                     height: "5vh",
-                    // backgroundColor: "green",
                   }}
                 >
                   <Box
@@ -599,30 +593,28 @@ const ReaderSettings = () => {
                       display: "flex",
                       flexDirection: "row",
                       justifyContent: "flex-end",
-                      // alignContent: "right",
                       height: "5vh",
                     }}
                   >
-                  <i
-                    className="fi fi-rr-user"
-                    style={{
-                      color: "#f4f4f4",
-                      fontSize: "1.75vw",
-                    }}
-                  >
                     <i
-                    className="fi fi-br-ban"
-                    style={{
-                      color: "#f4f4f4",
-                      fontSize: "1vw",
-                      marginTop: "1.75vh",
-                      marginLeft: "-.75vw",
-                      backgroundColor: "#225560",
-                      borderRadius: "50%",
-                    }}
-                  />
-                  </i>
-                  
+                      className="fi fi-rr-user"
+                      style={{
+                        color: "#f4f4f4",
+                        fontSize: "1.75vw",
+                      }}
+                    >
+                      <i
+                        className="fi fi-br-ban"
+                        style={{
+                          color: "#f4f4f4",
+                          fontSize: "1vw",
+                          marginTop: "1.75vh",
+                          marginLeft: "-.75vw",
+                          backgroundColor: "#225560",
+                          borderRadius: "50%",
+                        }}
+                      />
+                    </i>
                   </Box>
                   <Typography
                     sx={{
@@ -640,11 +632,9 @@ const ReaderSettings = () => {
                 sx={{
                   width: "30vw",
                   height: "45vh",
-                  // backgroundColor: "black",
                   display: "flex",
                   flexDirection: "column",
                   justifyContent: "center",
-                  // alignItems: "center",
                   gap: "20px",
                 }}
               >
@@ -652,117 +642,111 @@ const ReaderSettings = () => {
                   sx={{
                     display: "flex",
                     flexDirection: "row",
-                    // alignContent: "right",
                     height: "5vh",
                   }}
                 >
-
-                <Typography
-                  sx={{
-                    fontSize: "1.5vw",
-                    fontFamily: "Arimo",
-                  }}
-                >
-                  {userLoggedIn?.address}
-                </Typography>
-
-                </Box>
-
-                  <Box
+                  <Typography
                     sx={{
-                      display: "flex",
-                      flexDirection: "row",
-                      // alignContent: "right",
-                      height: "5vh",
+                      fontSize: "1.5vw",
+                      fontFamily: "Arimo",
                     }}
                   >
+                    {userLoggedIn?.address}
+                  </Typography>
+                </Box>
 
-                <Typography
-                  sx={{
-                    fontSize: "1.5vw",
-                    fontFamily: "Arimo",
-                  }}
-                >
-                  {userLoggedIn?.email}
-                </Typography>
-                  </Box>
-                
                 <Box
                   sx={{
                     display: "flex",
                     flexDirection: "row",
-                    // alignContent: "right",
                     height: "5vh",
                   }}
                 >
-
-                <Typography
-                  sx={{
-                    fontSize: "1.5vw",
-                    fontFamily: "Arimo",
-                  }}
-                >
-                  {userLoggedIn?.phoneNumber}
-                </Typography>
+                  <Typography
+                    sx={{
+                      fontSize: "1.5vw",
+                      fontFamily: "Arimo",
+                    }}
+                  >
+                    {userLoggedIn?.email}
+                  </Typography>
                 </Box>
-                
+
                 <Box
-                sx={{
-                  display: "flex",
-                  flexDirection: "row",
-                  // alignContent: "right",
-                  width: "30vw",
-                  height: "5vh",
-                }}
-                >
-                {suspendReason ? "" : <Typography
                   sx={{
-                    position: "relative",
-                    fontSize: "1.5vw",
-                    fontFamily: "Arimo",
-                    marginTop: ".5vh",
-                    textWrap: "nowrap",
+                    display: "flex",
+                    flexDirection: "row",
+                    height: "5vh",
                   }}
-                >Select a Suspend Reason</Typography>}
-                <FormControl 
-                  focused= {false}
-                variant="standard">
-                <Select
-                  value={suspendReason}
-                  label="Suspend Reason"
-                  onChange={(e) => setSuspendReason(e.target.value)}
-
-                  sx={{
-                    color: "#F4F4F4",
-                    fontSize: "1.5vw",
-                    fontFamily: "Arimo",
-                    width: "25vw",
-                    marginLeft:  suspendReason? null : "-17.75vw",
-                    "&.MuiInputBase-root": {
-                      "&:before": {
-                        borderBottom: "2px solid #FFFFFF", // Normal state border color
-                        marginBottom: "1vh",
-                      },
-                      "&:hover:before": {
-                        borderBottom: "2px solid #FFFFFF", // Hover state border color
-                      },
-                      "&:after": {
-                        borderBottom: "2px solid #00FF00", // Focus state border color
-                      },
-                    },
-                    ".MuiSelect-iconStandard": {
-                      color: "#F4F4F4",
-                    },
-                  }}
-
                 >
-                  {suspendReasons.map((reason) => (
-                    <MenuItem key={reason} value={reason}>
-                      {reason}
-                    </MenuItem>
-                  ))}
-                </Select>
-                </FormControl>
+                  <Typography
+                    sx={{
+                      fontSize: "1.5vw",
+                      fontFamily: "Arimo",
+                    }}
+                  >
+                    {userLoggedIn?.phoneNumber}
+                  </Typography>
+                </Box>
+
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: "row",
+                    width: "30vw",
+                    height: "5vh",
+                  }}
+                >
+                  {suspendReason ? (
+                    ""
+                  ) : (
+                    <Typography
+                      sx={{
+                        position: "relative",
+                        fontSize: "1.5vw",
+                        fontFamily: "Arimo",
+                        marginTop: ".5vh",
+                        textWrap: "nowrap",
+                      }}
+                    >
+                      Select a Suspend Reason
+                    </Typography>
+                  )}
+                  <FormControl focused={false} variant="standard">
+                    <Select
+                      value={suspendReason}
+                      label="Suspend Reason"
+                      onChange={(e) => setSuspendReason(e.target.value)}
+                      sx={{
+                        color: "#F4F4F4",
+                        fontSize: "1.5vw",
+                        fontFamily: "Arimo",
+                        width: "25vw",
+                        marginLeft: suspendReason ? null : "-17.75vw",
+                        "&.MuiInputBase-root": {
+                          "&:before": {
+                            borderBottom: "2px solid #FFFFFF", // Normal state border color
+                            marginBottom: "1vh",
+                          },
+                          "&:hover:before": {
+                            borderBottom: "2px solid #FFFFFF", // Hover state border color
+                          },
+                          "&:after": {
+                            borderBottom: "2px solid #00FF00", // Focus state border color
+                          },
+                        },
+                        ".MuiSelect-iconStandard": {
+                          color: "#F4F4F4",
+                        },
+                      }}
+                    >
+                      {suspendReasons.map((reason) => (
+                        <MenuItem key={reason} value={reason}>
+                          {reason}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
                 </Box>
               </Box>
             </Box>
@@ -810,8 +794,6 @@ const ReaderSettings = () => {
                 border: "2px solid #f4f4f4",
                 color: "#F4F4F4",
                 "&:hover": {
-                  // bgcolor: "#4dc995",
-                  // color: "#F4F4F4",
                   boxShadow: "none",
                 },
                 fontFamily: "Montserrat",
@@ -834,7 +816,6 @@ const ReaderSettings = () => {
         aria-describedby="unstyled-modal-description"
         open={openUnsuspend}
         onClose={handleClose}
-        // slots={{ backdrop: StyledBackdrop }}
         BackdropComponent={Backdrop}
         BackdropProps={{
           timeout: 500,
@@ -856,7 +837,6 @@ const ReaderSettings = () => {
             alignItems: "center",
             color: "#F4F4F4",
             flexDirection: "column",
-            // gap: "20px",
           }}
         >
           <i
@@ -876,7 +856,6 @@ const ReaderSettings = () => {
               fontSize: "3vw",
               fontWeight: "bold",
               fontFamily: "montserrat",
-              // marginTop: "-3vh",
             }}
           >
             UNSUSPEND ACCOUNT
@@ -886,10 +865,8 @@ const ReaderSettings = () => {
             sx={{
               width: "33vw",
               height: "100vh",
-              // backgroundColor: "yellow",
               display: "flex",
               justifyContent: "center",
-              // alignItems: "center",
               flexDirection: "column",
               gap: "3vh",
             }}
@@ -926,28 +903,24 @@ const ReaderSettings = () => {
                 display: "flex",
                 flexDirection: "row",
                 gap: "10px",
-                // backgroundColor: "red",
               }}
             >
               <Box
-                    sx={{
-                      display: "flex",
-                      flexDirection: "row",
-                      justifyContent: "flex-end",
-                      // alignContent: "right",
-                      height: "5vh",
-                    }}
-                  >
-                    
+                sx={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "flex-end",
+                  height: "5vh",
+                }}
+              >
+                <i
+                  className="fi fi-rr-user"
+                  style={{
+                    color: "#f4f4f4",
+                    fontSize: "1.75vw",
+                  }}
+                >
                   <i
-                    className="fi fi-rr-user"
-                    style={{
-                      color: "#f4f4f4",
-                      fontSize: "1.75vw",
-                    }}
-                  >
-                    
-                    <i
                     className="fi fi-br-ban"
                     style={{
                       color: "#f4f4f4",
@@ -958,9 +931,8 @@ const ReaderSettings = () => {
                       borderRadius: "50%",
                     }}
                   />
-                  </i>
-                  
-                  </Box>
+                </i>
+              </Box>
 
               <Typography
                 sx={{
@@ -1030,8 +1002,6 @@ const ReaderSettings = () => {
                 border: "2px solid #f4f4f4",
                 color: "#F4F4F4",
                 "&:hover": {
-                  // bgcolor: "#4dc995",
-                  // color: "#F4F4F4",
                   boxShadow: "none",
                 },
                 fontFamily: "Montserrat",
@@ -1170,7 +1140,6 @@ const ReaderSettings = () => {
             alignItems: "center",
             width: "90vw",
             height: "12.5vh",
-            // backgroundColor: "red",
           }}
         >
           <Box
@@ -1311,8 +1280,6 @@ const ReaderSettings = () => {
             justifyContent: "center",
             marginTop: "1.5vh",
             width: "90vw",
-            // height: "50vh",
-            // backgroundColor: "red",
           }}
         >
           <Box
@@ -1321,7 +1288,6 @@ const ReaderSettings = () => {
               flexDirection: "column",
               width: "50%",
               height: "inherit",
-              // backgroundColor: "green",
               gap: "2.5vh",
               paddingLeft: "5vw",
             }}
@@ -1499,8 +1465,6 @@ const ReaderSettings = () => {
                         sx={{
                           pointerEvents: editProfileOpen ? "auto" : "none",
                           color: "#F4F4F4",
-                          // backgroundColor: "red",
-                          // marginRight: "15px",
                           minWidth: 0,
                         }}
                       >
@@ -1523,7 +1487,6 @@ const ReaderSettings = () => {
                         sx={{
                           pointerEvents: editProfileOpen ? "auto" : "none",
                           color: "#F4F4F4",
-                          // backgroundColor: "red",
                           minWidth: 0,
                         }}
                       >
@@ -1618,7 +1581,6 @@ const ReaderSettings = () => {
                         sx={{
                           pointerEvents: editProfileOpen ? "auto" : "none",
                           color: "#F4F4F4",
-                          // backgroundColor: "red",
                           minWidth: 0,
                         }}
                       >
@@ -1645,7 +1607,6 @@ const ReaderSettings = () => {
               width: "50%",
               height: "inherit",
               flexDirection: "column",
-              // backgroundColor: "blue",
               gap: "2.5vh",
             }}
           >
@@ -1830,7 +1791,6 @@ const ReaderSettings = () => {
                         sx={{
                           pointerEvents: editProfileOpen ? "auto" : "none",
                           color: "#F4F4F4",
-                          // backgroundColor: "red",
                           minWidth: 0,
                         }}
                       >

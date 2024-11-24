@@ -130,8 +130,6 @@ const ContinueRegister = () => {
             margin: 0,
             borderRadius: "20px",
             color: "#E8E8E8",
-
-            // backgroundColor:"red",
             "&:hover": {
               backgroundColor: "transparent",
               filter: "drop-shadow(0 0 1px white)",
@@ -145,8 +143,6 @@ const ContinueRegister = () => {
           <ArrowSmallLeft
             size={"75px"}
             style={{
-              // backgroundColor: "green",
-              // margin: "-px -px -px -px",
               marginTop: "-10px",
               marginLeft: "-15px",
               marginRight: "-10px",
@@ -177,13 +173,11 @@ const ContinueRegister = () => {
             alignItems: "center",
           }}
           gap={2}
-          // backgroundColor="blue"
           height="clamp(25rem, 10vh, 30rem)"
         >
           <TextField
             required
             type="text"
-            // id='outlined-basic'
             variant="outlined"
             label="Username"
             name="username"
@@ -227,7 +221,6 @@ const ContinueRegister = () => {
           <TextField
             required
             type="email"
-            // id='outlined-basic'
             variant="outlined"
             label="Email"
             name="email"
@@ -271,7 +264,6 @@ const ContinueRegister = () => {
           <TextField
             required
             type={showPassword ? "text" : "password"}
-            // id='outlined-basic'
             variant="outlined"
             label="Password"
             name="password"
@@ -335,7 +327,6 @@ const ContinueRegister = () => {
           <TextField
             required
             type={showConfirmPassword ? "text" : "password"}
-            // id='outlined-basic'
             variant="outlined"
             label="Confirm Password"
             name="confirmPassword"
@@ -400,7 +391,7 @@ const ContinueRegister = () => {
             sx={{
               width: "clamp(10rem, 29vw, 40rem)",
               height: "52px",
-              borderRadius: "20px", // border radius
+              borderRadius: "20px",
               bgcolor: "#1FAA70",
               color: "#F4F4F4",
               "&:hover": {

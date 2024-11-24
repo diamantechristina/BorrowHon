@@ -1,5 +1,5 @@
 import { Snackbar, SnackbarContent, Typography } from "@mui/material";
-import React, { useEffect, useMemo, useState, } from "react";
+import React, { useEffect, useState } from "react";
 import { Box } from "@mui/material";
 import { TextField, Button } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
@@ -14,7 +14,14 @@ import { useStore } from "../library/store.js";
 import { useSnackbar } from "../library/snackbar.js";
 
 const Login = () => {
-  const {setOpenSnackbar, setSnackbarSuccess, setSnackbarMessage, openSnackbar, snackbarMessage, snackbarSuccess} = useSnackbar();
+  const {
+    setOpenSnackbar,
+    setSnackbarSuccess,
+    setSnackbarMessage,
+    openSnackbar,
+    snackbarMessage,
+    snackbarSuccess,
+  } = useSnackbar();
 
   const navigate = useNavigate();
   const { setCurrentUser, setLog, setIsAdmin, currentUser } = useStore();
@@ -22,10 +29,10 @@ const Login = () => {
     if (event.key === "Enter") {
       handleLoginClick();
     }
-  }
-  useEffect(()=> {
-    setIsAdmin(false)
-  },[])
+  };
+  useEffect(() => {
+    setIsAdmin(false);
+  }, []);
   useEffect(() => {
     if (currentUser) {
       setIsAdmin(currentUser.isAdmin);
@@ -33,11 +40,11 @@ const Login = () => {
     }
   }, [currentUser]);
   useEffect(() => {
-    document.addEventListener('keypress', handleKeyPress);
+    document.addEventListener("keypress", handleKeyPress);
     return () => {
-      document.removeEventListener('keypress', handleKeyPress);
-    }
-  })
+      document.removeEventListener("keypress", handleKeyPress);
+    };
+  });
 
   const { fetchAccount, account } = useAccount();
 
@@ -49,14 +56,12 @@ const Login = () => {
 
   useEffect(() => {
     fetchLogs();
-  },[fetchLogs])
+  }, [fetchLogs]);
   const [showPassword, setShowPassword] = useState(false);
   const [login, setLogin] = useState({
     username: "",
     password: "",
   });
-
-
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -73,47 +78,40 @@ const Login = () => {
       setSnackbarSuccess(false);
       return;
     }
-    if(account.filter((acc) => acc.username.toLowerCase() === login.username.trim().toLowerCase()).length === 0){
+    if (
+      account.filter(
+        (acc) =>
+          acc.username.toLowerCase() === login.username.trim().toLowerCase()
+      ).length === 0
+    ) {
       setOpenSnackbar(true);
       setSnackbarMessage("Incorrect username and password!");
       setSnackbarSuccess(false);
-      return
-    }  
+      return;
+    }
     for (const acc of account) {
-      if (acc.username.toLowerCase() === login.username.trim().toLowerCase()){
+      if (acc.username.toLowerCase() === login.username.trim().toLowerCase()) {
+        if (acc.password === login.password) {
+          const newLog = {
+            acc_id: acc.acc_id,
+            logindate: new Date(),
+          };
+          const { log } = await createLog(newLog);
+          setCurrentUser(acc);
+          setLog(log);
+          setIsAdmin(acc.isAdmin);
+          setOpenSnackbar(true);
+          navigate("/dashboard");
 
-      if ( acc.password === login.password) {
-        const newLog = {
-          acc_id: acc.acc_id,
-          logindate: new Date()
+          return;
+        } else {
+          setOpenSnackbar(true);
+          setSnackbarMessage("Incorrect password!");
+          setSnackbarSuccess(false);
+          return;
         }
-        const {log} = await createLog(newLog);
-        // console.log("log Login: ", log);
-
-        // const userLog = logs.find((log) => log.acc_id === acc.acc_id && log.logindate === new Date());
-        
-        // console.log("userLog Login: ", logs.find((log) => log.acc_id === acc.acc_id && log.logindate === new Date()));
-        setCurrentUser(acc);
-        setLog(log);
-        setIsAdmin(acc.isAdmin)
-        setOpenSnackbar(true);
-        navigate("/dashboard");
-        
-        return;
-      }
-      else{
-        setOpenSnackbar(true);
-        setSnackbarMessage("Incorrect password!");
-        setSnackbarSuccess(false);
-        return;
       }
     }
-    
-      // else if (login.username.toLowerCase() === "admin" && login.password === "admin"){
-      //   navigate("/dashboard")
-      // }
-    }
-    
   };
 
   const togglePasswordVisibility = () => {
@@ -139,8 +137,7 @@ const Login = () => {
         <SnackbarContent
           message={snackbarMessage}
           style={{
-            backgroundColor:
-              snackbarSuccess ? "green" : "red",
+            backgroundColor: snackbarSuccess ? "green" : "red",
             justifyContent: "center",
           }}
         />
@@ -214,13 +211,11 @@ const Login = () => {
             alignItems: "center",
           }}
           gap={2}
-          // backgroundColor="blue"
           height="clamp(15rem, 10vh, 30rem)"
         >
           <TextField
             required
             type="text"
-            // id='outlined-basic'
             variant="outlined"
             label="Username"
             name="username"
@@ -264,7 +259,6 @@ const Login = () => {
           <TextField
             required
             type={showPassword ? "text" : "password"}
-            // id='outlined-basic'
             variant="outlined"
             label="Password"
             name="password"
@@ -310,7 +304,6 @@ const Login = () => {
                     onClick={togglePasswordVisibility}
                     sx={{
                       color: "#F4F4F4",
-                      // backgroundColor: "red",
                       marginRight: "15px",
                       minWidth: 0,
                     }}
@@ -327,7 +320,6 @@ const Login = () => {
             }}
           />
           <Button
-            // ref= {loginButtonRef}
             variant="contained"
             onClick={handleLoginClick}
             sx={{

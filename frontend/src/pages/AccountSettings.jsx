@@ -5,9 +5,9 @@ import React, {
   useRef,
   useCallback,
   useEffect,
-  useLayoutEffect
+  useLayoutEffect,
 } from "react";
-import { styled } from '@mui/material/styles';
+import { styled } from "@mui/material/styles";
 import Resizer from "react-image-file-resizer";
 import {
   Avatar,
@@ -19,10 +19,10 @@ import {
   Snackbar,
   SnackbarContent,
 } from "@mui/material";
-import { ArrowSmallLeft, Eye, EyeCrossed } from "react-flaticons";
+import { ArrowSmallLeft } from "react-flaticons";
 import { useAccount } from "../library/account";
 import "@flaticon/flaticon-uicons/css/all/all.rounded.css";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import "@fontsource/arimo/600.css";
 import "@fontsource/montserrat/600.css";
 import { useStore } from "../library/store";
@@ -93,22 +93,20 @@ const VisuallyHiddenInput = styled("input")({
 });
 
 const AccountSettings = () => {
-  
-  const { currentUser , setCurrentUser, setCurrentPage } = useStore();
+  const { currentUser, setCurrentUser, setCurrentPage } = useStore();
   const navigate = useNavigate();
   const [display, setDisplay] = useState(false);
   useLayoutEffect(() => {
-    if (!currentUser){
+    if (!currentUser) {
       navigate("/");
-    }else{
+    } else {
       setDisplay(true);
     }
-  },[])
+  }, []);
 
-  
   useEffect(() => {
-    setCurrentPage(location.pathname)
-  },[])
+    setCurrentPage(location.pathname);
+  }, []);
 
   const { updateAccount } = useAccount();
   const [openSnackbar, setOpenSnackbar] = useState(false);
@@ -121,9 +119,7 @@ const AccountSettings = () => {
     address: false,
     phoneNumber: false,
   });
-  const [userLoggedIn, setUserLoggedIn] = useState(
-    currentUser
-  );
+  const [userLoggedIn, setUserLoggedIn] = useState(currentUser);
   const [editProfileOpen, setEditProfileOpen] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const handleToggleUsername = () => {
@@ -211,28 +207,28 @@ const AccountSettings = () => {
     });
   const onChangeCoverPhoto = async (event) => {
     const file = event.target.files[0];
-    const image = await resizeFile(file,1000,500);
+    const image = await resizeFile(file, 1000, 500);
     setUserLoggedIn((prevUser) => ({
       ...prevUser,
       coverpic: image,
-    }))
+    }));
   };
 
   const onChangeProfilePic = async (event) => {
     const file = event.target.files[0];
-    const image = await resizeFile(file,500,500);
+    const image = await resizeFile(file, 500, 500);
     setUserLoggedIn((prevUser) => ({
       ...prevUser,
       profilepic: image,
-    }))
-  }
+    }));
+  };
   return (
     <Box
       sx={{
         backgroundColor: "#2e2e2e",
         width: "100vw",
         height: "100vh",
-        display: display? "flex":'none',
+        display: display ? "flex" : "none",
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
@@ -260,7 +256,6 @@ const AccountSettings = () => {
           left: 0,
           width: "100vw",
           height: "15vh",
-          // backgroundColor: "red",
         }}
       >
         <Button
@@ -337,7 +332,7 @@ const AccountSettings = () => {
           }}
         >
           <Button
-            component='label'
+            component="label"
             variant="text"
             role="undefined"
             onChange={onChangeCoverPhoto}
@@ -372,7 +367,6 @@ const AccountSettings = () => {
             alignItems: "center",
             width: "90vw",
             height: "12.5vh",
-            // backgroundColor: "red",
           }}
         >
           <Box
@@ -436,7 +430,7 @@ const AccountSettings = () => {
                 {userLoggedIn?.firstName} {userLoggedIn?.lastName}
               </Typography>
               <Button
-                component='label'
+                component="label"
                 role="undefined"
                 onChange={onChangeProfilePic}
                 variant="text"
@@ -456,10 +450,10 @@ const AccountSettings = () => {
               >
                 Change Profile Picture
                 <VisuallyHiddenInput
-              type="file"
-              accept="image/*"
-              onChange={onChangeProfilePic}
-            />
+                  type="file"
+                  accept="image/*"
+                  onChange={onChangeProfilePic}
+                />
               </Button>
             </Box>
           </Box>
@@ -495,8 +489,6 @@ const AccountSettings = () => {
             justifyContent: "center",
             marginTop: "1.5vh",
             width: "90vw",
-            // height: "50vh",
-            // backgroundColor: "red",
           }}
         >
           <Box
@@ -505,7 +497,6 @@ const AccountSettings = () => {
               flexDirection: "column",
               width: "50%",
               height: "inherit",
-              // backgroundColor: "green",
               gap: "2.5vh",
               paddingLeft: "5vw",
             }}
@@ -586,7 +577,6 @@ const AccountSettings = () => {
                         sx={{
                           pointerEvents: editProfileOpen ? "auto" : "none",
                           color: "#F4F4F4",
-                          // backgroundColor: "red",
                           minWidth: 0,
                         }}
                       >
@@ -683,8 +673,6 @@ const AccountSettings = () => {
                         sx={{
                           pointerEvents: editProfileOpen ? "auto" : "none",
                           color: "#F4F4F4",
-                          // backgroundColor: "red",
-                          // marginRight: "15px",
                           minWidth: 0,
                         }}
                       >
@@ -707,7 +695,6 @@ const AccountSettings = () => {
                         sx={{
                           pointerEvents: editProfileOpen ? "auto" : "none",
                           color: "#F4F4F4",
-                          // backgroundColor: "red",
                           minWidth: 0,
                         }}
                       >
@@ -802,7 +789,6 @@ const AccountSettings = () => {
                         sx={{
                           pointerEvents: editProfileOpen ? "auto" : "none",
                           color: "#F4F4F4",
-                          // backgroundColor: "red",
                           minWidth: 0,
                         }}
                       >
@@ -829,7 +815,6 @@ const AccountSettings = () => {
               width: "50%",
               height: "inherit",
               flexDirection: "column",
-              // backgroundColor: "blue",
               gap: "2.5vh",
             }}
           >
@@ -910,7 +895,6 @@ const AccountSettings = () => {
                         sx={{
                           pointerEvents: editProfileOpen ? "auto" : "none",
                           color: "#F4F4F4",
-                          // backgroundColor: "red",
                           minWidth: 0,
                         }}
                       >
@@ -1014,7 +998,6 @@ const AccountSettings = () => {
                         sx={{
                           pointerEvents: editProfileOpen ? "auto" : "none",
                           color: "#F4F4F4",
-                          // backgroundColor: "red",
                           minWidth: 0,
                         }}
                       >

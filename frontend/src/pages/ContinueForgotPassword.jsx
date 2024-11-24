@@ -1,6 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Box, Typography, TextField, Button, InputAdornment, Snackbar, SnackbarContent } from "@mui/material";
+import {
+  Box,
+  Typography,
+  TextField,
+  Button,
+  InputAdornment,
+  Snackbar,
+  SnackbarContent,
+} from "@mui/material";
 import { ArrowSmallLeft, EyeCrossed, Eye } from "react-flaticons";
 import { useAccount } from "../library/account.js";
 import { useResetPassword } from "../library/resetpassword.js";
@@ -9,26 +17,33 @@ import { useSnackbar } from "../library/snackbar.js";
 
 const ContinueForgotPassword = () => {
   const navigate = useNavigate();
-  const {setOpenSnackbar, setSnackbarSuccess, setSnackbarMessage, openSnackbar, snackbarMessage, snackbarSuccess} = useSnackbar();
+  const {
+    setOpenSnackbar,
+    setSnackbarSuccess,
+    setSnackbarMessage,
+    openSnackbar,
+    snackbarMessage,
+    snackbarSuccess,
+  } = useSnackbar();
 
   const handleKeyPress = (event) => {
     if (event.key === "Enter") {
       handleContinueClick();
     }
-  }
+  };
   useEffect(() => {
-    document.addEventListener('keypress', handleKeyPress);
+    document.addEventListener("keypress", handleKeyPress);
     return () => {
-      document.removeEventListener('keypress', handleKeyPress);
-    }
-  })
-  const {updateAccount} = useAccount();
+      document.removeEventListener("keypress", handleKeyPress);
+    };
+  });
+  const { updateAccount } = useAccount();
   const { accountReset, setAccountReset } = useResetPassword();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const {setCurrentPage, currentPage} = useStore();
+  const { setCurrentPage, currentPage } = useStore();
 
   useEffect(() => {
     setCurrentPage(location.pathname);
@@ -46,33 +61,32 @@ const ContinueForgotPassword = () => {
 
   const handleConfirmPasswordChange = (event) => {
     setConfirmPassword(event.target.value);
-    setAccountReset({...accountReset, password: event.target.value});
-
-    
+    setAccountReset({ ...accountReset, password: event.target.value });
   };
   useEffect(() => {
     if (!accountReset) {
       navigate(currentPage);
-
     }
   }, []);
 
-  console.log(accountReset)
-  const handleContinueClick = async() => {
-    if(password.trim() === "" && confirmPassword.trim() === ""){
+  const handleContinueClick = async () => {
+    if (password.trim() === "" && confirmPassword.trim() === "") {
       setOpenSnackbar(true);
       setSnackbarMessage("Please fill in all fields!");
       setSnackbarSuccess(false);
-      return
-    }
-    else if (password.trim() === confirmPassword.trim()) {
-      const {success, message} = await updateAccount(accountReset._id, accountReset, false);
+      return;
+    } else if (password.trim() === confirmPassword.trim()) {
+      const { success, message } = await updateAccount(
+        accountReset._id,
+        accountReset,
+        false
+      );
       setOpenSnackbar(true);
       setSnackbarMessage("Password updated Successfully!");
       setSnackbarSuccess(success);
       navigate("/");
       setAccountReset(null);
-      return
+      return;
     } else {
       setOpenSnackbar(true);
       setSnackbarMessage("Passwords do not match!");
@@ -102,8 +116,7 @@ const ContinueForgotPassword = () => {
         <SnackbarContent
           message={snackbarMessage}
           style={{
-            backgroundColor:
-              snackbarSuccess ? "green" : "red",
+            backgroundColor: snackbarSuccess ? "green" : "red",
             justifyContent: "center",
           }}
         />
@@ -117,7 +130,6 @@ const ContinueForgotPassword = () => {
           alignItems: "center",
           flexDirection: "column",
           backgroundColor: "#225560",
-          // backgroundColor: "red"
         }}
       >
         <Button
@@ -128,8 +140,6 @@ const ContinueForgotPassword = () => {
             margin: 0,
             borderRadius: "20px",
             color: "#E8E8E8",
-
-            // backgroundColor:"red",
             "&:hover": {
               backgroundColor: "transparent",
               filter: "drop-shadow(0 0 1px white)",
@@ -143,8 +153,6 @@ const ContinueForgotPassword = () => {
           <ArrowSmallLeft
             size={"75px"}
             style={{
-              // backgroundColor: "green",
-              // margin: "-px -px -px -px",
               marginTop: "-10px",
               marginLeft: "-15px",
               marginRight: "-10px",
@@ -156,7 +164,6 @@ const ContinueForgotPassword = () => {
           src="src/resources/logo.png"
           alt="BorrowHon"
           style={{
-            
             maxWidth: "36vw",
             marginTop: "-15vh",
             marginBottom: "14vh",
@@ -172,9 +179,6 @@ const ContinueForgotPassword = () => {
         </Typography>
         <Box
           component="form"
-          // sx={{
-          //   "& .MuiTextField-root": { m: 1, width: "25ch" },
-          // }}
           noValidate
           autoComplete="off"
           display={"flex"}
@@ -182,13 +186,11 @@ const ContinueForgotPassword = () => {
           justifyContent={"center"}
           alignItems={"center"}
           gap={3}
-          // backgroundColor="gray"
           height={"clamp(20rem, 30vh, 30rem)"}
         >
           <TextField
             required
             type={showPassword ? "text" : "password"}
-            // id='outlined-basic'
             variant="outlined"
             value={password}
             onChange={handlePasswordChange}
@@ -229,27 +231,25 @@ const ContinueForgotPassword = () => {
               endAdornment: (
                 <InputAdornment position="end">
                   <Button
-                    // aria-label="toggle password visibility"
                     onClick={togglePasswordVisibility}
                     edge="end"
                     sx={{
                       tabIndex: -1,
                       color: "#F4F4F4",
-                      minWidth:0,
+                      minWidth: 0,
                       marginRight: "15px",
                     }}
                     tabIndex={-1}
-                    >
+                  >
                     {showPassword ? <Eye /> : <EyeCrossed />}
                   </Button>
                 </InputAdornment>
               ),
             }}
-            />
+          />
           <TextField
             required
             type={showConfirmPassword ? "text" : "password"}
-            // id='outlined-basic'
             variant="outlined"
             value={confirmPassword}
             onChange={handleConfirmPasswordChange}
@@ -275,13 +275,13 @@ const ContinueForgotPassword = () => {
                 borderWidth: "2px", // border width
               },
               "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline":
-              {
-                borderColor: "#F4F4F4", // focus border color
-              },
+                {
+                  borderColor: "#F4F4F4", // focus border color
+                },
               "& .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline":
-              {
-                borderColor: "#F4F4F4", // hover border color
-              },
+                {
+                  borderColor: "#F4F4F4", // hover border color
+                },
             }}
             InputProps={{
               style: {
@@ -290,13 +290,12 @@ const ContinueForgotPassword = () => {
               endAdornment: (
                 <InputAdornment position="end">
                   <Button
-                    // aria-label="toggle confirm password visibility"
                     onClick={toggleConfirmPasswordVisibility}
                     edge="end"
                     sx={{
                       tabIndex: -1,
                       color: "#F4F4F4",
-                      minWidth:0,
+                      minWidth: 0,
                       marginRight: "15px",
                     }}
                     tabIndex={-1}

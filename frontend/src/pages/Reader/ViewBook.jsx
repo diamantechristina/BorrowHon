@@ -18,11 +18,8 @@ import {
   SnackbarContent,
   Card,
   CardMedia,
-  CardContent,
 } from "@mui/material";
-import { useLocation } from "react-router-dom";
 import { useHistory } from "../../library/history";
-// import  BorrowBook from "../../components/BorrowBook.jsx";
 import { ArrowSmallLeft, EyeCrossed, Eye } from "react-flaticons";
 import { useNavigate } from "react-router-dom";
 import { useLog } from "../../library/log";
@@ -32,8 +29,14 @@ import { useAccount } from "../../library/account";
 import { useStore } from "../../library/store";
 
 const ViewBook = () => {
-  const { setCurrentUser, currentUser, bookData, setBookData, isAdmin, setCurrentPage } =
-  useStore();
+  const {
+    setCurrentUser,
+    currentUser,
+    bookData,
+    setBookData,
+    isAdmin,
+    setCurrentPage,
+  } = useStore();
   const navigate = useNavigate();
   const { fetchHistory, history } = useHistory();
   const { updateBook } = useBook();
@@ -41,19 +44,20 @@ const ViewBook = () => {
   const [showPassword, setShowPassword] = useState(false);
   const { fetchBook, books } = useBook();
   const { fetchAccount, account } = useAccount();
-  
-    const [open, setOpen] = useState(false);
-    const [returnOpen, setReturnOpen] = useState(false);
-    const [renewOpen, setRenewOpen] = useState(false);
-    const [renewHover, setRenewHover] = useState(false);
+
+  const [open, setOpen] = useState(false);
+  const [returnOpen, setReturnOpen] = useState(false);
+  const [renewOpen, setRenewOpen] = useState(false);
+  const [renewHover, setRenewHover] = useState(false);
 
   useEffect(() => {
     fetchAccount();
   }, [fetchAccount, renewHover]);
 
   useEffect(() => {
-    if(account) setCurrentUser(account.find((acc) => acc.acc_id === currentUser.acc_id));
-  },[account]);
+    if (account)
+      setCurrentUser(account.find((acc) => acc.acc_id === currentUser.acc_id));
+  }, [account]);
   useEffect(() => {
     fetchBook();
   }, [fetchBook, currentUser]);
@@ -128,7 +132,7 @@ const ViewBook = () => {
     return books.filter(
       (book) =>
         book._id !== bookData._id &&
-      book.genre.some((genre) => bookData.genre.includes(genre))
+        book.genre.some((genre) => bookData.genre.includes(genre))
     );
   }, [books, bookData]);
   const [openSnackbar, setOpenSnackbar] = useState(false);
@@ -157,7 +161,6 @@ const ViewBook = () => {
   };
   const handleupdateHistory = async (id, history) => {
     const { success, message } = await updateHistory(id, history);
-    setBookData(book);
   };
 
   const handleReturnBook = async () => {
@@ -220,13 +223,16 @@ const ViewBook = () => {
   const getStatus = () => {
     if (currentUser?.isSuspended === true && bookData?.status === "available") {
       return "Your account is suspended";
-    } 
-    else if(currentUser?.isSuspended === true && currentBookHistory?.book_id !== bookData?.book_id) {
+    } else if (
+      currentUser?.isSuspended === true &&
+      currentBookHistory?.book_id !== bookData?.book_id
+    ) {
       return "Your account is suspended";
-      
-    }
-    else {
-      if (currentBookHistory && currentBookHistory?.book_id === bookData?.book_id) {
+    } else {
+      if (
+        currentBookHistory &&
+        currentBookHistory?.book_id === bookData?.book_id
+      ) {
         if (currentBookHistory?.status === "onhand") {
           return "Borrowed";
         } else if (currentBookHistory?.status === "returned") {
@@ -257,7 +263,7 @@ const ViewBook = () => {
           backgroundSize: "cover",
           backgroundPosition: "center",
           filter: "brightness(20%)",
-          zIndex: -1, // To keep the background behind all the other content
+          zIndex: -1,
         },
       }}
     >
@@ -283,7 +289,6 @@ const ViewBook = () => {
           justifyContent: "center",
           alignItems: "center",
           height: "100vh",
-          // backgroundColor: "gray",
         }}
       >
         {/* navbar */}
@@ -295,7 +300,7 @@ const ViewBook = () => {
             width: "100vw",
             height: "15vh",
             backgroundColor: "transparent",
-            zIndex: 1000, // Ensures it stays on top
+            zIndex: 1000,
           }}
         >
           <Button
@@ -352,7 +357,6 @@ const ViewBook = () => {
             alignItems: "center",
             color: "#F4F4F4",
             flexDirection: "column",
-            // overflow: "auto",
           }}
         >
           <Box
@@ -364,14 +368,12 @@ const ViewBook = () => {
               position: "absolute",
               borderRadius: "30px",
               display: "flex",
-              // justifyContent: "center",
               alignItems: "center",
               flexDirection: "row",
             }}
           >
             <Box
               sx={{
-                // backgroundColor: "red",
                 width: "35%",
                 height: "100%",
                 borderRadius: "30px",
@@ -399,12 +401,9 @@ const ViewBook = () => {
             </Box>
             <Box
               sx={{
-                // backgroundColor: "green",
                 width: "65%",
                 height: "100%",
                 display: "flex",
-                // justifyContent: "center",
-                // alignItems: "center",
                 flexDirection: "column",
               }}
             >
@@ -416,8 +415,6 @@ const ViewBook = () => {
                   flexDirection: "column",
                   justifyContent: "center",
                   marginTop: "20px",
-                  // alignItems: "center",
-                  // backgroundColor: "red",
                   gap: "10px",
                 }}
               >
@@ -427,31 +424,15 @@ const ViewBook = () => {
                     color: "#F4F4F4",
                     fontWeight: "bold",
                     fontFamily: "montserrat",
-                    textTransform: currentUser?.isSuspended === true ? "uppercase" : "capitalize",
+                    textTransform:
+                      currentUser?.isSuspended === true
+                        ? "uppercase"
+                        : "capitalize",
                     textDecoration: "underline",
                     textUnderlineOffset: "7px",
                   }}
                 >
-                  {/* conditioning for book status. when reader has book in their history,
-                   then use current book history, if not then use book data */}
-                   {/* {() =>{if (currentUser?.isSuspended === true && bookData.status === "available") {
-                     return "Your account is suspended";
-                   } 
-                   else {
-                     if (currentBookHistory && currentBookHistory.book_id === bookData.book_id) {
-                       if (currentBookHistory?.status === "onhand") {
-                         return "Borrowed";
-                       } else if (currentBookHistory?.status === "returned") {
-                         return bookData?.status;
-                       } else {
-                         return currentBookHistory?.status;
-                       }
-                     } 
-                     else {
-                       return bookData?.status;
-                     }
-                   }}} */}
-                   {getStatus()}
+                  {getStatus()}
                 </Typography>
                 <Typography
                   sx={{
@@ -535,7 +516,6 @@ const ViewBook = () => {
                       display: "flex",
                       flexDirection: "row",
                       gap: "2vw",
-                      // justifyContent: "flex-start",
                     }}
                   >
                     <Button
@@ -560,30 +540,29 @@ const ViewBook = () => {
                     </Button>
                     {currentUser?.isSuspended === true ? null : (
                       <Button
-                      onClick={handleOpenRenew}
-                      onMouseEnter={() => setRenewHover(true)}
-                      onMouseLeave={() => setRenewHover(false)}
-                      variant="contained"
-                      sx={{
-                        width: "clamp(10vw, 10vw, 10vw)",
-                        height: "clamp(6vh, 6vh, 6vh)",
-                        boxShadow: "none",
-                        border: "2px solid #f4f4f4",
-                        backgroundColor: "transparent",
-                        textTransform: "none",
-                        "&:hover": {
+                        onClick={handleOpenRenew}
+                        onMouseEnter={() => setRenewHover(true)}
+                        onMouseLeave={() => setRenewHover(false)}
+                        variant="contained"
+                        sx={{
+                          width: "clamp(10vw, 10vw, 10vw)",
+                          height: "clamp(6vh, 6vh, 6vh)",
                           boxShadow: "none",
-                        },
-                        borderRadius: "13px",
-                        fontWeight: "bold",
-                        fontSize: "15px",
-                        marginTop: "20px",
-                      }}
-                    >
-                      Renew
-                    </Button>
+                          border: "2px solid #f4f4f4",
+                          backgroundColor: "transparent",
+                          textTransform: "none",
+                          "&:hover": {
+                            boxShadow: "none",
+                          },
+                          borderRadius: "13px",
+                          fontWeight: "bold",
+                          fontSize: "15px",
+                          marginTop: "20px",
+                        }}
+                      >
+                        Renew
+                      </Button>
                     )}
-                    
                   </Box>
                 ) : null}
                 <Modal
@@ -591,7 +570,6 @@ const ViewBook = () => {
                   aria-describedby="unstyled-modal-description"
                   open={open}
                   onClose={handleClose}
-                  // slots={{ backdrop: StyledBackdrop }}
                   BackdropComponent={Backdrop}
                   BackdropProps={{
                     timeout: 500,
@@ -632,7 +610,6 @@ const ViewBook = () => {
                         fontSize: "4vw",
                         fontWeight: "bold",
                         fontFamily: "montserrat",
-                        //   marginTop: "-5vh",
                       }}
                     >
                       BORROW BOOK
@@ -641,26 +618,21 @@ const ViewBook = () => {
                       sx={{
                         width: "60vw",
                         height: "55vh",
-                        // backgroundColor: "yellow",
                         display: "flex",
                         justifyContent: "center",
                         alignItems: "center",
                         flexDirection: "row",
-                        // overflow: "auto",
                       }}
                     >
                       <Box
                         sx={{
                           width: "30vw",
                           height: "inherit",
-                          // backgroundColor: "blue",
                         }}
                       >
                         <Box
                           sx={{
-                            //   width: "25vw",
                             height: "55vh",
-
                             backgroundImage: `url(${bookData?.coverImage})`,
                             backgroundSize: "contain",
                             backgroundRepeat: "no-repeat",
@@ -672,7 +644,6 @@ const ViewBook = () => {
                         sx={{
                           width: "50vw",
                           height: "inherit",
-                          // backgroundColor: "red",
                           color: "#F4F4F4",
                           marginRight: "2vw",
                         }}
@@ -690,7 +661,6 @@ const ViewBook = () => {
                         <Typography
                           sx={{
                             fontSize: "20px",
-                            // fontWeight: "bold",
                             fontFamily: "montserrat",
                           }}
                         >
@@ -705,15 +675,6 @@ const ViewBook = () => {
                         >
                           {bookData?.author}
                         </Typography>
-                        {/* <Typography
-                          sx={{
-                            fontSize: "20px",
-                            fontFamily: "montserrat",
-                            my: "2vh",
-                          }}
-                        >
-                          ISBN: {bookData?.isbn}
-                        </Typography> */}
                         <Box
                           sx={{
                             width: "100%",
@@ -726,12 +687,9 @@ const ViewBook = () => {
                           sx={{
                             height: "20vh",
                             overflowY: "scroll",
-                            // backgroundColor: "#F4F4F4",
                             "&::-webkit-scrollbar": {
-                              display: "none", // Hide scrollbars for WebKit browsers
+                              display: "none",
                             },
-                            // backgroundImage:
-                            //   "linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0), rgba(0, 0, 0, 0), rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.5))",
                           }}
                         >
                           <Typography
@@ -746,11 +704,9 @@ const ViewBook = () => {
                         <TextField
                           required
                           type={showPassword ? "text" : "password"}
-                          // id='outlined-basic'
                           variant="outlined"
                           label="Password"
                           name="password"
-                          // value={login.password}
                           onChange={handleInputChange}
                           InputLabelProps={{ required: false }}
                           sx={{
@@ -792,7 +748,6 @@ const ViewBook = () => {
                                   onClick={togglePasswordVisibility}
                                   sx={{
                                     color: "#F4F4F4",
-                                    // backgroundColor: "red",
                                     marginRight: "15px",
                                     minWidth: 0,
                                   }}
@@ -841,7 +796,6 @@ const ViewBook = () => {
                   aria-describedby="unstyled-modal-description"
                   open={returnOpen}
                   onClose={handleClose}
-                  // slots={{ backdrop: StyledBackdrop }}
                   BackdropComponent={Backdrop}
                   BackdropProps={{
                     timeout: 500,
@@ -874,7 +828,6 @@ const ViewBook = () => {
                         height: "0vh",
                         marginTop: "-3.5vh",
                         marginRight: "-3.5vw",
-                        // backgroundColor: "red",
                       }}
                     >
                       <i
@@ -888,7 +841,6 @@ const ViewBook = () => {
                         fontSize: "4vw",
                         fontWeight: "bold",
                         fontFamily: "montserrat",
-                        //   marginTop: "-5vh",
                       }}
                     >
                       RETURN BOOK
@@ -897,26 +849,21 @@ const ViewBook = () => {
                       sx={{
                         width: "60vw",
                         height: "55vh",
-                        // backgroundColor: "yellow",
                         display: "flex",
                         justifyContent: "center",
                         alignItems: "center",
                         flexDirection: "row",
-                        // overflow: "auto",
                       }}
                     >
                       <Box
                         sx={{
                           width: "30vw",
                           height: "inherit",
-                          // backgroundColor: "blue",
                         }}
                       >
                         <Box
                           sx={{
-                            //   width: "25vw",
                             height: "55vh",
-
                             backgroundImage: `url(${bookData?.coverImage})`,
                             backgroundSize: "contain",
                             backgroundRepeat: "no-repeat",
@@ -928,7 +875,6 @@ const ViewBook = () => {
                         sx={{
                           width: "50vw",
                           height: "inherit",
-                          // backgroundColor: "red",
                           color: "#F4F4F4",
                           marginRight: "2vw",
                         }}
@@ -946,7 +892,6 @@ const ViewBook = () => {
                         <Typography
                           sx={{
                             fontSize: "20px",
-                            // fontWeight: "bold",
                             fontFamily: "montserrat",
                           }}
                         >
@@ -961,15 +906,6 @@ const ViewBook = () => {
                         >
                           {bookData?.author}
                         </Typography>
-                        {/* <Typography
-                          sx={{
-                            fontSize: "20px",
-                            fontFamily: "montserrat",
-                            my: "2vh",
-                          }}
-                        >
-                          ISBN: {bookData?.isbn}
-                        </Typography> */}
                         <Box
                           sx={{
                             width: "100%",
@@ -982,12 +918,9 @@ const ViewBook = () => {
                           sx={{
                             height: "20vh",
                             overflowY: "scroll",
-                            // backgroundColor: "#F4F4F4",
                             "&::-webkit-scrollbar": {
-                              display: "none", // Hide scrollbars for WebKit browsers
+                              display: "none",
                             },
-                            // backgroundImage:
-                            //   "linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0), rgba(0, 0, 0, 0), rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.5))",
                           }}
                         >
                           <Typography
@@ -1045,11 +978,9 @@ const ViewBook = () => {
                         <TextField
                           required
                           type={showPassword ? "text" : "password"}
-                          // id='outlined-basic'
                           variant="outlined"
                           label="Password"
                           name="password"
-                          // value={login.password}
                           onChange={handleInputChange}
                           InputLabelProps={{ required: false }}
                           sx={{
@@ -1091,7 +1022,6 @@ const ViewBook = () => {
                                   onClick={togglePasswordVisibility}
                                   sx={{
                                     color: "#F4F4F4",
-                                    // backgroundColor: "red",
                                     marginRight: "15px",
                                     minWidth: 0,
                                   }}
@@ -1113,7 +1043,7 @@ const ViewBook = () => {
                       sx={{
                         width: "clamp(10rem, 12vw, 40rem)",
                         height: "70px",
-                        borderRadius: "20px", // border radius
+                        borderRadius: "20px",
                         bgcolor: "#1FAA70",
                         color: "#F4F4F4",
                         "&:hover": {
@@ -1140,7 +1070,6 @@ const ViewBook = () => {
                   aria-describedby="unstyled-modal-description"
                   open={renewOpen}
                   onClose={handleClose}
-                  // slots={{ backdrop: StyledBackdrop }}
                   BackdropComponent={Backdrop}
                   BackdropProps={{
                     timeout: 500,
@@ -1181,7 +1110,6 @@ const ViewBook = () => {
                         fontSize: "4vw",
                         fontWeight: "bold",
                         fontFamily: "montserrat",
-                        //   marginTop: "-5vh",
                       }}
                     >
                       RENEW BOOK
@@ -1190,26 +1118,21 @@ const ViewBook = () => {
                       sx={{
                         width: "60vw",
                         height: "55vh",
-                        // backgroundColor: "yellow",
                         display: "flex",
                         justifyContent: "center",
                         alignItems: "center",
                         flexDirection: "row",
-                        // overflow: "auto",
                       }}
                     >
                       <Box
                         sx={{
                           width: "30vw",
                           height: "inherit",
-                          // backgroundColor: "blue",
                         }}
                       >
                         <Box
                           sx={{
-                            //   width: "25vw",
                             height: "55vh",
-
                             backgroundImage: `url(${bookData?.coverImage})`,
                             backgroundSize: "contain",
                             backgroundRepeat: "no-repeat",
@@ -1221,7 +1144,6 @@ const ViewBook = () => {
                         sx={{
                           width: "50vw",
                           height: "inherit",
-                          // backgroundColor: "red",
                           color: "#F4F4F4",
                           marginRight: "2vw",
                         }}
@@ -1239,7 +1161,6 @@ const ViewBook = () => {
                         <Typography
                           sx={{
                             fontSize: "20px",
-                            // fontWeight: "bold",
                             fontFamily: "montserrat",
                           }}
                         >
@@ -1254,15 +1175,6 @@ const ViewBook = () => {
                         >
                           {bookData?.author}
                         </Typography>
-                        {/* <Typography
-                          sx={{
-                            fontSize: "20px",
-                            fontFamily: "montserrat",
-                            my: "2vh",
-                          }}
-                        >
-                          ISBN: {bookData?.isbn}
-                        </Typography> */}
                         <Box
                           sx={{
                             width: "100%",
@@ -1275,12 +1187,9 @@ const ViewBook = () => {
                           sx={{
                             height: "20vh",
                             overflowY: "scroll",
-                            // backgroundColor: "#F4F4F4",
                             "&::-webkit-scrollbar": {
-                              display: "none", // Hide scrollbars for WebKit browsers
+                              display: "none",
                             },
-                            // backgroundImage:
-                            //   "linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0), rgba(0, 0, 0, 0), rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.5))",
                           }}
                         >
                           <Typography
@@ -1338,11 +1247,9 @@ const ViewBook = () => {
                         <TextField
                           required
                           type={showPassword ? "text" : "password"}
-                          // id='outlined-basic'
                           variant="outlined"
                           label="Password"
                           name="password"
-                          // value={login.password}
                           onChange={handleInputChange}
                           InputLabelProps={{ required: false }}
                           sx={{
@@ -1384,7 +1291,6 @@ const ViewBook = () => {
                                   onClick={togglePasswordVisibility}
                                   sx={{
                                     color: "#F4F4F4",
-                                    // backgroundColor: "red",
                                     marginRight: "15px",
                                     minWidth: 0,
                                   }}
@@ -1406,7 +1312,7 @@ const ViewBook = () => {
                       sx={{
                         width: "clamp(10rem, 12vw, 40rem)",
                         height: "70px",
-                        borderRadius: "20px", // border radius
+                        borderRadius: "20px",
                         bgcolor: "#1FAA70",
                         color: "#F4F4F4",
                         "&:hover": {
@@ -1466,70 +1372,67 @@ const ViewBook = () => {
               <Box
                 sx={{
                   overflow: "hidden",
-
                 }}
               >
                 {relatedBooks.length > 0 ? (
                   relatedBooks.map((book) => (
-                  <Box
-                    key={book._id}
-                    sx={{
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      flexDirection: "column",
-                      marginY: "1.5vh",
-                    }}
-                  >
-                    <Card
-                      onClick={() => {
-                        // navigate('/view-book');
-                        setBookData(book);
-                      }}
+                    <Box
+                      key={book._id}
                       sx={{
-                        cursor: "pointer",
-                        
-                        width: "90%",
-                        height: "16vh",
-                        borderRadius: "20px",
                         display: "flex",
                         justifyContent: "center",
                         alignItems: "center",
                         flexDirection: "column",
-                      }}
-                    >
-                      <CardMedia
-                        component="img"
-                        image={book.coverImage}
-                        alt={book.title}
-                        sx={{
-                          borderRadius: "20px",
-                          objectFit: "cover ",
-                          paddingTop: "25vh",
-                        }}
-                      />
-                    </Card>
-                    <Typography
-                    onClick={() => {
-                      // navigate('/view-book');
-                      setBookData(book);
-                    }}
-                      sx={{
-                        cursor: "pointer",
-                        fontFamily: "Montserrat",
-                        fontWeight: "700",
-                        fontSize: "1vw",
                         marginY: "1.5vh",
-                        marginX: "1.5vw ",
-                        color: "#F4F4F4",
-                        textAlign: "center",
-                        lineHeight: "1.2",
                       }}
                     >
-                      {book.title}
-                    </Typography>
-                  </Box>
-                ))
+                      <Card
+                        onClick={() => {
+                          setBookData(book);
+                        }}
+                        sx={{
+                          cursor: "pointer",
+
+                          width: "90%",
+                          height: "16vh",
+                          borderRadius: "20px",
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          flexDirection: "column",
+                        }}
+                      >
+                        <CardMedia
+                          component="img"
+                          image={book.coverImage}
+                          alt={book.title}
+                          sx={{
+                            borderRadius: "20px",
+                            objectFit: "cover ",
+                            paddingTop: "25vh",
+                          }}
+                        />
+                      </Card>
+                      <Typography
+                        onClick={() => {
+                          setBookData(book);
+                        }}
+                        sx={{
+                          cursor: "pointer",
+                          fontFamily: "Montserrat",
+                          fontWeight: "700",
+                          fontSize: "1vw",
+                          marginY: "1.5vh",
+                          marginX: "1.5vw ",
+                          color: "#F4F4F4",
+                          textAlign: "center",
+                          lineHeight: "1.2",
+                        }}
+                      >
+                        {book.title}
+                      </Typography>
+                    </Box>
+                  ))
                 ) : (
                   <Typography
                     sx={{

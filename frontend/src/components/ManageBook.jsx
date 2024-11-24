@@ -1,5 +1,4 @@
-import React from "react";
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Modal, Backdrop, Box, Typography, Button } from "@mui/material";
 import Resizer from "react-image-file-resizer";
 import { TextField, styled } from "@mui/material";
