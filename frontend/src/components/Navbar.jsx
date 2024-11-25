@@ -625,7 +625,7 @@ const Navbar = () => {
               }}
             >
               {notification?.filter(
-                (item) => item.acc_id === currentUser.acc_id
+                (item) => item.acc_id === currentUser?.acc_id
               ).length === 0 ? (
                 <ListItem
                   sx={{
@@ -692,6 +692,7 @@ const Navbar = () => {
                               fontSize: "0.75rem",
                               fontWeight: "500",
                               color: "#191919",
+                              lineHeight: ".9rem",
                             }}
                           >
                             {item.message}

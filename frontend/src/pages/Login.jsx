@@ -51,16 +51,19 @@ const Login = () => {
   useEffect(() => {
     setOpenSnackbar(false);
   },[])
-  useEffect(() => {
+
+
+
+  const checkOverdue = () => {
     if (history && account !== undefined && books !== undefined) {
       const overdueHistory = history.filter(
         (history) => new Date(history.returndate) < Date.now() && history.status === "onhand"
       );
       console.log(overdueHistory)
       overdueHistory.map((history) => {
-        const borrowedBook = books.find((book) => book._id === history.book_id);
+        const borrowedBook = books.find((book) => book.book_id === history.book_id);
         const borrower = account.find((acc) => acc.acc_id === history.acc_id);
-        console.log("Borrower: ",borrower)
+
         if(borrower && borrowedBook){
           const borrowerNotification = {
             acc_id: history.acc_id,
@@ -74,12 +77,11 @@ const Login = () => {
             })}! Please return it as soon as possible.`,
             date: new Date(),
           };
+          console.log("Borrower", borrower)
           const adminNotification = {
             acc_id: 0,
             title: "Overdue Book",
-            message: `Borrowed book ${borrowedBook?.title.toUpperCase()} by ${
-              borrower?.firstname
-            } ${borrower?.lastname} was overdued at ${new Date(
+            message: `Borrowed book ${borrowedBook?.title.toUpperCase()} by ${borrower.firstName} ${borrower.lastName} was overdued at ${new Date(
               history.returndate
             ).toLocaleString("default", {
               month: "long",
@@ -88,7 +90,8 @@ const Login = () => {
             })}!`,
             date: new Date(),
           };
-          if(notification && borrower !== undefined && borrowedBook !== undefined){
+
+          if(notification){
             if (
               !notification.find(
                 (notification) =>
@@ -105,12 +108,11 @@ const Login = () => {
         }
       });
     }
-  }, [account, books]);
+  };
+
+
   const handleCreateNotification = async (notification) => {
-    console.log("Notification:", notification);
     const { success, message } = await createNotification(notification);
-    console.log("Success:", success);
-    console.log("Message:", message);
   };
   const navigate = useNavigate();
   const { setCurrentUser, setLog, setIsAdmin, currentUser } = useStore();
@@ -187,6 +189,7 @@ const Login = () => {
           setCurrentUser(acc);
           setLog(log);
           setIsAdmin(acc.isAdmin);
+          checkOverdue();
           setOpenSnackbar(true);
           navigate("/dashboard");
 
