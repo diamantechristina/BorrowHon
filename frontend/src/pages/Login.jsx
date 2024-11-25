@@ -61,44 +61,46 @@ const Login = () => {
         const borrowedBook = books.find((book) => book._id === history.book_id);
         const borrower = account.find((acc) => acc.acc_id === history.acc_id);
         console.log("Borrower: ",borrower)
-        const borrowerNotification = {
-          acc_id: history.acc_id,
-          title: "Overdue Book",
-          message: `Your borrowed book ${borrowedBook?.title.toUpperCase()} was overdued at ${new Date(
-            history.returndate
-          ).toLocaleString("default", {
-            month: "long",
-            day: "numeric",
-            year: "numeric",
-          })}! Please return it as soon as possible.`,
-          date: new Date(),
-        };
-        const adminNotification = {
-          acc_id: 0,
-          title: "Overdue Book",
-          message: `Borrowed book ${borrowedBook?.title.toUpperCase()} by ${
-            borrower?.firstname
-          } ${borrower?.lastname} was overdued at ${new Date(
-            history.returndate
-          ).toLocaleString("default", {
-            month: "long",
-            day: "numeric",
-            year: "numeric",
-          })}!`,
-          date: new Date(),
-        };
-        if(notification && borrower !== undefined && borrowedBook !== undefined){
-          if (
-            !notification.find(
-              (notification) =>
-                notification.message === borrowerNotification.message
-            ) &&
-            !notification.find(
-              (notification) => notification.message === adminNotification.message
-            )
-          ) {
-            handleCreateNotification(borrowerNotification);
-            handleCreateNotification(adminNotification);
+        if(borrower && borrowedBook){
+          const borrowerNotification = {
+            acc_id: history.acc_id,
+            title: "Overdue Book",
+            message: `Your borrowed book ${borrowedBook?.title.toUpperCase()} was overdued at ${new Date(
+              history.returndate
+            ).toLocaleString("default", {
+              month: "long",
+              day: "numeric",
+              year: "numeric",
+            })}! Please return it as soon as possible.`,
+            date: new Date(),
+          };
+          const adminNotification = {
+            acc_id: 0,
+            title: "Overdue Book",
+            message: `Borrowed book ${borrowedBook?.title.toUpperCase()} by ${
+              borrower?.firstname
+            } ${borrower?.lastname} was overdued at ${new Date(
+              history.returndate
+            ).toLocaleString("default", {
+              month: "long",
+              day: "numeric",
+              year: "numeric",
+            })}!`,
+            date: new Date(),
+          };
+          if(notification && borrower !== undefined && borrowedBook !== undefined){
+            if (
+              !notification.find(
+                (notification) =>
+                  notification.message === borrowerNotification.message
+              ) &&
+              !notification.find(
+                (notification) => notification.message === adminNotification.message
+              )
+            ) {
+              handleCreateNotification(borrowerNotification);
+              handleCreateNotification(adminNotification);
+            }
           }
         }
       });
