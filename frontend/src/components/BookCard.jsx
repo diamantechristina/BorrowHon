@@ -123,15 +123,15 @@ const BookCard = ({ book, open, setOpen }) => {
           open={editOpen}
           setOpen={setEditOpen}
           pageTitle={"Edit Book"}
-          confirmPageTitle={"Confirm Edit Book"}
-          book={{ ...book, genre: book.genre.join(", ") }}
+          confirmPageTitle={"Edit Book"}
+          book={{ ...book, genre: book?.genre.length > 1 ? book?.genre.join(", ") : book?.genre}}
           handleHover={handleHover}
         />
 
         <ConfirmDeleteBook
           confirmOpen={confirmOpen}
           setConfirmOpen={setConfirmOpen}
-          pageTitle={"Confirm Delete Book"}
+          pageTitle={"Delete Book"}
           backgroundImageUrl={book.coverImage}
           newBook={{ ...book, genre: book.genre.join(", ") }}
           handleHover={handleHover}

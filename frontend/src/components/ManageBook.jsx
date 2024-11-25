@@ -591,7 +591,7 @@ const ManageBook = ({
           tabIndex={-1}
           onClick={handleConfirmOpen}
         >
-          Confirm
+          {confirmPageTitle === "Edit Book" ? "Change" : "Confirm"}
         </Button>
         <ConfirmAddBook
           setOpen={setOpen}
@@ -599,6 +599,7 @@ const ManageBook = ({
           setConfirmOpen={setConfirmOpen}
           pageTitle={confirmPageTitle}
           newBook={book === undefined ? newBook : book}
+          handleCloseModal={handleClose}
         />
       </Box>
     </Modal>

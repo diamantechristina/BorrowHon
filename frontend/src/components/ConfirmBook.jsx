@@ -10,6 +10,7 @@ const ConfirmBook = ({
   setConfirmOpen,
   handleHover,
   newBook,
+  handleCloseModal
 }) => {
   const { createBook, deleteBook, updateBook } = useBook();
   const { setOpenSnackbar, setSnackbarSuccess, setSnackbarMessage } =
@@ -22,12 +23,14 @@ const ConfirmBook = ({
     setConfirmOpen(false);
   };
   const handleAddBook = async () => {
-    const updatedBook = { ...newBook, genre: newBook.genre.split(",") };
+    const updatedBook = { ...newBook, genre: newBook.genre.includes(",") ? newBook.genre.split(",") : newBook.genre };
     const { success, message } = await createBook(updatedBook);
     console.log("Success:", success);
     console.log("Message:", message);
+    handleCloseModal();
     setConfirmOpen(false);
     setOpenSnackbar(true);
+
     setSnackbarSuccess(success);
     setSnackbarMessage(message);
     setOpen !== null ? setOpen(false) : () => {};
@@ -44,7 +47,7 @@ const ConfirmBook = ({
   };
 
   const handleUpdateBook = async () => {
-    const updatedBook = { ...newBook, genre: newBook.genre.split(", ") };
+    const updatedBook = { ...newBook, genre:newBook.genre.includes(",") ? newBook.genre.split(",") : newBook.genre };
     const { success, message } = await updateBook(updatedBook._id, updatedBook);
     console.log("Success:", success);
     console.log("Message:", message);
@@ -249,7 +252,7 @@ const ConfirmBook = ({
           onClick={
             pageTitle === "Confirm Add Book"
               ? handleAddBook
-              : pageTitle === "Confirm Delete Book"
+              : pageTitle === "Delete Book"
               ? handleDeleteBook
               : handleUpdateBook
           }

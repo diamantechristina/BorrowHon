@@ -360,14 +360,21 @@ const Dashboard = () => {
             >
               By {mostPopularBooks[currentIndex]?.author}
             </Typography>
-            <Typography
+            <Box
               sx={{
                 marginY: "5vh",
+                maxHeight: "30vh",
+                overflow: "scroll",
+              }}
+            >
+              <Typography
+              sx={{
                 color: "#F4F4F4",
               }}
             >
               {mostPopularBooks[currentIndex]?.description}
-            </Typography>
+            </Typography></Box>
+            
             <Button
               onClick={() => {
                 setBookData(mostPopularBooks[currentIndex]);

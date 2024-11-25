@@ -529,7 +529,7 @@ const Dashboard = () => {
                           (book) => book.book_id === item.book_id
                         );
                         const user = account.find(
-                          (user) => user.user_id === item.user_id
+                          (user) => user.acc_id === item.acc_id
                         );
                         return (
                           <TableRow

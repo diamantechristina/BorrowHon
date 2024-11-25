@@ -451,7 +451,8 @@ const ViewBook = () => {
                     fontFamily: "montserrat",
                   }}
                 >
-                  {bookData?.genre.join(", ")}
+                  {bookData?.genre.length > 1 ? bookData?.genre.join(", ") : bookData?.genre}
+                  {/* {bookData?.genre.join(", ")} */}
                 </Typography>
                 <Typography
                   sx={{
@@ -478,15 +479,24 @@ const ViewBook = () => {
                     backgroundColor: "#F4F4F4",
                   }}
                 ></Box>
-                <Typography
+                <Box
                   sx={{
-                    color: "#F4F4F4",
-                    textAlign: "justify",
-                    fontFamily: "montserrat",
+
+                    maxHeight: "25vh",
+                    overflow: "scroll"
                   }}
                 >
-                  &emsp;&emsp;{bookData?.description}
-                </Typography>
+                  <Typography
+                    sx={{
+                      color: "#F4F4F4",
+                      textAlign: "justify",
+                      fontFamily: "montserrat",
+                    }}
+                  >
+                    &emsp;&emsp;{bookData?.description}
+                  </Typography>
+                </Box>
+
                 {statusContent === "available" ? (
                   <Button
                     onClick={handleOpen}
