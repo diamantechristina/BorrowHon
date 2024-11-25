@@ -12,8 +12,33 @@ import { useAccount } from "../library/account.js";
 import { useLog } from "../library/log.js";
 import { useStore } from "../library/store.js";
 import { useSnackbar } from "../library/snackbar.js";
+import { useHistory } from "./library/history.js";
+import { useNotification } from "./library/notification.js";
+import { useAccount } from "./library/account.js";
+import { useBook } from "./library/book.js";
 
 const Login = () => {
+  const { fetchLogs, createLog, logs } = useLog();
+  const { createNotification, fetchNotifications, notification } =
+    useNotification();
+  const { fetchHistory, history } = useHistory();
+  const { fetchAccount, account } = useAccount();
+  const { fetchBook, books } = useBook();
+  useEffect(() => {
+    fetchHistory();
+  }, [fetchHistory]);
+
+  useEffect(() => {
+    fetchNotifications();
+  }, [fetchNotifications]);
+
+  useEffect(() => {
+    fetchAccount();
+  }, [fetchAccount]);
+
+  useEffect(() => {
+    fetchBook();
+  }, [fetchBook]);
   const {
     setOpenSnackbar,
     setSnackbarSuccess,
@@ -23,6 +48,58 @@ const Login = () => {
     snackbarSuccess,
   } = useSnackbar();
 
+  useEffect(() => {
+    if (history) {
+      const overdueHistory = history.filter(
+        (history) => history.returndate < new Date()
+      );
+      overdueHistory.map((history) => {
+        const borrowedBook = books.find((book) => book._id === history.book_id);
+        const borrower = account.find((acc) => acc.acc_id === history.acc_id);
+        const borrowerNotification = {
+          acc_id: history.acc_id,
+          title: "Overdue Book",
+          message: `Your borrowed book ${borrowedBook.title.toUpperCase()} was overdued at ${new Date(
+            history.returndate
+          ).toLocaleString("default", {
+            month: "long",
+            day: "numeric",
+            year: "numeric",
+          })}! Please return it as soon as possible.`,
+          date: new Date(),
+        };
+        const adminNotification = {
+          acc_id: 8,
+          title: "Overdue Book",
+          message: `Borrowed book ${borrowedBook.title.toUpperCase()} by ${
+            borrower.firstname
+          } ${borrower.lastname} was overdued at ${new Date(
+            history.returndate
+          ).toLocaleString("default", {
+            month: "long",
+            day: "numeric",
+            year: "numeric",
+          })}!`,
+          date: new Date(),
+        };
+        if (
+          !notification.find(
+            (notification) =>
+              notification.message === borrowerNotification.message
+          ) &&
+          !notification.find(
+            (notification) => notification.message === adminNotification.message
+          )
+        ) {
+          handleCreateNotification(borrowerNotification);
+          handleCreateNotification(adminNotification);
+        }
+      });
+    }
+  }, []);
+  const handleCreateNotification = async (notification) => {
+    const { success, message } = await createNotification(notification);
+  };
   const navigate = useNavigate();
   const { setCurrentUser, setLog, setIsAdmin, currentUser } = useStore();
   const handleKeyPress = (event) => {
@@ -46,9 +123,7 @@ const Login = () => {
     };
   });
 
-  const { fetchAccount, account } = useAccount();
 
-  const { fetchLogs, createLog, logs } = useLog();
 
   useEffect(() => {
     fetchAccount();
