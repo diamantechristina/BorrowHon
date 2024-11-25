@@ -16,7 +16,7 @@ export const useNotification = create((set) => ({
     set((state) => ({
       notifications: [...state.notifications, data.data],
     }));
-    return [{ success: true, message: "Notification created successfully." }];
+    return { success: true, message: "Notification created successfully." };
   },
 
   fetchNotifications: async () => {
