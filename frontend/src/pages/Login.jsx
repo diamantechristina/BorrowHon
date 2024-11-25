@@ -59,7 +59,6 @@ const Login = () => {
       const overdueHistory = history.filter(
         (history) => new Date(history.returndate) < Date.now() && history.status === "onhand"
       );
-      console.log(overdueHistory)
       overdueHistory.map((history) => {
         const borrowedBook = books.find((book) => book.book_id === history.book_id);
         const borrower = account.find((acc) => acc.acc_id === history.acc_id);
@@ -77,7 +76,6 @@ const Login = () => {
             })}! Please return it as soon as possible.`,
             date: new Date(),
           };
-          console.log("Borrower", borrower)
           const adminNotification = {
             acc_id: 0,
             title: "Overdue Book",
