@@ -15,14 +15,23 @@ import { useSnackbar } from "../library/snackbar.js";
 import { useHistory } from "../library/history.js";
 import { useNotification } from "../library/notification.js";
 import { useBook } from "../library/book.js";
+import { set } from "mongoose";
 
 const Login = () => {
   const { fetchLogs, createLog, logs } = useLog();
   const { createNotification, fetchNotifications, notification } =
-    useNotification();
+  useNotification();
   const { fetchHistory, history } = useHistory();
   const { fetchAccount, account } = useAccount();
   const { fetchBook, books } = useBook();
+  const {
+    setOpenSnackbar,
+    setSnackbarSuccess,
+    setSnackbarMessage,
+    openSnackbar,
+    snackbarMessage,
+    snackbarSuccess,
+  } = useSnackbar();
   useEffect(() => {
     fetchHistory();
   }, [fetchHistory]);
@@ -38,24 +47,20 @@ const Login = () => {
   useEffect(() => {
     fetchBook();
   }, [fetchBook]);
-  const {
-    setOpenSnackbar,
-    setSnackbarSuccess,
-    setSnackbarMessage,
-    openSnackbar,
-    snackbarMessage,
-    snackbarSuccess,
-  } = useSnackbar();
 
   useEffect(() => {
-    if (history) {
+    setOpenSnackbar(false);
+  },[])
+  useEffect(() => {
+    if (history && account !== undefined && books !== undefined) {
       const overdueHistory = history.filter(
         (history) => new Date(history.returndate) < Date.now() && history.status === "onhand"
       );
       console.log(overdueHistory)
       overdueHistory.map((history) => {
-        const borrowedBook = books?.find((book) => book._id === history.book_id);
-        const borrower = account?.find((acc) => acc.acc_id === history.acc_id);
+        const borrowedBook = books.find((book) => book._id === history.book_id);
+        const borrower = account.find((acc) => acc.acc_id === history.acc_id);
+        console.log("Borrower: ",borrower)
         const borrowerNotification = {
           acc_id: history.acc_id,
           title: "Overdue Book",
@@ -82,7 +87,7 @@ const Login = () => {
           })}!`,
           date: new Date(),
         };
-        if(notification){
+        if(notification && borrower !== undefined && borrowedBook !== undefined){
           if (
             !notification.find(
               (notification) =>
@@ -98,7 +103,7 @@ const Login = () => {
         }
       });
     }
-  }, [history]);
+  }, [account, books]);
   const handleCreateNotification = async (notification) => {
     console.log("Notification:", notification);
     const { success, message } = await createNotification(notification);
