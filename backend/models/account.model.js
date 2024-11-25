@@ -22,7 +22,6 @@ const accountSchema = new mongoose.Schema({
         type: String,
         required: true,
         maxlength: 11,
-        unique: true
     },
     email:{
         type: String,
