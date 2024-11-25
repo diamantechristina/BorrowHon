@@ -49,7 +49,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     if (account)
-      setCurrentUser(account.find((acc) => acc.acc_id === currentUser.acc_id));
+      setCurrentUser(account.find((acc) => acc.acc_id === currentUser?.acc_id));
   }, [account]);
 
   useEffect(() => {
