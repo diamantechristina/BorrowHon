@@ -148,6 +148,7 @@ const ViewBook = () => {
       const { success, message } = await createHistory(newHistory);
       setOpen(false);
       setSnackbarMessage("Book borrow request sent!");
+      setPass({ password: "" });
       setOpenSnackbar(true);
     } else if(pass.password === "") {
       setSnackbarMessage("Please enter your password!");
@@ -178,6 +179,8 @@ const ViewBook = () => {
       handleUpdateBook(updatedBookData._id, updatedBookData);
       setReturnOpen(false);
       setSnackbarMessage("Book successfully returned!");
+      setPass({ password: "" });
+
       setOpenSnackbar(true);
     }
     else if(pass.password === "") {
@@ -199,6 +202,7 @@ const ViewBook = () => {
       handleupdateHistory(updatedUserHistory._id, updatedUserHistory);
       setRenewOpen(false);
       setSnackbarMessage("Book successfully renewed!");
+      setPass({ password: "" });
       setOpenSnackbar(true);
     }
     else if(pass.password === "") {
