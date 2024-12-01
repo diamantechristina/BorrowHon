@@ -692,7 +692,7 @@ const ViewBook = () => {
                             fontFamily: "montserrat",
                           }}
                         >
-                          {bookData?.genre}
+                          {bookData?.genre.length > 1 ? bookData?.genre.join(", ") : bookData?.genre}
                         </Typography>
                         <Typography
                           sx={{
@@ -713,11 +713,12 @@ const ViewBook = () => {
                         ></Box>
                         <Box
                           sx={{
-                            height: "20vh",
+                            maxHeight: "25vh",
                             overflowY: "scroll",
                             "&::-webkit-scrollbar": {
                               display: "none",
                             },
+                            marginBottom: "2vh",
                           }}
                         >
                           <Typography
@@ -923,7 +924,7 @@ const ViewBook = () => {
                             fontFamily: "montserrat",
                           }}
                         >
-                          {bookData?.genre}
+                          {bookData?.genre.length > 1 ? bookData?.genre.join(", ") : bookData?.genre}
                         </Typography>
                         <Typography
                           sx={{
@@ -1192,7 +1193,7 @@ const ViewBook = () => {
                             fontFamily: "montserrat",
                           }}
                         >
-                          {bookData?.genre}
+                          {bookData?.genre.length > 1 ? bookData?.genre.join(", ") : bookData?.genre}
                         </Typography>
                         <Typography
                           sx={{

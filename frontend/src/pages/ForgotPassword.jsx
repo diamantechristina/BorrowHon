@@ -62,8 +62,8 @@ const ForgotPassword = () => {
       return;
     }
     for (let i = 0; i < account.length; i++) {
-      if (account[i].username === username.trim()) {
-        if (account[i].email === email.trim()) {
+      if (account[i].username.toLowerCase() === username.trim().toLowerCase()) {
+        if (account[i].email.toLowerCase() === email.trim().toLowerCase()) {
           setAccountReset(account[i]);
           navigate("/resetpassword");
           return;
@@ -73,7 +73,7 @@ const ForgotPassword = () => {
           setSnackbarSuccess(false);
           return;
         }
-      }else if (account[i].email === email.trim() && !account[i].username === username.trim()) {
+      }else if (account[i].email.toLowerCase() === email.trim().toLowerCase() && !account[i].username.toLowerCase() === username.trim().toLowerCase()) {
         setSnackbarMessage("Username and email do not match!");
         setOpenSnackbar(true);
         setSnackbarSuccess(false);
