@@ -48,7 +48,7 @@ const Login = () => {
   }, [fetchBook]);
 
   useEffect(() => {
-    if(currentPage !== "/continue-register") setOpenSnackbar(false);
+    if(currentPage !== "/continue-register" && currentPage !== "/resetpassword") setOpenSnackbar(false);
   },[])
 
   useEffect(() => {
