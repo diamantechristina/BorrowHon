@@ -73,10 +73,11 @@ const ForgotPassword = () => {
           setSnackbarSuccess(false);
           return;
         }
-      }else if (account[i].email.toLowerCase() === email.trim().toLowerCase() && !account[i].username.toLowerCase() === username.trim().toLowerCase()) {
+      }else if (account[i].email.toLowerCase() === email.trim().toLowerCase()) {
         setSnackbarMessage("Username and email do not match!");
         setOpenSnackbar(true);
         setSnackbarSuccess(false);
+        return;
 
       }
     }
