@@ -124,7 +124,7 @@ const BookCard = ({ book, open, setOpen }) => {
           setOpen={setEditOpen}
           pageTitle={"Edit Book"}
           confirmPageTitle={"Edit Book"}
-          book={{ ...book, genre: book?.genre.length > 1 ? book?.genre.join(", ") : book?.genre}}
+          book={{ ...book, genre: book?.genre.length > 1 ? book?.genre.join(", ") : book?.genre[0]}}
           handleHover={handleHover}
         />
 

@@ -41,11 +41,11 @@ const ManageBook = ({
   const handleConfirmOpen = () => {
     if (
       book === undefined &&
-      (newBook.title === "" ||
-        newBook.author === "" ||
-        newBook.genre === "" ||
-        newBook.isbn === "" ||
-        newBook.description === "")
+      (newBook.title.trim() === "" ||
+        newBook.author.trim() === "" ||
+        newBook.genre.trim() === "" ||
+        newBook.isbn.trim() === "" ||
+        newBook.description.trim() === "")
     ) {
       setOpenSnackbar(true);
       setSnackbarSuccess(false);
@@ -53,11 +53,11 @@ const ManageBook = ({
       return;
     }
     if (
-      book?.title === "" ||
-      book?.author === "" ||
-      book?.genre === "" ||
-      book?.isbn === "" ||
-      book?.description === ""
+      book?.title.trim() === "" ||
+      book?.author.trim() === "" ||
+      book?.genre.trim() === "" ||
+      book?.isbn.trim() === "" ||
+      book?.description.trim() === ""
     ) {
       setOpenSnackbar(true);
       setSnackbarSuccess(false);
