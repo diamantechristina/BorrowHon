@@ -9,6 +9,7 @@ import {
   Snackbar,
   SnackbarContent,
 } from "@mui/material";
+import {useStore} from "../library/store.js"
 import { Link } from "react-router-dom";
 import { ArrowSmallLeft, EyeCrossed, Eye } from "react-flaticons";
 import { useAccount } from "../library/account.js";
@@ -25,6 +26,8 @@ const ContinueRegister = () => {
     snackbarMessage,
     snackbarSuccess,
   } = useSnackbar();
+  
+  const {setCurrentPage} = useStore();
 
   const newAccount = location.state;
   const [showPassword, setShowPassword] = useState(false);
@@ -49,6 +52,10 @@ const ContinueRegister = () => {
       document.removeEventListener("keydown", handleKeyPress);
     };
   });
+
+  useEffect (() => {
+    setCurrentPage(location.pathname);
+  }, []);
 
   const { createAccount } = useAccount();
 

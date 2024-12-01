@@ -15,7 +15,6 @@ import { useSnackbar } from "../library/snackbar.js";
 import { useHistory } from "../library/history.js";
 import { useNotification } from "../library/notification.js";
 import { useBook } from "../library/book.js";
-import { set } from "mongoose";
 
 const Login = () => {
   const { fetchLogs, createLog, logs } = useLog();
@@ -49,10 +48,13 @@ const Login = () => {
   }, [fetchBook]);
 
   useEffect(() => {
-    setOpenSnackbar(false);
+    if(currentPage !== "/continue-register") setOpenSnackbar(false);
   },[])
 
-
+  useEffect(() => {
+    setCurrentPage(location.pathname);
+    setIsAdmin(false);
+  }, []);
 
   const checkOverdue = () => {
     if (history && account !== undefined && books !== undefined) {
@@ -113,15 +115,13 @@ const Login = () => {
     const { success, message } = await createNotification(notification);
   };
   const navigate = useNavigate();
-  const { setCurrentUser, setLog, setIsAdmin, currentUser } = useStore();
+  const { setCurrentUser, setLog, setIsAdmin, currentUser, currentPage, setCurrentPage } = useStore();
   const handleKeyPress = (event) => {
     if (event.key === "Enter") {
       handleLoginClick();
     }
   };
-  useEffect(() => {
-    setIsAdmin(false);
-  }, []);
+  
   useEffect(() => {
     if (currentUser) {
       setIsAdmin(currentUser.isAdmin);

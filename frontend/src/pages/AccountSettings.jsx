@@ -159,19 +159,20 @@ const AccountSettings = () => {
   };
   const handleCloseEditOpen = async () => {
     setShowPassword(false);
-    setEditProfileOpen(false);
-    dispatch({ type: "resetAllExcept", payload: "none" });
     if (userLoggedIn === currentUser) {
       return;
     }
     const { success, message } = await updateAccount(
       userLoggedIn._id,
       userLoggedIn,
-      editProfile.username
+      editProfile.username,
+      editProfile.email
     );
     setSnackbarMessage(message);
     setSnackbarSuccess(success);
     if (success) {
+      dispatch({ type: "resetAllExcept", payload: "none" });
+      setEditProfileOpen(false);
       setCurrentUser(userLoggedIn);
     }
     setOpenSnackbar(true);

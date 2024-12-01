@@ -77,22 +77,61 @@ export const useAccount = create((set) => ({
       return { success: false, message: "Server error" };
     }
   },
-  updateAccount: async (id, updatedAccount, usernameEdited) => {
+  updateAccount: async (id, updatedAccount, usernameEdited, emailEdited) => {
     const checkerRes = await fetch("/api/accounts");
     const checkerData = await checkerRes.json();
 
+    if (
+      !updatedAccount.firstName.trim() ||
+      !updatedAccount.lastName.trim() ||
+      !updatedAccount.address.trim() ||
+      !updatedAccount.phoneNumber.trim() ||
+      !updatedAccount.username.trim() ||
+      !updatedAccount.email.trim() ||
+      !updatedAccount.password.trim()
+    ) {
+      return { success: false, message: "Please fill in all fields!" };
+    }
+    function allLetters(str) {
+      return /^[a-zA-Z\s]+$/.test(str);
+    }
+  
+    function allNumbers(str) {
+      return /^\d+$/.test(str);
+    }
+    
+    
     const existingAccount = checkerData.data.find((account) => {
       return (
-        account.username === updatedAccount.username
+        account.username.toLowerCase() === updatedAccount.username.toLowerCase()
       );
     });
-
+    
     if (existingAccount && usernameEdited) {
       return {
         success: false,
         message: "Username already taken!",
       };
     }
+    const checkEmail = checkerData.data.find((account) => {
+      return (
+        account.email.toLowerCase() === updatedAccount.email.toLowerCase()
+      );
+    });
+    
+    if (checkEmail && emailEdited) {
+      return {
+        success: false,
+        message: "Email already taken!",
+      };
+    }
+    if(!allNumbers(updatedAccount.phoneNumber)){
+      return {
+        success: false,
+        message: "Invalid phone number!",
+      };
+    }
+  
     const res = await fetch(`/api/accounts/${id}`, {
       method: "PUT",
       headers: {

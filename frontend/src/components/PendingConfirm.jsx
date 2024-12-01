@@ -122,8 +122,13 @@ const PendingConfirm = ({
   const day = currentDate.getDate();
   const year = currentDate.getFullYear();
   const borrowDate = `${month} ${day}, ${year}`;
-  const returnDate = `${month} ${day + 5}, ${year}`;
 
+  const initialReturnDate = new Date(currentDate);
+  initialReturnDate.setDate(initialReturnDate.getDate() + 5);
+  const returnMonth = months[initialReturnDate.getMonth()];
+  const returnDay = initialReturnDate.getDate();
+  const returnYear = initialReturnDate.getFullYear();
+  const returnDate = `${returnMonth} ${returnDay}, ${returnYear}`;
   return (
     <Modal
       aria-labelledby="unstyled-modal-title"

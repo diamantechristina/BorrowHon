@@ -79,6 +79,7 @@ const ContinueForgotPassword = () => {
       const { success, message } = await updateAccount(
         accountReset._id,
         accountReset,
+        false,
         false
       );
       setOpenSnackbar(true);

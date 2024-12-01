@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { Box, Typography, Button, Modal, Backdrop } from "@mui/material";
 import { useBook } from "../library/book.js";
 import { useSnackbar } from "../library/snackbar.js";
+import { set } from "mongoose";
 
 const ConfirmBook = ({
   pageTitle,
@@ -36,11 +37,14 @@ const ConfirmBook = ({
     setOpen !== null ? setOpen(false) : () => {};
   };
   const handleDeleteBook = async () => {
-    const { success, message } = await deleteBook(newBook._id);
-    console.log("Success:", success);
-    console.log("Message:", message);
-    setConfirmOpen(false);
     setOpenSnackbar(true);
+    if (newBook.status === "unavailable") {
+      setSnackbarMessage("Book is currently being borrowed.");
+      setSnackbarSuccess(false);
+      return;
+    }
+    const { success, message } = await deleteBook(newBook._id);
+    setConfirmOpen(false);
     setSnackbarSuccess(success);
     setSnackbarMessage(message);
     setOpen !== null ? setOpen(false) : () => {};

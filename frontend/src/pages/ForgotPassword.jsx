@@ -73,6 +73,11 @@ const ForgotPassword = () => {
           setSnackbarSuccess(false);
           return;
         }
+      }else if (account[i].email === email.trim() && !account[i].username === username.trim()) {
+        setSnackbarMessage("Username and email do not match!");
+        setOpenSnackbar(true);
+        setSnackbarSuccess(false);
+
       }
     }
     if (!accountReset) {

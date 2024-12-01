@@ -149,7 +149,11 @@ const ViewBook = () => {
       setOpen(false);
       setSnackbarMessage("Book borrow request sent!");
       setOpenSnackbar(true);
-    } else {
+    } else if(pass.password === "") {
+      setSnackbarMessage("Please enter your password!");
+      setOpenSnackbar(true);
+    } 
+    else {
       setSnackbarMessage("Incorrect password!");
       setOpenSnackbar(true);
     }
@@ -175,7 +179,12 @@ const ViewBook = () => {
       setReturnOpen(false);
       setSnackbarMessage("Book successfully returned!");
       setOpenSnackbar(true);
-    } else {
+    }
+    else if(pass.password === "") {
+      setSnackbarMessage("Please enter your password!");
+      setOpenSnackbar(true);
+    } 
+     else {
       setSnackbarMessage("Incorrect password!");
       setOpenSnackbar(true);
     }
@@ -191,7 +200,12 @@ const ViewBook = () => {
       setRenewOpen(false);
       setSnackbarMessage("Book successfully renewed!");
       setOpenSnackbar(true);
-    } else {
+    }
+    else if(pass.password === "") {
+      setSnackbarMessage("Please enter your password!");
+      setOpenSnackbar(true);
+    } 
+     else {
       setSnackbarMessage("Incorrect password!");
       setOpenSnackbar(true);
     }
@@ -277,7 +291,7 @@ const ViewBook = () => {
           message={snackbarMessage}
           style={{
             backgroundColor:
-              snackbarMessage === "Incorrect password!" ? "red" : "green",
+              snackbarMessage === "Incorrect password!" || snackbarMessage === "Please enter your password!" ? "red" : "green",
             justifyContent: "center",
           }}
         />
