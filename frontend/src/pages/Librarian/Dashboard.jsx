@@ -525,10 +525,10 @@ const Dashboard = () => {
                   >
                     <TableBody>
                       {borrowedBooks?.slice(0, 5).map((item, index) => {
-                        const book = books.find(
+                        const book = books?.find(
                           (book) => book.book_id === item.book_id
                         );
-                        const user = account.find(
+                        const user = account?.find(
                           (user) => user.acc_id === item.acc_id
                         );
                         return (
