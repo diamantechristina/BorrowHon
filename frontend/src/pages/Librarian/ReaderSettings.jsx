@@ -178,6 +178,7 @@ const ReaderSettings = () => {
       userLoggedIn.password =
         readerUser !== null ? readerUser.password : currentUser.password;
     }
+    setShowPassword(false)
     dispatch({ type: "togglePassword" });
     dispatch({ type: "resetAllExcept", payload: "password" });
   };
@@ -208,6 +209,8 @@ const ReaderSettings = () => {
   const handleCloseEditOpen = async () => {
     setShowPassword(false);
     if (userLoggedIn === readerUser) {
+      setEditProfileOpen(false);
+      dispatch({ type: "resetAllExcept", payload: "none" });
       return;
     }
     const { success, message } = await updateAccount(
@@ -256,6 +259,13 @@ const ReaderSettings = () => {
     });
   const onChangeCoverPhoto = async (event) => {
     const file = event.target.files[0];
+    const filetypes = ['png','jpeg','jpg']
+    if(!file.name.includes(filetypes)){
+      setSnackbarMessage("Invalid image format!");
+      setSnackbarSuccess(false);
+      setOpenSnackbar(true);
+      return;
+    }
     const image = await resizeFile(file, 1000, 500);
     setUserLoggedIn((prevUser) => ({
       ...prevUser,
@@ -265,6 +275,13 @@ const ReaderSettings = () => {
 
   const onChangeProfilePic = async (event) => {
     const file = event.target.files[0];
+    const filetypes = ['png','jpeg','jpg']
+    if(!file.name.includes(filetypes)){
+      setSnackbarMessage("Invalid image format!");
+      setSnackbarSuccess(false);
+      setOpenSnackbar(true);
+      return;
+    }
     const image = await resizeFile(file, 500, 500);
     setUserLoggedIn((prevUser) => ({
       ...prevUser,

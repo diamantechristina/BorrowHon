@@ -17,6 +17,14 @@ export const useAccount = create((set) => ({
       ) {
         return { success: false, message: "Please fill in all fields!" };
       }
+
+      if (!newAccount.email.includes("@gmail.com")){
+        return{
+          success: false,
+          message: "Invalid Email Address!"
+        }
+      }
+
       const checkerRes = await fetch("/api/accounts");
       const checkerData = await checkerRes.json();
   
@@ -100,7 +108,12 @@ export const useAccount = create((set) => ({
       return /^\d+$/.test(str);
     }
     
-    
+    if (!updatedAccount.email.includes("@gmail.com")){
+      return{
+        success: false,
+        message: "Invalid Email Address!"
+      }
+    }
     const existingAccount = checkerData.data.find((account) => {
       return (
         account.username.toLowerCase() === updatedAccount.username.toLowerCase()

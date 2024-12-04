@@ -133,6 +133,7 @@ const AccountSettings = () => {
     if (editProfile.password) {
       userLoggedIn.password = currentUser.password;
     }
+    setShowPassword(false)
     dispatch({ type: "togglePassword" });
     dispatch({ type: "resetAllExcept", payload: "password" });
   };
@@ -160,6 +161,8 @@ const AccountSettings = () => {
   const handleCloseEditOpen = async () => {
     setShowPassword(false);
     if (userLoggedIn === currentUser) {
+      dispatch({ type: "resetAllExcept", payload: "none" });
+      setEditProfileOpen(false);
       return;
     }
     const { success, message } = await updateAccount(
@@ -208,6 +211,13 @@ const AccountSettings = () => {
     });
   const onChangeCoverPhoto = async (event) => {
     const file = event.target.files[0];
+    const filetypes = ['png','jpeg','jpg']
+    if(!file.name.includes(filetypes)){
+      setSnackbarMessage("Invalid image format!");
+      setSnackbarSuccess(false);
+      setOpenSnackbar(true);
+      return;
+    }
     const image = await resizeFile(file, 1000, 500);
     setUserLoggedIn((prevUser) => ({
       ...prevUser,
@@ -216,8 +226,15 @@ const AccountSettings = () => {
   };
 
   const onChangeProfilePic = async (event) => {
-    const file = event.target.files[0];
-    const image = await resizeFile(file, 500, 500);
+    const file = event.target.files[0]; 
+    const filetypes = ['png','jpeg','jpg']
+    if(!file.name.includes(filetypes)){
+      setSnackbarMessage("Invalid image format!");
+      setSnackbarSuccess(false);
+      setOpenSnackbar(true);
+      return;
+    }
+        const image = await resizeFile(file, 500, 500);
     setUserLoggedIn((prevUser) => ({
       ...prevUser,
       profilepic: image,
