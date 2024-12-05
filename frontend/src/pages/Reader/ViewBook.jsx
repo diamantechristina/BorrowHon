@@ -500,7 +500,7 @@ const ViewBook = () => {
                 <Box
                   sx={{
 
-                    maxHeight: "25vh",
+                    maxHeight: statusContent=== "pending" ? "35vh":"25vh",
                     overflow: "scroll"
                   }}
                 >
@@ -509,6 +509,7 @@ const ViewBook = () => {
                       color: "#F4F4F4",
                       textAlign: "justify",
                       fontFamily: "montserrat",
+                      
                     }}
                   >
                     &emsp;&emsp;{bookData?.description}
@@ -532,7 +533,7 @@ const ViewBook = () => {
                       borderRadius: "13px",
                       fontWeight: "bold",
                       fontSize: "15px",
-                      marginTop: "20px",
+                      marginTop: "10px",
                     }}
                   >
                     Borrow
@@ -561,7 +562,7 @@ const ViewBook = () => {
                         borderRadius: "13px",
                         fontWeight: "bold",
                         fontSize: "15px",
-                        marginTop: "20px",
+                        marginTop: "10px",
                       }}
                     >
                       Return
@@ -585,7 +586,7 @@ const ViewBook = () => {
                           borderRadius: "13px",
                           fontWeight: "bold",
                           fontSize: "15px",
-                          marginTop: "20px",
+                          marginTop: "10px",
                         }}
                       >
                         Renew
@@ -713,12 +714,12 @@ const ViewBook = () => {
                         ></Box>
                         <Box
                           sx={{
-                            maxHeight: "25vh",
+                            maxHeight: "18vh",
                             overflowY: "scroll",
                             "&::-webkit-scrollbar": {
                               display: "none",
                             },
-                            marginBottom: "2vh",
+                            marginBottom: "2.5vh",
                           }}
                         >
                           <Typography
