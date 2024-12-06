@@ -189,7 +189,7 @@ const ListOfBooks = () => {
           </Card>
           {books.map((book) => (
             <BookCard
-              key={book._id}
+              key={book?._id}
               book={book}
               open={open}
               setOpen={setOpen}

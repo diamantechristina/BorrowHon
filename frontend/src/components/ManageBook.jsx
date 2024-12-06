@@ -167,7 +167,7 @@ const ManageBook = ({
         }}
       >
         <i
-          class="fi fi-bs-cross-small"
+          className="fi fi-bs-cross-small"
           style={{
             fontSize: "2vw",
             cursor: "pointer",

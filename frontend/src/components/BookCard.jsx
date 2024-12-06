@@ -33,11 +33,11 @@ const BookCard = ({ book, open, setOpen }) => {
         height: "60vh",
         objectFit: "contain",
         background:
-          book.coverImage
-            ? `url(${book.coverImage})`
+          book?.coverImage
+            ? `url(${book?.coverImage})`
             : 'url("src/resources/defaultCover.png")',
         backgroundColor: "#225560",
-        backgroundSize: book.coverImage !== undefined ? "cover" : "contain",
+        backgroundSize: book?.coverImage !== undefined ? "cover" : "contain",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
         display: "flex",
@@ -132,7 +132,7 @@ const BookCard = ({ book, open, setOpen }) => {
           confirmOpen={confirmOpen}
           setConfirmOpen={setConfirmOpen}
           pageTitle={"Delete Book"}
-          backgroundImageUrl={book.coverImage}
+          backgroundImageUrl={book?.coverImage}
           newBook={{ ...book, genre: book.genre.join(", ") }}
           handleHover={handleHover}
         />

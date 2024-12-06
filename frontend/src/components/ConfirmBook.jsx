@@ -47,7 +47,8 @@ const ConfirmBook = ({
     setConfirmOpen(false);
     setSnackbarSuccess(success);
     setSnackbarMessage(message);
-    setOpen !== null ? setOpen(false) : () => {};
+    // setOpen !== null ? setOpen(false) : () => {};
+    const setOpenFunction = setOpen !== null ? () => setOpen(false) : () => {};
   };
 
   const handleUpdateBook = async () => {
@@ -110,7 +111,7 @@ const ConfirmBook = ({
           }}
         >
           <i
-            class="fi fi-bs-cross-small"
+            className="fi fi-bs-cross-small"
             style={{ fontSize: "2vw", cursor: "pointer" }}
             onClick={handleClose}
           ></i>
