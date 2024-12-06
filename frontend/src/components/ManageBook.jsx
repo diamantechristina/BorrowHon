@@ -64,6 +64,12 @@ const ManageBook = ({
       setSnackbarMessage("Please fill in all fields!");
       return;
     }
+    if (isNaN(newBook.isbn)) {
+      setOpenSnackbar(true);
+      setSnackbarSuccess(false);
+      setSnackbarMessage("Invalid ISBN!");
+      return;
+    }
     setConfirmOpen(true);
   };
 
