@@ -165,6 +165,7 @@ const ContinueRegister = () => {
             fontWeight: "bold",
             color: "#F4F4F4",
             fontFamily: "Montserrat",
+            marginTop: "-6vh"
           }}
         >
           CREATE AN ACCOUNT
@@ -413,11 +414,11 @@ const ContinueRegister = () => {
             }}
             onClick={handleAddAccount}
           >
-            Continue
+            Sign Up
           </Button>
         </Box>
 
-        <Box
+        {/* <Box
           sx={{
             height: "1px",
             width: "clamp(10rem, 22vw, 40rem)",
@@ -444,7 +445,7 @@ const ContinueRegister = () => {
           >
             Sign in Here
           </Link>
-        </Typography>
+        </Typography> */}
       </Box>
       <Box
         sx={{
