@@ -75,7 +75,7 @@ const BookCard = ({ book, open, setOpen }) => {
           }}
           gutterBottom
         >
-          {book.title.toUpperCase()}
+          {book?.title.toUpperCase()}
         </Typography>
         <Typography
           sx={{
@@ -85,7 +85,7 @@ const BookCard = ({ book, open, setOpen }) => {
             marginBottom: "2vh",
           }}
         >
-          {book.author}
+          {book?.author}
         </Typography>
         <Box
           sx={{
@@ -133,7 +133,7 @@ const BookCard = ({ book, open, setOpen }) => {
           setConfirmOpen={setConfirmOpen}
           pageTitle={"Delete Book"}
           backgroundImageUrl={book?.coverImage}
-          newBook={{ ...book, genre: book.genre.join(", ") }}
+          newBook={{ ...book, genre: book?.genre.join(", ") }}
           handleHover={handleHover}
         />
       </Box>
