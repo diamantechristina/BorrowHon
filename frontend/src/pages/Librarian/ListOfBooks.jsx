@@ -119,7 +119,7 @@ const ListOfBooks = () => {
             fontSize: "clamp(2vw, 2.5vw, 2.5vw)",
           }}
         >
-          List of Books
+          LIST OF BOOKS
         </Typography>
         <Box
           sx={{
