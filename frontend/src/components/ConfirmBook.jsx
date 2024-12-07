@@ -24,7 +24,7 @@ const ConfirmBook = ({
     setConfirmOpen(false);
   };
   const handleAddBook = async () => {
-    const updatedBook = { ...newBook, genre: newBook.genre.includes(",") ? newBook.genre.split(",") : newBook.genre };
+    const updatedBook = { ...newBook, genre:newBook.genre.includes(", ") ? newBook.genre.split(", ").map((genre) => genre.trim()) : newBook.genre.trim() };
     const { success, message } = await createBook(updatedBook);
     console.log("Success:", success);
     console.log("Message:", message);
@@ -52,7 +52,7 @@ const ConfirmBook = ({
   };
 
   const handleUpdateBook = async () => {
-    const updatedBook = { ...newBook, genre:newBook.genre.includes(",") ? newBook.genre.split(",") : newBook.genre };
+    const updatedBook = { ...newBook, genre:newBook.genre.includes(", ") ? newBook.genre.split(", ").map((genre) => genre.trim()) : newBook.genre.trim() };
     const { success, message } = await updateBook(updatedBook._id, updatedBook);
     console.log("Success:", success);
     console.log("Message:", message);
