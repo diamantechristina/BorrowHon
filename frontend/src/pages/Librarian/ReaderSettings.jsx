@@ -259,8 +259,9 @@ const ReaderSettings = () => {
     });
   const onChangeCoverPhoto = async (event) => {
     const file = event.target.files[0];
-    const filetypes = ['png','jpeg','jpg']
-    if(!file.name.includes(filetypes)){
+    const fileType = file.name.slice(-4).split(".");
+    const filetypes = ["png", "jpeg", "jpg"];
+    if (!filetypes.includes(fileType[fileType.length - 1])) {
       setSnackbarMessage("Invalid image format!");
       setSnackbarSuccess(false);
       setOpenSnackbar(true);
@@ -275,8 +276,9 @@ const ReaderSettings = () => {
 
   const onChangeProfilePic = async (event) => {
     const file = event.target.files[0];
-    const filetypes = ['png','jpeg','jpg']
-    if(!file.name.includes(filetypes)){
+    const fileType = file.name.slice(-4).split(".");
+    const filetypes = ["png", "jpeg", "jpg"];
+    if (!filetypes.includes(fileType[fileType.length - 1])) {
       setSnackbarMessage("Invalid image format!");
       setSnackbarSuccess(false);
       setOpenSnackbar(true);
