@@ -104,7 +104,7 @@ const PendingBookCard = ({ book, account, history }) => {
           <PendingConfirm
             open={open}
             setOpen={setOpen}
-            book={book}
+            book={{ ...book, genre: book?.genre.length > 1 ? book?.genre.join(", ") : book?.genre[0]}}
             account={account}
             userHistory={history}
             pageTitle={"Accept Pending"}
@@ -131,7 +131,7 @@ const PendingBookCard = ({ book, account, history }) => {
           <PendingConfirm
             open={declineOpen}
             setOpen={setDeclineOpen}
-            book={book}
+            book={{ ...book, genre: book?.genre.length > 1 ? book?.genre.join(", ") : book?.genre[0]}}
             account={account}
             userHistory={history}
             pageTitle={"Decline Pending"}

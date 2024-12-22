@@ -95,12 +95,13 @@ const PendingConfirm = ({
     );
     setOpen !== null ? setOpen(false) : () => {};
   };
-
+  
   const handleDeclinePending = () => {
     handleDeleteHistory(userHistory.acc_id, userHistory);
     setOpenSnackbar(true);
     setSnackbarSuccess(true);
     setSnackbarMessage("Book request Declined!");
+    setOpen !== null ? setOpen(false) : () => {};
   };
 
   const months = [
